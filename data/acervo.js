@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-07",
-  "rev": 1,
+  "rev": 2,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1241,24 +1241,44 @@ window.AMB_DATA = {
       "title": "Me Leva pra Casa",
       "kind": "tv",
       "date": "1985",
-      "status": "na-fila",
+      "program": "Programa Vamos Nessa",
+      "channel": "SBT",
+      "status": "no-acervo",
       "capa": "media/capas/joe-euthanazia-me-leva-pra-casa-1985.jpg",
+      "fit": "cover",
       "duration": 213,
+      "file": {
+        "video": "https://archive.org/download/ambario-joe-euthanazia-me-leva-pra-casa-1985/joe-euthanazia-me-leva-pra-casa-1985.mp4",
+        "ia": "ambario-joe-euthanazia-me-leva-pra-casa-1985"
+      },
       "audio": [
         {
           "id": "principal",
           "short": "DISCO",
           "label": "Áudio do disco (FLAC)",
-          "kind": "digital",
+          "kind": "lp",
+          "release": "tudo-pode-mudar-1985",
+          "by": "Luiz Alberto Gomes (bugrim)",
           "embedded": true
         },
-        { "id": "original", "short": "ORIGINAL", "label": "Som original da gravação", "kind": "tv" }
+        {
+          "id": "original",
+          "short": "ORIGINAL",
+          "label": "Som original da gravação",
+          "kind": "vhs",
+          "url": "https://archive.org/download/ambario-joe-euthanazia-me-leva-pra-casa-1985/joe-euthanazia-me-leva-pra-casa-1985-fita.m4a"
+        }
       ],
-      "credits": { "sync": "moguell" },
-      "source": { "medium": "Cópia digital", "from": "Cópia com a marca d’água “MofoTV”" },
-      "description": "Joe Euthanazia canta “Me Leva pra Casa”, do compacto de 1984, no palco de um programa de TV. Ainda não sabemos que programa é: se souber, sugira uma correção.",
+      "credits": { "sync": "Miguel Lins", "tape": "MofoTV" },
+      "source": { "medium": "Cópia digital", "from": "Cópia com a marca d’água “MofoTV”", "aired": "1985" },
+      "description": "Joe Euthanazia canta “Me Leva pra Casa”, do compacto de 1984, no Programa Vamos Nessa.",
       "src": ["scribd-rock-gaucho"],
-      "refs": [{ "t": "Cópia de referência (YouTube)", "u": "https://www.youtube.com/watch?v=4xLov6E79Rg" }],
+      "refs": [
+        {
+          "t": "Cópia de referência (YouTube)",
+          "u": "https://youtu.be/ra8My-11KOo?si=UV9DIntkO8efEpaY"
+        }
+      ],
       "added": "2026-11-07",
       "added_by": "moguell"
     },
