@@ -1,14 +1,14 @@
 /*
- * TV de Tubo — app: rotas, eventos, comentários, avaliações, formulários e atalhos.
+ * Ambário — app: rotas, eventos, comentários, avaliações, formulários e atalhos.
  * Endereços (tudo depois do #):
  *   inicio · videos · v-<vídeo> · artistas · a-<artista> (· a-<artista>--videos / --sobre) · acervos · c-<acervo>
- *   procura-se · busca · sobre · colaborar · politica · admin
+ *   procura-se · busca · sobre · colaborar · politica · admin (· admin/…: telas da área do curador)
  */
 (function () {
   'use strict';
-  const TDT = window.TDT;
-  const V = TDT.V;
-  const esc = TDT.esc;
+  const AMB = window.AMB;
+  const V = AMB.V;
+  const esc = AMB.esc;
   const main = document.getElementById('main');
 
   const ST = {
@@ -19,20 +19,59 @@
     autoplay: false,
     rolar: null
   };
-  try { ST.q = sessionStorage.getItem('tdt.q') || ''; } catch (e) { /* ok */ }
+  try { ST.q = sessionStorage.getItem('amb.q') || ''; } catch (e) { /* ok */ }
   let player = null;
 
   /* ---------------- marca (nome do site no logotipo) ---------------- */
   function aplicarMarca() {
-    const nome = TDT.cfg('SITE_NAME', 'TV de Tubo');
+    const nome = AMB.cfg('SITE_NAME', 'Ambário');
     const partes = nome.trim().split(/\s+/);
     const ultima = partes.pop();
     const el = document.querySelector('.logo-nome');
     if (el) el.innerHTML = (partes.length ? esc(partes.join(' ')) + ' ' : '') + '<em>' + esc(ultima) + '</em>';
     const sub = document.querySelector('.logo-sub');
-    if (sub) sub.textContent = TDT.cfg('SITE_TAGLINE', 'Acervo de videoclipes');
+    if (sub) sub.textContent = AMB.cfg('SITE_TAGLINE', 'Acervo de videoclipes');
     const modo = document.getElementById('modo');
-    if (modo) modo.textContent = TDT.api.live() ? '' : 'Modo demonstração: comentários, exibições e avaliações ficam só neste navegador até o servidor (Apps Script) ser ligado.';
+    if (modo) modo.textContent = AMB.api.live() ? '' : 'Modo demonstração: comentários, exibições e avaliações ficam só neste navegador até o servidor (Apps Script) ser ligado.';
+  }
+
+  // Aviso para quem edita: alterações que só existem neste navegador, ou a versão recém-publicada
+  function avisoLocal() {
+    let el = document.getElementById('aviso-local');
+    const e = AMB.estado || {};
+    let html = '';
+    if (e.pendentes) {
+      html = '<b>' + V.pl(e.pendentes, 'alteração', 'alterações') + ' só neste navegador.</b> Ainda não está' + (e.pendentes === 1 ? '' : 'ão') + ' no site público. ' +
+        '<a href="#admin/publicar">Publicar ou descartar</a>';
+    } else if (e.publicado) {
+      html = 'Você está vendo a versão que acabou de publicar. O site público atualiza sozinho em 1 ou 2 minutos.';
+    }
+    if (e.erro) html += (html ? ' · ' : '') + '<span class="erro">Não deu para aplicar alguma alteração pendente (' + esc(e.erro) + '). Abra a <a href="#admin/publicar">área do curador</a>.</span>';
+    if (!html) { if (el) el.remove(); return; }
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'aviso-local';
+      el.className = 'aviso-local';
+      el.setAttribute('role', 'status');
+      main.parentNode.insertBefore(el, main);
+    }
+    el.innerHTML = html;
+  }
+
+  // A área do curador só é baixada quando alguém abre #admin (visitantes não carregam nada disso)
+  let adminCarregando = null;
+  function carregarAdmin() {
+    if (AMB.Admin) return Promise.resolve();
+    if (adminCarregando) return adminCarregando;
+    const versao = encodeURIComponent(String(AMB.servido && AMB.servido.rev || ''));
+    adminCarregando = ['js/editor-github.js', 'js/editor-capa.js', 'js/admin.js'].reduce((p, src) => p.then(() => new Promise((ok, falha) => {
+      const s = document.createElement('script');
+      s.src = src + '?v=' + versao;
+      s.onload = ok;
+      s.onerror = () => falha(new Error('Não deu para carregar ' + src + '. Confira a conexão e recarregue a página.'));
+      document.head.appendChild(s);
+    })), Promise.resolve()).catch((e) => { adminCarregando = null; throw e; });
+    return adminCarregando;
   }
 
   /* ---------------- rotas ---------------- */
@@ -45,11 +84,11 @@
     if (location.hash === '#' + hash) render();
     else location.hash = hash;
   }
-  TDT.ir = ir;
+  AMB.ir = ir;
 
   function titulo(t) {
-    const site = TDT.cfg('SITE_NAME', 'TV de Tubo');
-    document.title = t ? t + ' — ' + site : site + ' — ' + TDT.cfg('SITE_TAGLINE', 'Acervo de videoclipes');
+    const site = AMB.cfg('SITE_NAME', 'Ambário');
+    document.title = t ? t + ' — ' + site : site + ' — ' + AMB.cfg('SITE_TAGLINE', 'Acervo de videoclipes');
   }
   function marcarAba(aba) {
     document.querySelectorAll('.abas-topo a').forEach((a) => {
@@ -70,12 +109,12 @@
     } else if (h === 'videos') {
       html = V.videos(ST.videos); aba = 'videos'; tit = 'Vídeos';
     } else if (h.indexOf('v-') === 0) {
-      const v = TDT.videoById[h.slice(2)];
+      const v = AMB.videoById[h.slice(2)];
       if (v) { html = V.watch(v); aba = 'videos'; tit = v.artistObj.name + ' — ' + v.title; depois = () => posWatch(v); }
       else html = V.naoAchei('este vídeo');
     } else if (h.indexOf('a-') === 0) {
       const [id, sub] = h.slice(2).split('--');
-      const a = TDT.artists[id];
+      const a = AMB.artists[id];
       if (a) { html = V.artista(a, sub); aba = 'artistas'; tit = a.name; depois = posArtista; }
       else html = V.naoAchei('este artista');
     } else if (h === 'artistas') {
@@ -83,7 +122,7 @@
     } else if (h === 'acervos') {
       html = V.acervos(); aba = 'acervos'; tit = 'Acervos';
     } else if (h.indexOf('c-') === 0) {
-      const c = TDT.acervos[h.slice(2)];
+      const c = AMB.acervos[h.slice(2)];
       if (c) { html = V.acervo(c); aba = 'acervos'; tit = c.name; }
       else html = V.naoAchei('este acervo');
     } else if (h === 'procura-se') {
@@ -93,12 +132,20 @@
     } else if (h === 'sobre' || h === 'colaborar' || h === 'politica') {
       html = V.sobre(h); tit = h === 'colaborar' ? 'Como colaborar' : h === 'politica' ? 'Política' : 'Sobre';
       depois = () => { if (h !== 'sobre') rolarPara('sec-' + h); };
-    } else if (h === 'admin' && TDT.Admin) {
-      html = '<div id="admin"></div>'; tit = 'Área do curador'; depois = () => TDT.Admin.render(document.getElementById('admin'));
+    } else if (h === 'admin' || h.indexOf('admin/') === 0) {
+      html = '<div id="admin" class="adm-pg"><p class="mini">Carregando a área do curador…</p></div>'; tit = 'Área do curador';
+      depois = () => carregarAdmin().then(() => {
+        const el = document.getElementById('admin');
+        if (el && rota() === h) AMB.Admin.render(el, h);
+      }).catch((e) => {
+        const el = document.getElementById('admin');
+        if (el) el.innerHTML = V.box('Área do curador', '<p class="erro">' + esc(e.message) + '</p>');
+      });
     } else {
       html = V.naoAchei();
     }
     main.innerHTML = html;
+    avisoLocal();
     titulo(tit);
     marcarAba(aba);
     if (!opts.manterRolagem) window.scrollTo(0, 0);
@@ -122,17 +169,17 @@
     });
     if (!ids.size) return;
     let s;
-    try { s = await TDT.api.stats(Array.from(ids)); } catch (e) { return; }
+    try { s = await AMB.api.stats(Array.from(ids)); } catch (e) { return; }
     raiz.querySelectorAll('[data-st]').forEach((el) => {
       const x = s[el.dataset.st];
       if (!x) return;
-      el.innerHTML = (el.dataset.curto ? TDT.fmtNum(x.v) + ' exib.' : V.pl(x.v || 0, 'exibição', 'exibições')) + (x.n ? ' ' + V.estrelas(x.r, x.n, 'est-p') : '');
+      el.innerHTML = (el.dataset.curto ? AMB.fmtNum(x.v) + ' exib.' : V.pl(x.v || 0, 'exibição', 'exibições')) + (x.n ? ' ' + V.estrelas(x.r, x.n, 'est-p') : '');
     });
-    raiz.querySelectorAll('[data-st-views]').forEach((el) => { const x = s[el.dataset.stViews]; if (x) el.textContent = TDT.fmtNum(x.v || 0); });
+    raiz.querySelectorAll('[data-st-views]').forEach((el) => { const x = s[el.dataset.stViews]; if (x) el.textContent = AMB.fmtNum(x.v || 0); });
     raiz.querySelectorAll('[data-st-rate]').forEach((el) => {
       const x = s[el.dataset.stRate];
       if (!x) return;
-      const meu = TDT.myVote(el.dataset.stRate);
+      const meu = AMB.myVote(el.dataset.stRate);
       el.innerHTML = (x.n ? V.estrelas(x.r, x.n) + ' ' + V.pl(x.n, 'avaliação', 'avaliações') : 'Seja o primeiro a avaliar') + (meu ? ' · <span class="mini">você deu ' + meu + '</span>' : '');
       pintarVoto(meu);
     });
@@ -147,11 +194,11 @@
     const box = document.getElementById('recentes');
     if (!box) return;
     try {
-      const l = await TDT.api.recent();
+      const l = await AMB.api.recent();
       if (!document.body.contains(box)) return;
       box.innerHTML = l.length ? '<ul class="recentes-l">' + l.map((c) => {
-        const v = TDT.videoById[c.video_id];
-        return '<li><b>' + esc(c.nome) + '</b> <span class="mini">' + esc(TDT.ago(c.criado_em)) + '</span>' +
+        const v = AMB.videoById[c.video_id];
+        return '<li><b>' + esc(c.nome) + '</b> <span class="mini">' + esc(AMB.ago(c.criado_em)) + '</span>' +
           '<p>“' + esc(String(c.texto).length > 110 ? String(c.texto).slice(0, 107) + '…' : c.texto) + '”</p>' +
           (v ? '<a class="mini" href="#v-' + esc(v.id) + '">em ' + esc(v.artistObj.name + ' — ' + v.title) + '</a>' : '') + '</li>';
       }).join('') + '</ul>' : '<p class="mini">Ainda não há comentários. Que tal deixar o primeiro?</p>';
@@ -162,27 +209,27 @@
 
   /* ---------------- página do vídeo ---------------- */
   function posWatch(v) {
-    const viz = TDT.neighbors(v);
+    const viz = AMB.neighbors(v);
     const box = document.getElementById('player');
-    player = TDT.Player.create(box, {
+    player = AMB.Player.create(box, {
       video: v,
       prev: viz.prev,
       next: viz.next,
       autoplay: ST.autoplay,
-      autoNext: TDT.cfg('PROXIMO_AUTOMATICO', true) !== false,
+      autoNext: AMB.cfg('PROXIMO_AUTOMATICO', true) !== false,
       onPrev: () => { ST.autoplay = true; ir('v-' + viz.prev.id); },
       onNext: () => { ST.autoplay = true; ir('v-' + viz.next.id); },
       onCount: (x) => {
-        TDT.api.view(x.id).then(() => {
-          const s = TDT.api.cached(x.id);
+        AMB.api.view(x.id).then(() => {
+          const s = AMB.api.cached(x.id);
           const el = document.querySelector('[data-st-views="' + x.id + '"]');
-          if (s && el) el.textContent = TDT.fmtNum(s.v || 0);
+          if (s && el) el.textContent = AMB.fmtNum(s.v || 0);
         }).catch(() => {});
       },
       onTrack: (t) => audioInfo(v, t)
     });
     ST.autoplay = false;
-    TDT.__ultimoPlayer = player; // ajuda a depurar pelo console do navegador
+    AMB.__ultimoPlayer = player; // ajuda a depurar pelo console do navegador
     if (v.hasFile) {
       const atalhos = document.createElement('p');
       atalhos.className = 'mini atalhos';
@@ -191,7 +238,7 @@
       box.after(atalhos);
     }
     carregarComentarios(v.id);
-    pintarVoto(TDT.myVote(v.id));
+    pintarVoto(AMB.myVote(v.id));
   }
 
   function audioInfo(v, t) {
@@ -200,8 +247,8 @@
     const outra = v.audio.find((x) => x !== t && (x.embedded || x.url));
     const rel = t.release ? v.artistObj.releases.find((r) => r.id === t.release) : null;
     box.innerHTML = '<span class="ai-rot">Você está ouvindo:</span> <b>' + esc(t.label || t.short) + '</b>' +
-      (rel ? ' — <a href="#a-' + esc(v.artistObj.id) + '" data-disco="' + esc(rel.id) + '">' + esc(rel.title) + '</a> (' + esc(TDT.RELTYPES[rel.type] || '') + (rel.year ? ', ' + esc(rel.year) : '') + ')' : '') +
-      (t.by ? ', digitalizado por ' + V.quem(TDT.who(t.by)) : '') +
+      (rel ? ' — <a href="#a-' + esc(v.artistObj.id) + '" data-disco="' + esc(rel.id) + '">' + esc(rel.title) + '</a> (' + esc(AMB.RELTYPES[rel.type] || '') + (rel.year ? ', ' + esc(rel.year) : '') + ')' : '') +
+      (t.by ? ', digitalizado por ' + V.quem(AMB.who(t.by)) : '') +
       (outra ? ' <button type="button" class="btn btn-p" data-acao="trocar-audio" data-id="' + esc(outra.id) + '">Ouvir: ' + esc(outra.label || outra.short) + '</button>' : '');
   }
 
@@ -209,20 +256,20 @@
     const box = document.querySelector('.com-lista[data-video="' + id + '"]');
     if (!box) return;
     try {
-      const l = await TDT.api.comments(id);
+      const l = await AMB.api.comments(id);
       if (!document.body.contains(box)) return;
       box.innerHTML = l.length ? l.map(V.comentario).join('') : '<p class="mini">Nenhum comentário ainda.</p>';
       const n = document.querySelector('[data-st-com="' + id + '"]');
       if (n) n.textContent = l.length ? '(' + l.length + ')' : '';
     } catch (e) {
-      box.innerHTML = '<p class="mini">' + esc(TDT.erroMsg(e)) + '</p>';
+      box.innerHTML = '<p class="mini">' + esc(AMB.erroMsg(e)) + '</p>';
     }
   }
 
   /* ---------------- artista ---------------- */
   function posArtista() {
     const chk = main.querySelector('[data-acao="so-com-video"]');
-    if (chk && TDT.store.get('tdt.soComVideo', false)) { chk.checked = true; main.classList.add('so-com-video'); }
+    if (chk && AMB.store.get('amb.soComVideo', false)) { chk.checked = true; main.classList.add('so-com-video'); }
   }
 
   /* ---------------- janelas (formulários) ---------------- */
@@ -285,13 +332,13 @@
     const tipo = form.dataset.tipo;
     const falta = Array.from(form.querySelectorAll('[required]')).find((el) => !String(el.value || '').trim());
     if (falta) { msg.className = 'form-msg erro'; msg.textContent = 'Preencha os campos obrigatórios.'; falta.focus(); return; }
-    if (d.fonte_url && !TDT.isUrl(d.fonte_url)) { msg.className = 'form-msg erro'; msg.textContent = 'O link da fonte precisa começar com http:// ou https://'; return; }
-    const v = TDT.videoById[form.dataset.video || ''];
+    if (d.fonte_url && !AMB.isUrl(d.fonte_url)) { msg.className = 'form-msg erro'; msg.textContent = 'O link da fonte precisa começar com http:// ou https://'; return; }
+    const v = AMB.videoById[form.dataset.video || ''];
     const botao = form.querySelector('button[type=submit]');
     botao.disabled = true;
     msg.className = 'form-msg'; msg.textContent = 'Enviando…';
     try {
-      const r = await TDT.api.suggest({
+      const r = await AMB.api.suggest({
         tipo, video: form.dataset.video || '', artista: form.dataset.artista || (v ? v.artistObj.id : ''),
         titulo: v ? v.artistObj.name + ' — ' + v.title : '', nome: d.nome || '', contato: d.contato || '',
         mensagem: [d.campo ? '[' + d.campo + ']' : '', d.formato ? '[' + d.formato + ']' : '', d.mensagem || ''].filter(Boolean).join(' '),
@@ -303,7 +350,7 @@
     } catch (e) {
       botao.disabled = false;
       msg.className = 'form-msg erro';
-      msg.textContent = TDT.erroMsg(e);
+      msg.textContent = AMB.erroMsg(e);
     }
   }
 
@@ -311,22 +358,22 @@
     const id = form.dataset.video;
     const msg = form.querySelector('.com-msg');
     const nome = form.nome.value, texto = form.texto.value;
-    const erro = TDT.checkComment(nome, texto);
+    const erro = AMB.checkComment(nome, texto);
     if (erro) { msg.className = 'com-msg erro'; msg.textContent = erro; return; }
     const desde = Date.now() - Number(form.dataset.aberto || 0);
     const botao = form.querySelector('button[type=submit]');
     botao.disabled = true;
     msg.className = 'com-msg'; msg.textContent = 'Enviando…';
     try {
-      const r = await TDT.api.postComment(id, nome, texto, { website: form.website.value, t: desde });
-      TDT.store.set('tdt.nome', nome.trim());
+      const r = await AMB.api.postComment(id, nome, texto, { website: form.website.value, t: desde });
+      AMB.store.set('amb.nome', nome.trim());
       form.texto.value = '';
       contarResta(form);
       if (r.pendente) { msg.className = 'com-msg ok'; msg.textContent = 'Recebido! Seu comentário aparece depois que a moderação aprovar.'; }
       else { msg.className = 'com-msg ok'; msg.textContent = r.demo ? 'Publicado (modo demonstração: só neste navegador).' : 'Publicado!'; }
       carregarComentarios(id);
     } catch (e) {
-      msg.className = 'com-msg erro'; msg.textContent = TDT.erroMsg(e);
+      msg.className = 'com-msg erro'; msg.textContent = AMB.erroMsg(e);
     } finally { botao.disabled = false; }
   }
   function contarResta(form) {
@@ -354,8 +401,8 @@
       case 'filtro': ST.home.filtro = el.dataset.f; ST.home.qtd = 24; render({ manterRolagem: true }); break;
       case 'mais': ST.home.qtd += 24; render({ manterRolagem: true }); break;
       case 'art-origem': ST.artistas.origem = el.dataset.f; render({ manterRolagem: true }); break;
-      case 'tenho': e.preventDefault(); formTenho(TDT.videoById[el.dataset.video]); break;
-      case 'corrigir': e.preventDefault(); formCorrigir(TDT.videoById[el.dataset.video], TDT.artists[el.dataset.artista]); break;
+      case 'tenho': e.preventDefault(); formTenho(AMB.videoById[el.dataset.video]); break;
+      case 'corrigir': e.preventDefault(); formCorrigir(AMB.videoById[el.dataset.video], AMB.artists[el.dataset.artista]); break;
       case 'fechar': fecharModal(); break;
       case 'painel': {
         const p = document.getElementById('painel');
@@ -364,7 +411,7 @@
       }
       case 'copiar': copiar(el.dataset.txt, el); break;
       case 'favoritar': {
-        const on = TDT.favs.toggle(el.dataset.video);
+        const on = AMB.favs.toggle(el.dataset.video);
         el.classList.toggle('ativo', on);
         el.innerHTML = '<i class="ico ico-fav"></i>' + (on ? 'Favoritado' : 'Favoritar');
         break;
@@ -373,9 +420,9 @@
         const box = el.closest('.rate-in');
         const n = Number(el.dataset.n);
         pintarVoto(n);
-        TDT.api.rate(box.dataset.video, n).then(() => preencherStats(main)).catch((er) => {
+        AMB.api.rate(box.dataset.video, n).then(() => preencherStats(main)).catch((er) => {
           const t = document.querySelector('[data-st-rate]');
-          if (t) t.textContent = TDT.erroMsg(er);
+          if (t) t.textContent = AMB.erroMsg(er);
         });
         break;
       }
@@ -390,7 +437,7 @@
         if (ta) { ta.value = '@' + el.dataset.nome + ' ' + ta.value.replace(/^@\S+\s/, ''); ta.focus(); contarResta(ta.form); }
         break;
       }
-      case 'trocar-audio': if (player) { TDT.clique(); player.selecionar(el.dataset.id); } break;
+      case 'trocar-audio': if (player) { AMB.clique(); player.selecionar(el.dataset.id); } break;
       case 'so-com-video': break; // tratado no "change"
       default: break;
     }
@@ -399,7 +446,7 @@
   document.addEventListener('change', (e) => {
     const el = e.target;
     if (el.matches('[data-acao="vfiltro"]')) { ST.videos[el.dataset.k] = el.value; render({ manterRolagem: true }); }
-    if (el.matches('[data-acao="so-com-video"]')) { main.classList.toggle('so-com-video', el.checked); TDT.store.set('tdt.soComVideo', el.checked); }
+    if (el.matches('[data-acao="so-com-video"]')) { main.classList.toggle('so-com-video', el.checked); AMB.store.set('amb.soComVideo', el.checked); }
   });
 
   document.addEventListener('submit', (e) => {
@@ -407,7 +454,7 @@
     if (f.id === 'form-busca') {
       e.preventDefault();
       ST.q = (f.q.value || '').trim();
-      try { sessionStorage.setItem('tdt.q', ST.q); } catch (er) { /* ok */ }
+      try { sessionStorage.setItem('amb.q', ST.q); } catch (er) { /* ok */ }
       if (ST.q) ir('busca');
       return;
     }
@@ -448,11 +495,27 @@
     else if (k === 'arrowleft' || k === 'j') { e.preventDefault(); player.pular(-5); }
     else if (k === 'f') { player.alternarTela(); }
     else if (k === 'm') { player.alternarMudo(); }
-    else if (k === 'a') { TDT.clique(); player.proximaFaixa(); }
+    else if (k === 'a') { AMB.clique(); player.proximaFaixa(); }
     else if (k === 'c') { player.alternarCRT(); }
   });
 
-  window.addEventListener('hashchange', () => render());
+  // Saindo de um formulário da área do curador com alterações não salvas: pergunta antes
+  let hashAtual = location.hash;
+  window.addEventListener('hashchange', () => {
+    const destino = location.hash;
+    if (AMB.Admin && AMB.Admin.sujo && AMB.Admin.sujo()) {
+      history.replaceState(null, '', hashAtual || '#admin'); // volta o endereço (não dispara hashchange)
+      AMB.Admin.confirmarSaida(() => { location.hash = destino; }); // se confirmar, o formulário é descartado antes
+      return;
+    }
+    hashAtual = destino;
+    render();
+  });
+  window.addEventListener('beforeunload', (e) => {
+    if (AMB.Admin && AMB.Admin.sujo && AMB.Admin.sujo()) { e.preventDefault(); e.returnValue = ''; }
+  });
+  AMB.render = render;
+  AMB.avisoLocal = avisoLocal;
   aplicarMarca();
   const q = document.getElementById('q');
   if (q && ST.q) q.value = ST.q;

@@ -1,5 +1,5 @@
 /**
- * TV de Tubo — servidor no Google Apps Script (gratuito)
+ * Ambário — servidor no Google Apps Script (gratuito)
  * ===========================================================
  * O que este script faz:
  *   1. Guarda e mostra os COMENTÁRIOS de cada vídeo (aba "Comentarios").
@@ -13,7 +13,7 @@
  * O site atualiza em até 2 minutos depois de uma mudança na planilha.
  *
  * Instalação (o passo a passo detalhado está no README, seção 6):
- *   1. Crie uma planilha no Google Sheets (ex.: "TV de Tubo - banco").
+ *   1. Crie uma planilha no Google Sheets (ex.: "Ambário - banco").
  *   2. Na planilha: Extensões → Apps Script. Apague o conteúdo e cole este arquivo inteiro.
  *   3. Escolha a função setup no menu e clique em Executar (autorize o acesso).
  *   4. Implantar → Nova implantação → Tipo: App da Web
@@ -87,7 +87,7 @@ function doGet(e) {
       case 'comments': return json_(comentarios_(texto_(p.video, 120)));
       case 'recent': return json_({ ok: true, items: recentes_() });
       case 'stats': return json_(stats_(String(p.ids || '').split(',').slice(0, 80)));
-      case 'ping': return json_({ ok: true, app: 'TV de Tubo' });
+      case 'ping': return json_({ ok: true, app: 'Ambário' });
       default: return json_({ ok: false, error: 'acao_desconhecida' });
     }
   } catch (err) {
@@ -281,7 +281,7 @@ function mensagem_(b) {
     try {
       MailApp.sendEmail({
         to: Session.getEffectiveUser().getEmail(),
-        subject: 'TV de Tubo — ' + TIPOS_MSG[tipo] + (linha.titulo ? ': ' + linha.titulo : ''),
+        subject: 'Ambário — ' + TIPOS_MSG[tipo] + (linha.titulo ? ': ' + linha.titulo : ''),
         body: [
           TIPOS_MSG[tipo] + (linha.titulo ? ' — ' + linha.titulo : ''),
           'Nome: ' + linha.nome, 'Contato: ' + linha.contato, '', mensagem, '',
@@ -333,6 +333,7 @@ function linhas_(sh) {
 
 // Visitante anônimo: o site manda um código aleatório guardado no navegador; aqui ele vira um resumo (hash)
 function visitante_(v) {
+  // 'tdt' vem do nome antigo do site; fica assim para os visitantes de antes continuarem com o mesmo código
   const sal = PropertiesService.getScriptProperties().getProperty('SAL') || 'tdt';
   const d = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, sal + '|' + texto_(v, 80));
   return Utilities.base64EncodeWebSafe(d).slice(0, 16);

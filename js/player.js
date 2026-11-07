@@ -1,5 +1,5 @@
 /*
- * TV de Tubo — player de TV de tubo (CRT) com dois áudios sincronizados.
+ * Ambário — player de TV antiga (CRT) com dois áudios sincronizados.
  *
  * Baseado no player "Eternal Medias" do moguell.neocities.org (TV com chuvisco, scanlines, vinheta,
  * OSD verde, botões REINICIAR / CRT / ANTERIOR / PRÓXIMO / TELA CHEIA e o clique dos botões).
@@ -15,15 +15,15 @@
  */
 (function () {
   'use strict';
-  const TDT = window.TDT;
-  const esc = TDT.esc;
+  const AMB = window.AMB;
+  const esc = AMB.esc;
   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 
   /* ---------- clique sintetizado dos botões (o mesmo do player original) ---------- */
   let ctxAudio = null;
-  TDT.somBotoes = () => TDT.store.get('tdt.somBotoes', true) !== false;
-  TDT.clique = function () {
-    if (!TDT.somBotoes()) return;
+  AMB.somBotoes = () => AMB.store.get('amb.somBotoes', true) !== false;
+  AMB.clique = function () {
+    if (!AMB.somBotoes()) return;
     try {
       if (!ctxAudio) ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
       if (ctxAudio.state === 'suspended') ctxAudio.resume();
@@ -55,8 +55,8 @@
     this.root = root;
     this.opts = opts || {};
     this.v = this.opts.video;
-    this.crt = TDT.store.get('tdt.crt', true) !== false;
-    this.volume = clamp(Number(TDT.store.get('tdt.volume', 0.9)) || 0.9, 0, 1);
+    this.crt = AMB.store.get('amb.crt', true) !== false;
+    this.volume = clamp(Number(AMB.store.get('amb.volume', 0.9)) || 0.9, 0, 1);
     this.mudo = false;
     this.tracks = (this.v.audio || []).filter((t) => t.embedded || t.url);
     this.track = null;
@@ -81,7 +81,7 @@
 
   Player.prototype.render = function () {
     const v = this.v;
-    const site = TDT.cfg('SITE_NAME', 'TV de Tubo');
+    const site = AMB.cfg('SITE_NAME', 'Ambário');
     const fonte = v.source || {};
     const sinal = [fonte.medium, fonte.standard].filter(Boolean).join(' · ') || (v.hasFile ? 'ARQUIVO' : 'SEM FITA');
     const ar = String(v.aspect || '4:3').replace(':', ' / ');
@@ -92,11 +92,12 @@
         '<div class="vr-tv-top">' +
           '<div class="vr-brand"><span class="vr-led"></span>' + esc(site.toUpperCase()) + '</div>' +
           '<div class="vr-sinal">SINAL: <b>' + esc(sinal.toUpperCase()) + '</b></div>' +
-          '<button type="button" class="vr-mini" data-a="som">SOM BOTÕES: <span class="' + (TDT.somBotoes() ? 'vr-on">ON' : 'vr-off">OFF') + '</span></button>' +
+          '<button type="button" class="vr-mini" data-a="som">SOM BOTÕES: <span class="' + (AMB.somBotoes() ? 'vr-on">ON' : 'vr-off">OFF') + '</span></button>' +
         '</div>' +
         '<div class="vr-screen">' +
           '<div class="vr-picture" style="aspect-ratio:' + esc(ar) + '">' +
-            '<video class="vr-video" playsinline webkit-playsinline preload="metadata"></video>' +
+            // fit: "cover" corta bordas pretas laterais (4:3 dentro de 16:9); "fill" desfaz imagem 4:3 esticada para 16:9
+            '<video class="vr-video' + (v.fit ? ' vr-fit-' + esc(v.fit) : '') + '" style="--ar:' + esc(ar) + '" playsinline webkit-playsinline preload="metadata"></video>' +
             '<div class="vr-semsinal" hidden></div>' +
             '<div class="vr-erro"><strong>SEM SINAL</strong><span class="vr-erro-msg"></span>' +
               '<span class="vr-erro-acoes"><button type="button" data-a="tentar">TENTAR DE NOVO</button>' +
@@ -118,7 +119,7 @@
           '</div>' +
           '<div class="vr-transporte"' + (v.hasFile ? '' : ' hidden') + '>' +
             '<button type="button" class="vr-t-btn vr-pp" data-a="pp" aria-label="Tocar">' + ICONE.play + '</button>' +
-            '<span class="vr-tempo"><b class="vr-t-atual">0:00</b><i>/</i><span class="vr-t-total">' + (v.duration ? TDT.fmtDur(v.duration) : '0:00') + '</span></span>' +
+            '<span class="vr-tempo"><b class="vr-t-atual">0:00</b><i>/</i><span class="vr-t-total">' + (v.duration ? AMB.fmtDur(v.duration) : '0:00') + '</span></span>' +
             '<div class="vr-seek"><div class="vr-seek-trilho"><div class="vr-seek-buf"></div><div class="vr-seek-pos"></div></div>' +
               '<input type="range" class="vr-seek-in" min="0" max="1000" step="1" value="0" aria-label="Posição no vídeo"></div>' +
             '<button type="button" class="vr-t-btn vr-mudo" data-a="mudo" aria-label="Tirar o som">' + ICONE.som + '</button>' +
@@ -192,12 +193,20 @@
   Player.prototype.semSinal = function () {
     const v = this.v;
     const box = this.$('.vr-semsinal');
-    const titulo = v.status === 'procura-se' ? 'PROCURA-SE ESTA FITA' : 'NA FILA PARA DIGITALIZAR';
+    const titulo = v.status === 'procura-se' ? 'PROCURA-SE ESTA FITA' : 'NA FILA DO ACERVO';
     const sub = v.status === 'procura-se'
       ? 'Sabemos que este registro existe, mas ainda não temos uma cópia.'
-      : 'Este registro já foi separado e ainda vai ser digitalizado e enviado.';
+      : 'Este registro já foi separado pelo curador e o arquivo ainda vai ser enviado.';
+    // com capa, a tela azul fica por cima dela, meio transparente (como um quadro congelado do videocassete)
+    if (v.thumb) {
+      // endereço completo: dentro de uma variável CSS, um caminho relativo seria lido a partir da pasta css/
+      let url = String(v.thumb);
+      try { url = new URL(url, location.href).href; } catch (e) { /* fica como está */ }
+      box.classList.add('vr-ss-capa');
+      box.style.setProperty('--capa', 'url("' + url.replace(/["\\\n]/g, '') + '")');
+    }
     box.innerHTML =
-      '<div class="vr-ss-topo"><span>' + esc(TDT.STATUS[v.status] ? TDT.STATUS[v.status].t.toUpperCase() : '') + '</span></div>' +
+      '<div class="vr-ss-topo"><span>' + esc(AMB.STATUS[v.status] ? AMB.STATUS[v.status].t.toUpperCase() : '') + '</span></div>' +
       '<div class="vr-ss-meio"><b>' + titulo + '</b>' +
         '<span class="vr-ss-nome">' + esc(v.artistObj.name) + ' — ' + esc(v.title) + (v.year ? ' (' + esc(v.year) + ')' : '') + '</span>' +
         '<span class="vr-ss-sub">' + esc(sub) + '</span>' +
@@ -214,7 +223,7 @@
     if (this.v.thumb) video.poster = this.v.thumb;
     video.volume = this.volume;
     video.src = this.fontes[0];
-    const pref = TDT.store.get('tdt.audioPref', 'principal');
+    const pref = AMB.store.get('amb.audioPref', 'principal');
     const alvo = pref === 'alternativo' && this.tracks.length > 1 ? this.tracks[1].id : (this.tracks[0] && this.tracks[0].id);
     if (alvo) this.selecionar(alvo, true); else this.aplicarSom();
     if (this.opts.autoplay) {
@@ -310,7 +319,7 @@
     if (!quieto) {
       this.glitch(180);
       this.osdModo('ÁUDIO: ' + String(t.label || t.short).toUpperCase(), 2600);
-      TDT.store.set('tdt.audioPref', this.tracks.indexOf(t) > 0 ? 'alternativo' : 'principal');
+      AMB.store.set('amb.audioPref', this.tracks.indexOf(t) > 0 ? 'alternativo' : 'principal');
     }
     if (this.opts.onTrack) this.opts.onTrack(t);
   };
@@ -389,7 +398,7 @@
     const st = this.$('.vr-crt-status');
     st.textContent = this.crt ? 'SIM' : 'NÃO';
     st.className = 'vr-crt-status ' + (this.crt ? 'vr-on' : 'vr-off');
-    TDT.store.set('tdt.crt', this.crt);
+    AMB.store.set('amb.crt', this.crt);
     this.osd(this.crt ? 'FILTRO CRT LIGADO' : 'FILTRO CRT DESLIGADO');
   };
   Player.prototype.reiniciar = function () {
@@ -474,8 +483,8 @@
   Player.prototype.atualizarTempo = function () {
     const v = this.video;
     const dur = isFinite(v.duration) && v.duration > 0 ? v.duration : (this.v.duration || 0);
-    this.$('.vr-t-atual').textContent = TDT.fmtDur(v.currentTime);
-    this.$('.vr-t-total').textContent = TDT.fmtDur(dur);
+    this.$('.vr-t-atual').textContent = AMB.fmtDur(v.currentTime);
+    this.$('.vr-t-total').textContent = AMB.fmtDur(dur);
     if (!this.arrastando && dur) {
       const f = clamp(v.currentTime / dur, 0, 1);
       this.seekIn.value = Math.round(f * 1000);
@@ -505,7 +514,7 @@
       const b = e.target.closest('[data-a]');
       if (!b || !this.root.contains(b)) return;
       const a = b.dataset.a;
-      if (a !== 'som') TDT.clique();
+      if (a !== 'som') AMB.clique();
       switch (a) {
         case 'pp': this.alternar(); break;
         case 'audio': this.selecionar(b.dataset.id); break;
@@ -518,10 +527,10 @@
         case 'tela': this.alternarTela(); break;
         case 'tentar': this.$('.vr-erro').classList.remove('ativo'); this.trocarFonte(0, video.currentTime || 0); break;
         case 'som': {
-          const ligado = !TDT.somBotoes();
-          TDT.store.set('tdt.somBotoes', ligado);
+          const ligado = !AMB.somBotoes();
+          AMB.store.set('amb.somBotoes', ligado);
           b.innerHTML = 'SOM BOTÕES: <span class="' + (ligado ? 'vr-on">ON' : 'vr-off">OFF') + '</span>';
-          TDT.clique();
+          AMB.clique();
           break;
         }
         default: break;
@@ -542,7 +551,7 @@
       const dur = video.duration || this.v.duration || 0;
       const f = seek.value / 1000;
       this.$('.vr-seek-pos').style.width = (f * 100).toFixed(2) + '%';
-      this.$('.vr-t-atual').textContent = TDT.fmtDur(f * dur);
+      this.$('.vr-t-atual').textContent = AMB.fmtDur(f * dur);
     });
     this.on(seek, 'change', () => {
       this.arrastando = false;
@@ -553,7 +562,7 @@
     this.on(vol, 'input', () => {
       this.volume = clamp(vol.value / 100, 0, 1);
       this.mudo = this.volume === 0;
-      TDT.store.set('tdt.volume', this.volume);
+      AMB.store.set('amb.volume', this.volume);
       this.aplicarSom();
     });
 
@@ -644,7 +653,7 @@
       if (!('mediaSession' in navigator) || typeof MediaMetadata === 'undefined') return;
       const v = this.v;
       const arte = v.thumb && !/^data:/.test(v.thumb) ? [{ src: new URL(v.thumb, location.href).href }] : [];
-      navigator.mediaSession.metadata = new MediaMetadata({ title: v.title, artist: v.artistObj.name, album: TDT.cfg('SITE_NAME', 'TV de Tubo'), artwork: arte });
+      navigator.mediaSession.metadata = new MediaMetadata({ title: v.title, artist: v.artistObj.name, album: AMB.cfg('SITE_NAME', 'Ambário'), artwork: arte });
       navigator.mediaSession.setActionHandler('play', () => this.tocar());
       navigator.mediaSession.setActionHandler('pause', () => this.video.pause());
       navigator.mediaSession.setActionHandler('nexttrack', this.opts.next ? () => this.opts.onNext() : null);
@@ -664,5 +673,5 @@
     try { if ('mediaSession' in navigator) navigator.mediaSession.metadata = null; } catch (e) { /* ok */ }
   };
 
-  TDT.Player = { create: (root, opts) => new Player(root, opts), ICONE };
+  AMB.Player = { create: (root, opts) => new Player(root, opts), ICONE };
 })();

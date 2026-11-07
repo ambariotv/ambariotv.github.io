@@ -1,6 +1,6 @@
 /* =====================================================================
-   TV de Tubo — visual inspirado nos sites de vídeo de 2007 (com um toque
-   "frutiger aero": brilho, vidro, azul de céu) + o player de TV de tubo.
+   Ambário — visual inspirado nos sites de vídeo de 2007 (com um toque
+   "frutiger aero": brilho, vidro, azul de céu) + o player de TV antiga (CRT).
    ===================================================================== */
 @font-face { font-family: 'VT323'; font-style: normal; font-weight: 400; font-display: swap;
   src: url('../fonts/vt323-latin.woff2') format('woff2');
@@ -24,6 +24,7 @@
   --estrela: #f0a000;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; font: 13px/1.45 Arial, Helvetica, sans-serif; color: var(--texto); background: #fff; }
 a { color: var(--link); text-decoration: none; }
@@ -63,6 +64,8 @@ code { font: 12px Consolas, 'Courier New', monospace; background: #f1f4f8; paddi
 .logo-txt { display: flex; flex-direction: column; }
 .logo-nome { font: 900 29px/1 'Arial Black', Arial, sans-serif; letter-spacing: -.5px; color: #2b2f36; text-shadow: 0 1px 0 #fff; }
 .logo-nome em { font-style: normal; background: linear-gradient(#69bbff 0%, #2a83e6 48%, #0f5bc4 52%, #3d93ec 100%); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none; filter: drop-shadow(0 1px 0 rgba(255,255,255,.9)); }
+/* Ambário: o nome em âmbar, o mesmo dourado dos botões amarelos */
+.logo-nome em:only-child { background-image: linear-gradient(#ffd86e 0%, #f5a51c 47%, #d97a00 53%, #f3b23e 100%); filter: drop-shadow(0 1px 0 rgba(255,255,255,.95)) drop-shadow(0 0 1px rgba(140,70,0,.45)); }
 .logo-sub { margin-top: 3px; font-size: 11px; color: #6c7a8c; letter-spacing: .02em; }
 .topo-links { position: relative; font-size: 12px; color: #999; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 
@@ -403,10 +406,87 @@ html.com-modal { overflow: hidden; }
 .adm-ia { display: flex; gap: 8px; align-items: flex-end; }
 .adm-ia label { flex: 1 1 auto; }
 .adm-acoes { display: flex; flex-wrap: wrap; gap: 8px; }
-.adm-saida { margin-top: 10px; }
 .codigo { font: 12px/1.45 Consolas, 'Courier New', monospace !important; white-space: pre; background: #f7f9fc !important; }
-.modelos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.rascunhos { margin: 0; padding-left: 18px; }
+.adm-topo { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 14px; }
+.adm-con { font-size: 12px; color: #7a5b00; }
+.adm-con-ok { color: #237a2a; }
+.adm-abas { margin: 4px 0 12px; }
+.adm-badge { display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 3px; font: 700 11px/18px Arial; text-align: center; color: #fff; background: #e0700f; border-radius: 9px; }
+.adm-flash { margin: 0 0 12px; padding: 8px 12px; font-size: 13px; border: 1px solid; border-radius: 5px; }
+.adm-flash-ok { color: #1d5e23; background: #ecf8ed; border-color: #9fd3a5; }
+.adm-flash-aviso { color: #4a3a00; background: #fff8dc; border-color: #e3c24f; }
+.adm-flash-erro { color: #8a0000; background: #fff0f0; border-color: #e3a0a0; }
+.adm-barra { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
+.adm-barra input[type=search] { flex: 1 1 220px; min-width: 0; padding: 4px 8px; border: 1px solid #8ea6c8; border-radius: 3px; box-shadow: inset 0 1px 2px rgba(0,0,0,.1); }
+.adm-barra select { padding: 3px 4px; border: 1px solid #a9b8cc; border-radius: 3px; background: #fff; }
+.adm-lista { display: flex; flex-direction: column; }
+.adm-item { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px dotted #ccc; }
+.adm-item:last-child { border-bottom: 0; }
+.adm-item-art { grid-template-columns: 58px minmax(0, 1fr) auto; }
+.adm-item-txt { min-width: 0; }
+.adm-item-txt .mini { display: block; }
+.adm-item-tit { font-weight: 700; font-size: 14px; }
+.adm-id { font-family: Consolas, 'Courier New', monospace; }
+.adm-item-acoes { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; }
+.adm-rasc { display: inline-block; padding: 0 5px; font: 700 9.5px/1.6 Arial; letter-spacing: .03em; text-transform: uppercase; color: #fff; background: #7a3fc4; border-radius: 3px; vertical-align: 1px; }
+.btn.adm-perigo { color: #8a0000; border-color: #d39a9a; }
+.btn.adm-perigo:hover:not(:disabled) { color: #fff; background: linear-gradient(#e86b6b, #c42f2f); border-color: #a31f1f; text-shadow: none; }
+.adm label.adm-check, .adm-check { display: flex; align-items: center; gap: 6px; font-weight: 400; font-size: 12px; }
+.adm .adm-check input, .adm-check input { display: inline-block; width: auto; margin: 0; box-shadow: none; }
+.adm-salvar { position: sticky; bottom: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px -10px -10px; padding: 10px; background: linear-gradient(rgba(255,255,255,.92), #f1f5fa); border-top: 1px solid #d5dde8; border-radius: 0 0 5px 5px; }
+.adm-salvar .adm-msg { flex-basis: 100%; margin: 0; }
+.adm-det { margin: 6px 0; }
+.adm-det > summary { cursor: pointer; color: var(--link); font-size: 12px; }
+.adm-capa { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 14px; align-items: start; }
+.adm-capa-prev { width: 200px; }
+.adm-capa-sem { position: absolute; inset: 2px; display: grid; place-items: center; font: 1.15rem 'VT323', 'Courier New', monospace; letter-spacing: 1px; color: #eaf1ff; background: repeating-linear-gradient(rgba(0,0,0,.08) 0 1px, transparent 1px 3px), linear-gradient(#1c3fd8, #1028a8); }
+.adm-capa-botoes { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.adm-foto { grid-template-columns: 100px minmax(0, 1fr); align-items: center; }
+.adm-papeis { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; }
+.adm-pend { margin: 6px 0 10px; padding-left: 20px; }
+.adm-pend li { margin-bottom: 3px; }
+.adm-disco { margin: 0 0 10px; background: #fbfcfe; border: 1px solid #d5dde8; border-radius: 6px; }
+.adm-disco > summary { padding: 7px 10px; cursor: pointer; background: linear-gradient(#fdfdfd, #eef2f7); border-radius: 6px; }
+.adm-disco[open] > summary { border-bottom: 1px solid #d5dde8; border-radius: 6px 6px 0 0; }
+.adm-disco > .adm-grade { padding: 10px; }
+.adm-tab-faixas { overflow-x: auto; padding: 0 10px; }
+table.adm-faixas { width: 100%; min-width: 860px; border-collapse: collapse; font-size: 12px; }
+.adm-faixas th { padding: 4px; text-align: left; font: 700 10px Arial; text-transform: uppercase; color: #777; }
+.adm-faixas th small { text-transform: none; font-weight: 400; }
+.adm-faixas td { padding: 2px; }
+.adm .adm-faixas input { margin: 0; padding: 3px 5px; font-size: 12px; }
+.af-n { width: 50px; } .af-len { width: 62px; } .af-ver { width: 110px; } .af-song { width: 140px; } .af-bt { width: 96px; white-space: nowrap; }
+.af-bt .btn { padding: 1px 6px; }
+.adm-disco-acoes { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 10px 10px; }
+.adm-colar { width: 100%; font: 12px/1.4 Consolas, 'Courier New', monospace; }
+
+/* janelas da área do curador (confirmação, capa) */
+.adm-fundo { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 16px; background: rgba(12,32,64,.45); backdrop-filter: blur(2px); }
+.adm-fundo.arrastando .modal { outline: 3px dashed #3b86e0; outline-offset: -8px; }
+.modal-capa { width: min(720px, 100%); }
+.capa-fontes { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; }
+.capa-fontes label { position: relative; overflow: hidden; }
+.capa-fontes input[type=file] { position: absolute; inset: 0; width: 100%; opacity: 0; cursor: pointer; }
+.capa-video { margin-bottom: 10px; padding: 8px; background: #0d1018; border-radius: 6px; }
+.capa-vid { display: block; width: 100%; max-height: 220px; background: #000; }
+.capa-vid-ctrl { display: flex; align-items: center; gap: 6px; margin-top: 6px; color: #dfe6ef; }
+.capa-vid-ctrl input[type=range] { flex: 1 1 auto; min-width: 60px; }
+.capa-vid-t { min-width: 44px; font: 1.15rem 'VT323', 'Courier New', monospace; color: #34d399; }
+.capa-video .capa-vid-msg { margin: 6px 0 0; color: #aab3c0; }
+.capa-palco { position: relative; margin: 0 auto; overflow: hidden; background: #000; border: 2px solid #050506; border-radius: 6px; box-shadow: inset 0 0 10px #000; }
+.capa-canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+.capa-canvas:active { cursor: grabbing; }
+.capa-vazio { position: absolute; inset: 0; display: grid; place-items: center; padding: 10px; text-align: center; font: 1.3rem/1.3 'VT323', 'Courier New', monospace; color: #c9d6ef; pointer-events: none;
+  background: repeating-linear-gradient(rgba(0,0,0,.08) 0 1px, transparent 1px 3px), linear-gradient(#1c3fd8, #1028a8); }
+.capa-ctrl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 8px 0 0; font-size: 12px; }
+.capa-ctrl label { display: flex; align-items: center; gap: 6px; font-weight: 700; }
+.capa-ctrl input[type=range] { width: 180px; }
+
+/* aviso para quem edita (alterações só neste navegador) */
+.aviso-local { max-width: 960px; margin: 10px auto 0; padding: 7px 12px; font-size: 12px; color: #4a3a00; background: linear-gradient(#fffbe6, #fff0b8); border: 1px solid #e3c24f; border-radius: 5px; }
+.aviso-local a { font-weight: 700; }
+.aviso-local .erro, .erro { color: #b00000; }
+@media (max-width: 980px) { .aviso-local { margin-left: 10px; margin-right: 10px; } }
 
 /* ---------------- rodapé ---------------- */
 .rodape { max-width: 980px; margin: 30px auto 0; padding: 14px 10px 26px; text-align: center; font-size: 12px; color: #666; border-top: 1px solid #ccc; }
@@ -414,7 +494,7 @@ html.com-modal { overflow: hidden; }
 .rodape p { margin: 6px 0 0; }
 
 /* =====================================================================
-   Player de TV de tubo (vr-): mesmo esqueleto e efeitos do player
+   Player de TV antiga (vr-): mesmo esqueleto e efeitos do player
    "Eternal Medias" do moguell.neocities.org. Para usar o visual vermelho
    do original, troque --vr-acento por #ff3333 e --vr-moldura por #330808.
    ===================================================================== */
@@ -433,6 +513,8 @@ html.com-modal { overflow: hidden; }
 .vr-screen { position: relative; }
 .vr-picture { position: relative; width: 100%; overflow: hidden; background: #000; border: 3px solid #050506; border-radius: 16px / 20px; box-shadow: inset 0 0 15px #000; }
 .vr-video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
+.vr-video.vr-fit-cover { object-fit: cover; }   /* corta bordas pretas laterais */
+.vr-video.vr-fit-fill { object-fit: fill; }     /* desfaz imagem 4:3 esticada para 16:9 */
 .vr-camada { position: absolute; inset: 0; pointer-events: none; }
 .vr-noise { z-index: 15; width: 100%; height: 100%; opacity: 0; transition: opacity .15s; image-rendering: pixelated; }
 .vr-noise.ativo { opacity: .9; }
@@ -463,6 +545,7 @@ html.com-modal { overflow: hidden; }
 .vr-semsinal { position: absolute; inset: 0; z-index: 14; display: flex; flex-direction: column; justify-content: space-between; padding: 14px 18px; color: #e9f0ff; text-transform: uppercase; font-family: 'VT323', 'Courier New', monospace;
   background: repeating-linear-gradient(rgba(0,0,0,.06) 0 1px, transparent 1px 3px), linear-gradient(#1c3fd8, #0f26a6); }
 .vr-semsinal[hidden] { display: none; }
+.vr-semsinal.vr-ss-capa { background: repeating-linear-gradient(rgba(0,0,0,.08) 0 1px, transparent 1px 3px), linear-gradient(rgba(28,63,216,.8), rgba(15,38,166,.88)), var(--capa) center / cover no-repeat, #0f26a6; }
 .vr-ss-topo, .vr-ss-base { display: flex; justify-content: flex-end; font-size: 1.35rem; letter-spacing: 2px; }
 .vr-ss-base { justify-content: flex-end; animation: vrPisca 1.4s steps(2) infinite; }
 .vr-ss-meio { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
@@ -516,6 +599,9 @@ html.com-modal { overflow: hidden; }
 .vr-sair-tela { display: none; position: absolute; z-index: 29; top: 10px; right: 10px; padding: 4px 10px; font: 700 12px Arial; color: #fff; background: rgba(0,0,0,.6); border: 1px solid #777; border-radius: 3px; cursor: pointer; }
 .vr-screen.vr-tela-cheia { display: flex; flex-direction: column; justify-content: center; width: 100%; height: 100%; background: #000; }
 .vr-screen.vr-tela-cheia .vr-picture { flex: 1 1 auto; width: 100%; height: 100%; aspect-ratio: auto !important; border: 0; border-radius: 0; }
+/* em tela cheia, a imagem corrigida (cortada ou desesticada) fica numa caixa com a proporção certa, no meio */
+.vr-screen.vr-tela-cheia .vr-video.vr-fit-cover, .vr-screen.vr-tela-cheia .vr-video.vr-fit-fill {
+  inset: auto; top: 50%; left: 50%; width: min(100%, calc(100vh * (var(--ar, 4 / 3)))); height: auto; max-height: 100%; aspect-ratio: var(--ar, 4 / 3); transform: translate(-50%, -50%); }
 .vr-screen.vr-tela-cheia .vr-sair-tela { display: block; }
 .vr-screen.vr-tela-cheia .vr-transporte { position: absolute; left: 0; right: 0; bottom: 0; z-index: 28; padding: 20px 18px 12px; background: linear-gradient(transparent, rgba(0,0,0,.85)); opacity: 0; transition: opacity .25s; }
 .vr-screen.vr-tela-cheia.vr-mexendo .vr-transporte, .vr-tv:not(.vr-tocando) .vr-screen.vr-tela-cheia .vr-transporte { opacity: 1; }
@@ -540,7 +626,6 @@ html.vr-trava { overflow: hidden; }
   .cols { grid-template-columns: minmax(0, 1fr); }
   .art-topo { grid-template-columns: auto minmax(0, 1fr); }
   .art-nums { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; gap: 4px 16px; text-align: left; }
-  .modelos { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
   body { font-size: 14px; }
@@ -584,6 +669,11 @@ html.vr-trava { overflow: hidden; }
   .vr-ss-sub { display: none; }
   .vr-osd-canal { font-size: 1.1rem; }
   .vr-grande { width: 62px; height: 62px; margin: -31px 0 0 -31px; }
+  .adm-item { grid-template-columns: 72px minmax(0, 1fr); }
+  .adm-item .th-s { width: 72px; }
+  .adm-item-acoes { grid-column: 1 / -1; justify-content: flex-start; }
+  .adm-capa { grid-template-columns: minmax(0, 1fr); }
+  .adm-capa-prev { width: 100%; max-width: 280px; }
 }
 @media (hover: none) { .vr-vol { display: none; } }
 @media (prefers-reduced-motion: reduce) {

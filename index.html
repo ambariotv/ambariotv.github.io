@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TV de Tubo — acervo de videoclipes</title>
+  <title>Ambário — acervo de videoclipes</title>
   <meta name="description" content="Acervo público de videoclipes e apresentações musicais gravados em fita, brasileiros e gringos, com o áudio dos discos sincronizado, os créditos de quem guardou cada fita e a discografia comparada à videografia de cada artista.">
   <meta name="theme-color" content="#2f77d0">
-  <meta property="og:title" content="TV de Tubo — acervo de videoclipes">
+  <meta property="og:title" content="Ambário — acervo de videoclipes">
+  <meta property="og:site_name" content="Ambário">
   <meta property="og:description" content="Videoclipes e apresentações gravados da TV, preservados com crédito a quem guardou cada fita.">
   <meta property="og:type" content="website">
   <link rel="icon" href="assets/icone.svg" type="image/svg+xml">
@@ -33,7 +34,7 @@
           <rect x="51.5" y="38" width="6" height="2" rx="1" fill="#55677f"/><rect x="51.5" y="42" width="6" height="2" rx="1" fill="#55677f"/>
           <rect x="14" y="51" width="8" height="4" rx="1.5" fill="#7b8ea8"/><rect x="42" y="51" width="8" height="4" rx="1.5" fill="#7b8ea8"/>
         </svg>
-        <span class="logo-txt"><span class="logo-nome">TV de <em>Tubo</em></span><span class="logo-sub">Acervo de videoclipes</span></span>
+        <span class="logo-txt"><span class="logo-nome"><em>Ambário</em></span><span class="logo-sub">Acervo de videoclipes</span></span>
       </a>
       <nav class="topo-links" aria-label="Links">
         <a href="#sobre">Sobre</a><span>|</span><a href="#colaborar">Como colaborar</a><span>|</span><a href="#politica">Política</a>
@@ -65,13 +66,13 @@
     <p class="mini" id="modo"></p>
   </footer>
 
-  <!-- Ordem importa: configuração, dados, núcleo, player, telas, curador, app -->
+  <!-- Ordem importa: configuração, dados, núcleo, player, telas, app.
+       A área do curador (js/admin.js, js/editor-*.js) só é carregada quando alguém abre #admin. -->
   <script src="js/config.js"></script>
   <script src="data/acervo.js"></script>
   <script src="js/core.js"></script>
   <script src="js/player.js"></script>
   <script src="js/views.js"></script>
-  <script src="js/admin.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
