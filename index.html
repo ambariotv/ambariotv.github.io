@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TV de Tubo — acervo de videoclipes</title>
+  <meta name="description" content="Acervo público de videoclipes e apresentações musicais gravados em fita, brasileiros e gringos, com o áudio dos discos sincronizado, os créditos de quem guardou cada fita e a discografia comparada à videografia de cada artista.">
+  <meta name="theme-color" content="#2f77d0">
+  <meta property="og:title" content="TV de Tubo — acervo de videoclipes">
+  <meta property="og:description" content="Videoclipes e apresentações gravados da TV, preservados com crédito a quem guardou cada fita.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="assets/icone.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="pular" href="#main">Pular para o conteúdo</a>
+  <header class="topo">
+    <div class="topo-in">
+      <a class="logo" href="#inicio" aria-label="Início">
+        <svg class="logo-tv" viewBox="0 0 64 56" aria-hidden="true">
+          <defs>
+            <linearGradient id="lg-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f8fd"/><stop offset=".5" stop-color="#c9d6e6"/><stop offset=".5" stop-color="#b3c4d9"/><stop offset="1" stop-color="#dfe8f3"/></linearGradient>
+            <linearGradient id="lg-tela" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7fd0ff"/><stop offset=".55" stop-color="#1f7fe0"/><stop offset="1" stop-color="#0b3f8f"/></linearGradient>
+            <linearGradient id="lg-brilho" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+          </defs>
+          <path d="M22 9 L14 1 M42 9 L50 1" stroke="#6b7c93" stroke-width="2.4" stroke-linecap="round"/>
+          <circle cx="14" cy="1.6" r="1.8" fill="#6b7c93"/><circle cx="50" cy="1.6" r="1.8" fill="#6b7c93"/>
+          <rect x="2" y="9" width="60" height="42" rx="9" fill="url(#lg-corpo)" stroke="#7b8ea8" stroke-width="1.4"/>
+          <rect x="7" y="14" width="40" height="32" rx="7" fill="url(#lg-tela)" stroke="#264f86" stroke-width="1.2"/>
+          <path d="M9 17 Q27 13 45 17 L45 25 Q27 21 9 27 Z" fill="url(#lg-brilho)"/>
+          <circle cx="54.5" cy="21" r="3.2" fill="#e04848" stroke="#8a2020" stroke-width=".8"/>
+          <circle cx="54.5" cy="31" r="3.2" fill="#8fa3bd" stroke="#55677f" stroke-width=".8"/>
+          <rect x="51.5" y="38" width="6" height="2" rx="1" fill="#55677f"/><rect x="51.5" y="42" width="6" height="2" rx="1" fill="#55677f"/>
+          <rect x="14" y="51" width="8" height="4" rx="1.5" fill="#7b8ea8"/><rect x="42" y="51" width="8" height="4" rx="1.5" fill="#7b8ea8"/>
+        </svg>
+        <span class="logo-txt"><span class="logo-nome">TV de <em>Tubo</em></span><span class="logo-sub">Acervo de videoclipes</span></span>
+      </a>
+      <nav class="topo-links" aria-label="Links">
+        <a href="#sobre">Sobre</a><span>|</span><a href="#colaborar">Como colaborar</a><span>|</span><a href="#politica">Política</a>
+      </nav>
+    </div>
+    <nav class="abas-topo" aria-label="Seções">
+      <a href="#inicio" data-tab="inicio">Início</a>
+      <a href="#videos" data-tab="videos">Vídeos</a>
+      <a href="#artistas" data-tab="artistas">Artistas</a>
+      <a href="#acervos" data-tab="acervos">Acervos</a>
+      <a href="#procura-se" data-tab="procura-se">Procura-se</a>
+    </nav>
+    <div class="barra-busca">
+      <form class="busca" role="search" id="form-busca">
+        <input type="search" name="q" id="q" placeholder="Artista, música, programa, ano…" aria-label="Buscar no acervo" autocomplete="off">
+        <button type="submit" class="btn">Buscar</button>
+      </form>
+      <a class="btn btn-y btn-colab" href="#colaborar">Colaborar</a>
+    </div>
+  </header>
+
+  <main id="main" class="conteudo" tabindex="-1">
+    <noscript><p class="vazio">O acervo precisa de JavaScript ligado para funcionar.</p></noscript>
+  </main>
+
+  <footer class="rodape">
+    <nav><a href="#sobre">Sobre</a> · <a href="#colaborar">Como colaborar</a> · <a href="#politica">Política e pedidos de remoção</a> · <a href="#procura-se">Procura-se</a> · <a href="#admin">Área do curador</a></nav>
+    <p>Acervo sem fins lucrativos. Nenhum vídeo daqui está no YouTube: os arquivos são enviados pelos colaboradores e guardados no Internet Archive.</p>
+    <p class="mini" id="modo"></p>
+  </footer>
+
+  <!-- Ordem importa: configuração, dados, núcleo, player, telas, curador, app -->
+  <script src="js/config.js"></script>
+  <script src="data/acervo.js"></script>
+  <script src="js/core.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/views.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
