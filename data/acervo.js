@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-07",
-  "rev": 2,
+  "rev": 3,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -165,16 +165,15 @@ window.AMB_DATA = {
   "acervos": [
     {
       "id": "moguell",
-      "name": "moguell",
+      "name": "Miguel Lins",
       "roles": ["curadoria", "captura", "sincronizacao"],
       "since": "2026-11",
-      "city": "",
       "bio": "Arquivista e curador do Ambário. Sincroniza o áudio dos discos com os vídeos usando o EternalDub, ferramenta própria de código aberto.",
       "links": [
         { "t": "moguell.neocities.org", "u": "https://moguell.neocities.org/" },
         { "t": "EternalDub no GitHub", "u": "https://github.com/Moguel0818/EternalDub" }
       ],
-      "avatar": ""
+      "avatar": "media/acervos/moguell.jpg?v=mw62mrrc"
     }
   ],
   "artists": [
