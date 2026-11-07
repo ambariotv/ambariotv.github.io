@@ -18,7 +18,7 @@
   const AMB = window.AMB;
   const esc = AMB.esc;
   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
-
+ 
   /* ---------- clique sintetizado dos botões (o mesmo do player original) ---------- */
   let ctxAudio = null;
   AMB.somBotoes = () => AMB.store.get('amb.somBotoes', true) !== false;
@@ -41,7 +41,7 @@
       osc.stop(t + 0.05);
     } catch (e) { /* sem áudio: segue sem o clique */ }
   };
-
+ 
   const ICONE = {
     play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
     pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>',
@@ -50,7 +50,7 @@
     prev: '<svg viewBox="0 0 253 257" aria-hidden="true"><rect x="4" y="4" width="245" height="249"></rect><polyline points="162,57 78,116 160,203"></polyline></svg>',
     next: '<svg viewBox="0 0 253 257" aria-hidden="true"><rect x="4" y="4" width="245" height="249"></rect><polyline points="92,56 176,116 94,204"></polyline></svg>'
   };
-
+ 
   function Player(root, opts) {
     this.root = root;
     this.opts = opts || {};
@@ -74,16 +74,14 @@
     if (this.v.hasFile) this.preparar(); else this.semSinal();
     this.glitch();
   }
-
+ 
   Player.prototype.$ = function (sel) { return this.root.querySelector(sel); };
   Player.prototype.on = function (el, ev, fn, o) { el.addEventListener(ev, fn, o); this._off.push(() => el.removeEventListener(ev, fn, o)); };
   Player.prototype.timer = function (nome, fn, ms) { clearTimeout(this._t[nome]); this._t[nome] = setTimeout(fn, ms); };
-
+ 
   Player.prototype.render = function () {
     const v = this.v;
     const site = AMB.cfg('SITE_NAME', 'Ambário');
-    const fonte = v.source || {};
-    const sinal = [fonte.medium, fonte.standard].filter(Boolean).join(' · ') || (v.hasFile ? 'ARQUIVO' : 'SEM FITA');
     const ar = String(v.aspect || '4:3').replace(':', ' / ');
     const trilhas = this.tracks.length > 1 ? this.tracks.map((t, i) =>
       '<button type="button" data-a="audio" data-id="' + esc(t.id) + '" aria-pressed="' + (i === 0) + '" title="' + esc(t.label || t.short) + '">' + esc(t.short) + '</button>').join('') : '';
@@ -91,7 +89,6 @@
       '<div class="vr-tv' + (this.crt ? '' : ' vr-crt-off') + '">' +
         '<div class="vr-tv-top">' +
           '<div class="vr-brand"><span class="vr-led"></span>' + esc(site.toUpperCase()) + '</div>' +
-          '<div class="vr-sinal">SINAL: <b>' + esc(sinal.toUpperCase()) + '</b></div>' +
           '<button type="button" class="vr-mini" data-a="som">SOM BOTÕES: <span class="' + (AMB.somBotoes() ? 'vr-on">ON' : 'vr-off">OFF') + '</span></button>' +
         '</div>' +
         '<div class="vr-screen">' +
@@ -124,7 +121,7 @@
               '<input type="range" class="vr-seek-in" min="0" max="1000" step="1" value="0" aria-label="Posição no vídeo"></div>' +
             '<button type="button" class="vr-t-btn vr-mudo" data-a="mudo" aria-label="Tirar o som">' + ICONE.som + '</button>' +
             '<input type="range" class="vr-vol" min="0" max="100" step="1" value="' + Math.round(this.volume * 100) + '" aria-label="Volume">' +
-            (trilhas ? '<div class="vr-audio" role="group" aria-label="Escolher o áudio"><span class="vr-audio-rot">ÁUDIO</span>' + trilhas + '</div>' : '') +
+            (trilhas ? '<div class="vr-audio" role="group" aria-label="Escolher o áudio">' + trilhas + '</div>' : '') +
           '</div>' +
         '</div>' +
         '<div class="vr-controles">' +
@@ -145,7 +142,7 @@
     this.seekIn = this.$('.vr-seek-in');
     this.osdCanal.textContent = this.osdPadrao();
   };
-
+ 
   Player.prototype.osdPadrao = function () {
     return String(this.v.n || 1).padStart(2, '0') + ' // ' + String(this.v.artistObj.name || '').toUpperCase();
   };
@@ -158,7 +155,7 @@
     clearTimeout(this._t.modo);
     if (ms) this.timer('modo', () => { this.osdModoEl.textContent = this.video.paused && this.v.hasFile && !this.video.ended ? '❚❚ PAUSA' : ''; }, ms);
   };
-
+ 
   /* ---------- chuvisco (o mesmo do player original) ---------- */
   Player.prototype.ajustarRuido = function () {
     const c = this.noise;
@@ -188,7 +185,7 @@
       this._ruido = null;
     }, ms || 350);
   };
-
+ 
   /* ---------- tela "sem sinal" para registros que ainda não têm arquivo ---------- */
   Player.prototype.semSinal = function () {
     const v = this.v;
@@ -216,15 +213,17 @@
     this.$('.vr-grande').hidden = true;
     this.tv.classList.add('vr-sem-arquivo');
   };
-
+ 
   /* ---------- vídeo, áudios e sincronia ---------- */
   Player.prototype.preparar = function () {
     const video = this.video;
     if (this.v.thumb) video.poster = this.v.thumb;
     video.volume = this.volume;
     video.src = this.fontes[0];
-    const pref = AMB.store.get('amb.audioPref', 'principal');
-    const alvo = pref === 'alternativo' && this.tracks.length > 1 ? this.tracks[1].id : (this.tracks[0] && this.tracks[0].id);
+    // Sempre começa no áudio de melhor qualidade (o do disco); o áudio original da fita fica só como opção.
+    const DA_FITA = ['vhs', 'tv', 'fita'];
+    const melhor = this.tracks.find((t) => !DA_FITA.includes(t.kind)) || this.tracks[0];
+    const alvo = melhor && melhor.id;
     if (alvo) this.selecionar(alvo, true); else this.aplicarSom();
     if (this.opts.autoplay) {
       const p = video.play();
@@ -232,7 +231,7 @@
     }
     this._sync = setInterval(() => this.sincronizar(), 250);
   };
-
+ 
   Player.prototype.audioDe = function (t) {
     if (!t || t.embedded || !t.url) return null;
     if (this.ext[t.id]) return this.ext[t.id];
@@ -274,13 +273,13 @@
     this.ext[t.id] = a;
     return a;
   };
-
+ 
   // Leva o áudio separado para o tempo t (marca a hora do salto, para não saltar de novo em seguida)
   Player.prototype.saltar = function (a, t) {
     if (!a) return;
     try { a.currentTime = Math.max(0, t); this._salto = performance.now(); } catch (e) { /* ainda sem dados */ }
   };
-
+ 
   Player.prototype.aplicarSom = function () {
     const ext = this.extAtivo;
     if (ext) {
@@ -298,7 +297,7 @@
       b.setAttribute('aria-label', calado ? 'Ligar o som' : 'Tirar o som');
     }
   };
-
+ 
   // Troca a faixa de áudio. Chamada de dentro do clique: o navegador deixa o novo áudio tocar na hora.
   Player.prototype.selecionar = function (id, quieto) {
     const t = this.tracks.find((x) => x.id === id) || this.tracks[0];
@@ -319,7 +318,6 @@
     if (!quieto) {
       this.glitch(180);
       this.osdModo('ÁUDIO: ' + String(t.label || t.short).toUpperCase(), 2600);
-      AMB.store.set('amb.audioPref', this.tracks.indexOf(t) > 0 ? 'alternativo' : 'principal');
     }
     if (this.opts.onTrack) this.opts.onTrack(t);
   };
@@ -328,7 +326,7 @@
     const i = this.tracks.indexOf(this.track);
     this.selecionar(this.tracks[(i + 1) % this.tracks.length].id);
   };
-
+ 
   // Corrige a diferença entre o áudio separado e a imagem
   Player.prototype.sincronizar = function () {
     const a = this.extAtivo, v = this.video;
@@ -346,13 +344,13 @@
       a.playbackRate = base;
     }
   };
-
+ 
   Player.prototype.carregando = function (sim) {
     const el = this.$('.vr-carregando');
     if (!sim) { clearTimeout(this._t.carr); el.hidden = true; return; }
     this.timer('carr', () => { el.hidden = false; }, 350);
   };
-
+ 
   /* ---------- comandos ---------- */
   Player.prototype.tocar = function () {
     if (!this.v.hasFile) return;
@@ -418,7 +416,7 @@
     this.video.addEventListener('loadedmetadata', ir, { once: true });
     this.video.load();
   };
-
+ 
   /* ---------- tela cheia (nativa; "falsa" no iPhone, como no original) ---------- */
   Player.prototype.telaCheia = function () { return this.screen.classList.contains('vr-tela-cheia'); };
   Player.prototype.entrarTelaCheia = function () {
@@ -447,7 +445,7 @@
     this.screen.classList.add('vr-mexendo');
     this.timer('mexe', () => this.screen.classList.remove('vr-mexendo'), 2500);
   };
-
+ 
   /* ---------- fim da fita: próxima automática com aviso ---------- */
   Player.prototype.fimDaFita = function () {
     const prox = this.opts.next;
@@ -478,7 +476,7 @@
     const box = this.$('.vr-fim');
     if (box) box.hidden = true;
   };
-
+ 
   /* ---------- interface ---------- */
   Player.prototype.atualizarTempo = function () {
     const v = this.video;
@@ -506,7 +504,7 @@
     b.setAttribute('aria-label', tocando ? 'Pausar' : 'Tocar');
     this.tv.classList.toggle('vr-tocando', tocando);
   };
-
+ 
   Player.prototype.bind = function () {
     const video = this.video;
     // botões (um ouvinte só, pelo atributo data-a)
@@ -543,7 +541,7 @@
     this.on(sensor, 'mousemove', () => this.mexendo());
     this.on(sensor, 'touchstart', () => this.mexendo(), { passive: true });
     this.on(this.$('.vr-transporte'), 'mousemove', () => this.mexendo());
-
+ 
     // barra de posição
     const seek = this.seekIn;
     this.on(seek, 'input', () => {
@@ -565,7 +563,7 @@
       AMB.store.set('amb.volume', this.volume);
       this.aplicarSom();
     });
-
+ 
     // eventos do vídeo
     this.on(video, 'play', () => {
       this.iconePP();
@@ -634,7 +632,7 @@
       this.$('.vr-erro-msg').textContent = 'Não foi possível carregar o vídeo agora. O servidor pode estar fora do ar por alguns minutos.';
       this.$('.vr-erro').classList.add('ativo');
     });
-
+ 
     // tela cheia
     const aoMudar = () => {
       const t = this.screen;
@@ -647,7 +645,7 @@
     this.on(document, 'webkitfullscreenchange', aoMudar);
     this.on(window, 'resize', () => this.ajustarRuido());
   };
-
+ 
   Player.prototype.mediaSession = function () {
     try {
       if (!('mediaSession' in navigator) || typeof MediaMetadata === 'undefined') return;
@@ -660,7 +658,7 @@
       navigator.mediaSession.setActionHandler('previoustrack', this.opts.prev ? () => this.opts.onPrev() : null);
     } catch (e) { /* opcional */ }
   };
-
+ 
   Player.prototype.destroy = function () {
     Object.keys(this._t).forEach((k) => clearTimeout(this._t[k]));
     clearInterval(this._sync); clearInterval(this._ruido); clearInterval(this._fim);
@@ -672,6 +670,7 @@
     this.ext = {};
     try { if ('mediaSession' in navigator) navigator.mediaSession.metadata = null; } catch (e) { /* ok */ }
   };
-
+ 
   AMB.Player = { create: (root, opts) => new Player(root, opts), ICONE };
 })();
+ 
