@@ -17,7 +17,7 @@ window.TDT_CONFIG = {
 
   // URL do Web App do Google Apps Script (termina em /exec). Veja backend/Code.gs e o README.
   // Vazio = modo demonstração: comentários, exibições e avaliações ficam só no navegador de quem testa.
-  APPS_SCRIPT_URL: "",
+  APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbykId3AnhAjoC0G5MhC9AHkHcETva2VSDYGObYRBX4BCTIj_2a3jizNlSKvZGAcZcFb/exec",
 
   // Contato do curador (e-mail ou @ do Instagram). Aparece em "Sobre" e "Como colaborar". Vazio = não mostra.
   CONTATO: "",
