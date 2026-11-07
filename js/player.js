@@ -19,6 +19,54 @@
   const esc = AMB.esc;
   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
  
+  /* ---------- Internet Archive: endereços diretos dos servidores ---------- */
+  // archive.org/download/ITEM/arquivo só redireciona para um dos dois servidores que guardam o item, e o navegador
+  // passa por esse redirecionamento a cada pedaço do vídeo. A API de metadados diz quais são os dois servidores:
+  // o player vai direto a eles (começa mais rápido) e, se um travar, pula para o outro. Se a API falhar ou
+  // demorar, usa o link normal. Os servidores podem mudar com o tempo, por isso a consulta é feita na hora.
+  const IA = { pedidos: {}, ok: {} };
+  function iaPartes(url) {
+    const m = /^https?:\/\/(?:www\.)?archive\.org\/download\/([^/?#]+)\/([^?#]+)/.exec(url || '');
+    return m ? { id: decodeURIComponent(m[1]), caminho: m[2] } : null;
+  }
+  function iaServidores(id) {
+    if (IA.pedidos[id]) return IA.pedidos[id];
+    const chave = 'amb.ia.' + id;
+    try {
+      const s = JSON.parse(sessionStorage.getItem(chave) || 'null');
+      if (s && Date.now() - s.t < 6 * 3600e3) { IA.ok[id] = s; return (IA.pedidos[id] = Promise.resolve(s)); }
+    } catch (e) { /* sem armazenamento */ }
+    const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const limite = setTimeout(() => { if (ctrl) ctrl.abort(); }, 3000);
+    IA.pedidos[id] = fetch('https://archive.org/metadata/' + encodeURIComponent(id), ctrl ? { signal: ctrl.signal } : {})
+      .then((r) => (r.ok ? r.json() : null))
+      .then((m) => {
+        if (!m || !m.dir) return null;
+        const bons = Array.isArray(m.workable_servers) && m.workable_servers.length ? m.workable_servers : null;
+        const servidores = [m.d1, m.d2, m.server].filter((h, i, l) => h && l.indexOf(h) === i && (!bons || bons.indexOf(h) >= 0));
+        if (!servidores.length) return null;
+        const s = { t: Date.now(), dir: m.dir, servidores };
+        IA.ok[id] = s;
+        try { sessionStorage.setItem(chave, JSON.stringify(s)); } catch (e) { /* ok */ }
+        return s;
+      })
+      .catch(() => null)
+      .then((s) => { clearTimeout(limite); if (!s) delete IA.pedidos[id]; return s; });
+    return IA.pedidos[id];
+  }
+  // Lista de endereços para um link: os servidores diretos primeiro, o link original por último
+  function iaLista(url, s) {
+    const p = iaPartes(url);
+    if (!p || !s) return [url];
+    return s.servidores.map((h) => 'https://' + h + s.dir + '/' + p.caminho).concat(url);
+  }
+  AMB.iaFontes = (url) => {
+    const p = iaPartes(url);
+    return p ? iaServidores(p.id).then((s) => iaLista(url, s)) : Promise.resolve([url]);
+  };
+  const iaFontesJa = (url) => { const p = iaPartes(url); return iaLista(url, p && IA.ok[p.id]); };
+  const unicos = (l) => l.filter((u, i) => u && l.indexOf(u) === i);
+ 
   /* ---------- clique sintetizado dos botões (o mesmo do player original) ---------- */
   let ctxAudio = null;
   AMB.somBotoes = () => AMB.store.get('amb.somBotoes', true) !== false;
@@ -64,6 +112,8 @@
     this.extAtivo = null;
     this.fontes = this.v.hasFile ? [this.v.file.video].concat(this.v.file.mirrors || []).filter(Boolean) : [];
     this.fonteIdx = 0;
+    this.falhas = 0;
+    this.audFontes = {};
     this.assistido = 0;
     this.contou = false;
     this.primeiroPlay = true;
@@ -219,7 +269,15 @@
     const video = this.video;
     if (this.v.thumb) video.poster = this.v.thumb;
     video.volume = this.volume;
+    this.carregando(true);
+    Promise.all(this.fontes.map((u) => AMB.iaFontes(u))).catch(() => [this.fontes])
+      .then((listas) => { if (!this.morto) this.comecar(unicos([].concat.apply([], listas))); });
+  };
+  Player.prototype.comecar = function (fontes) {
+    const video = this.video;
+    if (fontes.length) this.fontes = fontes;
     video.src = this.fontes[0];
+    this.carregando(false);
     // Sempre começa no áudio de melhor qualidade (o do disco); o áudio original da fita fica só como opção.
     const DA_FITA = ['vhs', 'tv', 'fita'];
     const melhor = this.tracks.find((t) => !DA_FITA.includes(t.kind)) || this.tracks[0];
@@ -238,7 +296,8 @@
     const a = new Audio();
     a.preload = 'auto';
     try { a.preservesPitch = true; a.mozPreservesPitch = true; a.webkitPreservesPitch = true; } catch (e) { /* navegador antigo */ }
-    a.src = t.url;
+    this.audFontes[t.id] = { l: iaFontesJa(t.url), i: 0 };
+    a.src = this.audFontes[t.id].l[0];
     // Travadas curtas (logo depois de um salto) se resolvem sozinhas: só pausa a imagem se o áudio
     // ficar carregando por mais de 0,7 s, e volta assim que ele tocar.
     this.on(a, 'waiting', () => {
@@ -248,6 +307,10 @@
         this.pausadoPeloAudio = true;
         this.video.pause();
         this.carregando(true);
+        // continua sem chegar nada: tenta o outro servidor
+        this.timer('audtrava', () => {
+          if (a === this.extAtivo && this.pausadoPeloAudio && a.readyState < 3) this.outroServidorAudio(t, a);
+        }, 10000);
       }, 700);
     });
     const retomar = () => {
@@ -264,6 +327,7 @@
     });
     this.on(a, 'error', () => {
       if (a !== this.extAtivo) return;
+      if (this.outroServidorAudio(t, a)) return;
       this.osd('ÁUDIO INDISPONÍVEL');
       this.pausadoPeloAudio = false;
       this.carregando(false);
@@ -272,6 +336,20 @@
     });
     this.ext[t.id] = a;
     return a;
+  };
+ 
+  // Passa o áudio separado para o próximo servidor da lista; devolve false se já tentou todos
+  Player.prototype.outroServidorAudio = function (t, a) {
+    const f = this.audFontes[t.id];
+    if (!f || f.i + 1 >= f.l.length) return false;
+    f.i++;
+    a.src = f.l[f.i];
+    a.addEventListener('loadedmetadata', () => {
+      this.saltar(a, this.video.currentTime);
+      if (a === this.extAtivo && (!this.video.paused || this.pausadoPeloAudio)) { const p = a.play(); if (p && p.catch) p.catch(() => {}); }
+    }, { once: true });
+    a.load();
+    return true;
   };
  
   // Leva o áudio separado para o tempo t (marca a hora do salto, para não saltar de novo em seguida)
@@ -404,17 +482,64 @@
     this.esconderFim();
     if (!this.v.hasFile) { this.osd('SEM SINAL'); return; }
     this.$('.vr-erro').classList.remove('ativo');
-    if (this.video.error) { this.trocarFonte(this.fonteIdx, 0); return; }
+    if (this.video.error) { this.falhas = 0; this.trocarFonte(this.fonteIdx, 0); return; }
     this.video.currentTime = 0;
     this.tocar();
     this.osd('PLAYER REINICIADO');
   };
-  Player.prototype.trocarFonte = function (i, tempo) {
+  Player.prototype.trocarFonte = function (i, tempo, continuar) {
     this.fonteIdx = i;
+    this._tempoAlvo = tempo || 0;
+    this._recuperando = continuar !== false;
     this.video.src = this.fontes[i];
-    const ir = () => { try { this.video.currentTime = tempo || 0; } catch (e) { /* ok */ } this.tocar(); };
+    const ir = () => {
+      try { this.video.currentTime = this._tempoAlvo; } catch (e) { /* ok */ }
+      if (continuar !== false) this.tocar();
+    };
     this.video.addEventListener('loadedmetadata', ir, { once: true });
     this.video.load();
+    if (continuar !== false) this.vigiar();
+  };
+ 
+  // O vídeo deveria estar tocando mas está esperando dados. Se nada chegar em 8 s (ou se continuar
+  // travado por 25 s, mesmo chegando aos pouquinhos), reconecta, pulando para o outro servidor.
+  Player.prototype.vigiar = function () {
+    if (this._travaDesde) return;
+    this._travaDesde = this._dados = performance.now();
+    const checar = () => {
+      if (!this._travaDesde) return;
+      const v = this.video, agora = performance.now();
+      if (v.paused && !this._recuperando) { this.desvigiar(); return; }
+      if (v.readyState >= 3 && !v.seeking) { this.desvigiar(); return; }
+      if (agora - this._dados > 8000 || agora - this._travaDesde > 25000) { this.desvigiar(); this.recuperar(); return; }
+      this.timer('trava', checar, 1000);
+    };
+    this.timer('trava', checar, 1000);
+  };
+  Player.prototype.desvigiar = function () { this._travaDesde = 0; clearTimeout(this._t.trava); };
+ 
+  Player.prototype.recuperar = function () {
+    if (!this.v.hasFile || this.morto) return;
+    const v = this.video;
+    const tempo = v.readyState > 0 ? v.currentTime : (this._tempoAlvo || 0);
+    const continuar = !v.paused || !!this._recuperando;
+    this.falhas++;
+    // dá duas voltas por todos os servidores antes de desistir
+    if (this.falhas > Math.max(2, this.fontes.length * 2)) {
+      this._recuperando = false;
+      this.carregando(false);
+      this.glitch();
+      this.$('.vr-erro-msg').textContent = 'Não foi possível carregar o vídeo agora. O Internet Archive pode estar lento ou fora do ar; tente de novo em alguns minutos.';
+      this.$('.vr-erro').classList.add('ativo');
+      return;
+    }
+    this._recuperando = continuar;
+    this.osd(this.fontes.length > 1 ? 'TROCANDO DE SERVIDOR' : 'RECONECTANDO');
+    this.glitch();
+    const prox = (this.fonteIdx + 1) % this.fontes.length;
+    // espera um pouco a cada volta completa, para não martelar um servidor fora do ar
+    const pausa = prox === 0 ? 1500 : 0;
+    this.timer('reconectar', () => this.trocarFonte(prox, tempo, continuar), pausa);
   };
  
   /* ---------- tela cheia (nativa; "falsa" no iPhone, como no original) ---------- */
@@ -523,7 +648,7 @@
         case 'next': this.esconderFim(); if (this.opts.onNext && this.opts.next) this.opts.onNext(); break;
         case 'cancelar': this.esconderFim(); this.osdModo('FIM DA FITA', 0); this.$('.vr-grande').hidden = false; break;
         case 'tela': this.alternarTela(); break;
-        case 'tentar': this.$('.vr-erro').classList.remove('ativo'); this.trocarFonte(0, video.currentTime || 0); break;
+        case 'tentar': this.$('.vr-erro').classList.remove('ativo'); this.falhas = 0; this.trocarFonte(0, video.readyState > 0 ? video.currentTime : (this._tempoAlvo || 0)); break;
         case 'som': {
           const ligado = !AMB.somBotoes();
           AMB.store.set('amb.somBotoes', ligado);
@@ -566,6 +691,7 @@
  
     // eventos do vídeo
     this.on(video, 'play', () => {
+      if (video.readyState < 3) this.vigiar();
       this.iconePP();
       this.$('.vr-grande').hidden = true;
       if (!this.pausadoPeloAudio) this.osdModo('▶ PLAY', 1800);
@@ -584,12 +710,16 @@
     });
     this.on(video, 'playing', () => {
       this.carregando(false);
+      this.desvigiar();
+      this.falhas = 0;
+      this._recuperando = false;
       this._ultimo = video.currentTime;
       const a = this.extAtivo;
       if (a && a.paused && !this.pausadoPeloAudio) { const p = a.play(); if (p && p.catch) p.catch(() => {}); }
     });
     this.on(video, 'waiting', () => {
       this.carregando(true);
+      if (!video.paused) this.vigiar();
       if (this.extAtivo) this.extAtivo.pause();
     });
     this.on(video, 'seeking', () => { if (this.extAtivo) this.extAtivo.pause(); });
@@ -611,7 +741,7 @@
         if (!this.contou && this.assistido >= 5) { this.contou = true; if (this.opts.onCount) this.opts.onCount(this.v); }
       }
     });
-    this.on(video, 'progress', () => this.atualizarBuffer());
+    this.on(video, 'progress', () => { this._dados = performance.now(); this.atualizarBuffer(); });
     this.on(video, 'loadedmetadata', () => { this.atualizarTempo(); this.atualizarBuffer(); });
     this.on(video, 'ended', () => {
       this.iconePP();
@@ -619,18 +749,9 @@
       this.fimDaFita();
     });
     this.on(video, 'error', () => {
-      if (!this.v.hasFile) return;
-      const tempo = video.currentTime || 0;
-      if (this.fonteIdx + 1 < this.fontes.length) {
-        this.osd('TROCANDO DE ESPELHO');
-        this.glitch();
-        this.trocarFonte(this.fonteIdx + 1, tempo);
-        return;
-      }
-      this.carregando(false);
-      this.glitch();
-      this.$('.vr-erro-msg').textContent = 'Não foi possível carregar o vídeo agora. O servidor pode estar fora do ar por alguns minutos.';
-      this.$('.vr-erro').classList.add('ativo');
+      if (!this.v.hasFile || !video.getAttribute('src')) return;
+      this.desvigiar();
+      this.recuperar();
     });
  
     // tela cheia
@@ -660,6 +781,7 @@
   };
  
   Player.prototype.destroy = function () {
+    this.morto = true;
     Object.keys(this._t).forEach((k) => clearTimeout(this._t[k]));
     clearInterval(this._sync); clearInterval(this._ruido); clearInterval(this._fim);
     if (this.telaCheia()) this.sairTelaCheia();
@@ -673,4 +795,5 @@
  
   AMB.Player = { create: (root, opts) => new Player(root, opts), ICONE };
 })();
+ 
  
