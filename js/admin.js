@@ -34,7 +34,7 @@
   }
   const ORDEM_VIDEO = ['id', 'artist', 'artist_name', 'song', 'song_title', 'ver', 'title', 'kind', 'date', 'program', 'channel', 'director', 'status',
     'capa', 'fit', 'aspect', 'duration', 'file', 'audio', 'credits', 'source', 'description', 'note', 'src', 'refs', 'tags', 'test', 'added', 'added_by'];
-  const ORDEM_ARTISTA = ['id', 'name', 'alt', 'country', 'origin', 'years', 'members', 'intro', 'src', 'releases'];
+  const ORDEM_ARTISTA = ['id', 'name', 'photo', 'alt', 'country', 'origin', 'years', 'members', 'intro', 'src', 'releases'];
   const ORDEM_DISCO = ['id', 'type', 'title', 'credit', 'year', 'date', 'label', 'format', 'partial', 'note', 'src', 'tracks'];
   const ORDEM_ACERVO = ['id', 'name', 'roles', 'since', 'city', 'bio', 'links', 'avatar'];
 
@@ -752,6 +752,14 @@
         campo('members', 'Formação', (a.members || []).map((m) => m.name + (m.role || m.years ? ' | ' + (m.role || '') : '') + (m.years ? ' | ' + m.years : '')).join('\n'), { tipo: 'textarea', rows: 3, ajuda: '(uma pessoa por linha: “Nome | função | anos”)' }) +
         campo('src', 'Fontes', fontesParaTexto(a.src), { tipo: 'textarea', rows: 3, ajuda: '(uma por linha: “Título | https://link”, ou o id de uma fonte cadastrada)' }) +
       '</div>' + datalistPaises() + '</fieldset>' +
+      '<fieldset><legend>Foto do artista</legend><div class="adm-capa adm-foto">' +
+        '<div class="adm-foto-prev"></div>' +
+        '<div class="adm-capa-txt"><p class="mini">Imagem quadrada: aparece na lista de artistas e na página do artista, no lugar do disco. Você enquadra antes de salvar.</p>' +
+          '<div class="adm-capa-botoes"><button type="button" class="btn btn-b" data-adm="foto-img">Escolher imagem…</button>' +
+          '<button type="button" class="btn" data-adm="foto-ajustar">Reenquadrar</button>' +
+          '<button type="button" class="btn" data-adm="foto-remover">Sem foto</button></div>' +
+          '<input type="hidden" name="photo" value="' + esc(a.photo || '') + '"><p class="mini adm-foto-info"></p></div>' +
+      '</div></fieldset>' +
       '<fieldset><legend>Discografia</legend>' +
         '<p class="mini">Cada disco com as faixas em ordem. A coluna <b>Id da música</b> liga as faixas aos vídeos: a mesma música em discos diferentes usa o mesmo id (fica automático a partir do título). ' +
         'Use <b>Versão</b> para gravações diferentes da mesma música (ao vivo, remix, regravação).</p>' +
@@ -769,10 +777,28 @@
     const f = root.querySelector('#adm-artista');
     if (!f) return;
     const original = idOriginal === 'novo' ? null : rawArtista(idOriginal);
+    function mostrarFoto() {
+      const caminho = f.elements.photo.value;
+      const url = E.fotoNova || (caminho ? (AMB.local.arquivo(caminho) || caminho) : '');
+      const nome = f.elements.name.value || '?';
+      f.querySelector('.adm-foto-prev').innerHTML = V.discoIcone({ id: f.elements.id.value || nome, name: nome, photo: url }, 'g');
+      f.querySelector('[data-adm="foto-ajustar"]').hidden = !url;
+      f.querySelector('.adm-foto-info').innerHTML = E.fotoNova ? 'Imagem nova (500×500). Vai para <code>media/artistas/…</code> ao salvar.'
+        : caminho ? 'Atual: <code>' + esc(caminho) + '</code>' : 'Sem foto: aparece o disco com a inicial do nome.';
+    }
+    f.elements.name.addEventListener('input', mostrarFoto);
+    mostrarFoto();
     f.addEventListener('click', async (e) => {
       const b = e.target.closest('[data-adm]');
       if (!b) return;
       const acao = b.dataset.adm;
+      if (acao === 'foto-img' || acao === 'foto-ajustar') {
+        const atual = acao === 'foto-ajustar' ? (E.fotoNova || AMB.local.arquivo(f.elements.photo.value) || f.elements.photo.value) : '';
+        const r = await AMB.Capa.escolher({ titulo: acao === 'foto-ajustar' ? 'Reenquadrar a foto' : 'Foto do artista', proporcao: 1, largura: 500, atual });
+        if (r) { E.fotoNova = r.dataUrl; E.sujo = true; mostrarFoto(); }
+        return;
+      }
+      if (acao === 'foto-remover') { E.fotoNova = null; f.elements.photo.value = ''; E.sujo = true; mostrarFoto(); return; }
       const disco = b.closest('.adm-disco');
       const tr = b.closest('tr');
       if (acao === 'disco-mais') {
@@ -915,7 +941,17 @@
       if (r.campo && f.elements[r.campo]) f.elements[r.campo].focus();
       return;
     }
-    salvarOps([{ t: 'artista', id: r.a.id, dados: r.a }], {
+    const ops = [];
+    let foto = String(f.elements.photo.value || '').trim();
+    if (E.fotoNova) {
+      const caminho = 'media/artistas/' + r.a.id + '.jpg';
+      foto = caminho + '?v=' + Date.now().toString(36);
+      ops.push({ t: 'arquivo', caminho, dataUrl: E.fotoNova });
+    }
+    if (foto) r.a.photo = foto; else delete r.a.photo;
+    r.a = ordenar(r.a, ORDEM_ARTISTA);
+    ops.push({ t: 'artista', id: r.a.id, dados: r.a });
+    salvarOps(ops, {
       msgEl: msg, botoes: [botao], ok: r.a.name + (original ? ' foi atualizado.' : ' entrou no acervo.'), depois: '#admin/artistas', ver: '#a-' + r.a.id
     });
   }
