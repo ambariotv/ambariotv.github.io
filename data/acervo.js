@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-09",
-  "rev": 16,
+  "rev": 17,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -293,20 +293,13 @@ window.AMB_DATA = {
           "src": ["ddb-joe-1985", "scribd-rock-gaucho", "letras-joe"],
           "tracks": [
             {
-              "n": "3",
-              "t": "Febre Tropical",
-              "song": "febre-tropical",
-              "len": "2:44",
-              "w": "Tavinho Paes, Gastão Lamounier, Orlando Vianna"
-            },
-            { "n": "9", "t": "Brigitte", "song": "brigitte", "w": "Tavinho Paes, Orlando Vianna" },
-            { "n": "B4", "t": "Brigitte", "song": "brigitte", "w": "Joe, Tavinho Paes" },
-            {
               "n": "A3",
               "t": "Febre Tropical",
               "song": "febre-tropical",
-              "w": "Gastão Lamounier, Joe, Tavinho Paes"
-            }
+              "w": "Tavinho Paes, Gastão Lamounier, Orlando Vianna",
+              "len": "2:44"
+            },
+            { "n": "B4", "t": "Brigitte", "song": "brigitte", "w": "Tavinho Paes, Orlando Vianna" }
           ],
           "partial": true
         }

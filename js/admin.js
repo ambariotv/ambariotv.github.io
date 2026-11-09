@@ -765,8 +765,21 @@
         if (!rel) {
           rel = ordenar(Object.assign(clone(d), { partial: true, tracks: escolhida ? [clone(escolhida)] : [] }), ORDEM_DISCO.concat(['discogs']));
           base.releases.push(rel); mudou = true;
-        } else if (escolhida && !(rel.tracks || []).some((t) => t.n === escolhida.n)) {
-          rel.tracks = (rel.tracks || []).concat([clone(escolhida)]); rel.partial = true; mudou = true;
+        } else {
+          // disco já cadastrado: passa a citar o Discogs (link e id), se ainda não citava
+          if (!rel.discogs && d.discogs) { rel.discogs = d.discogs; mudou = true; }
+          const srcDg = (d.src || [])[0];
+          if (srcDg && !(rel.src || []).some((s) => /discogs\.com/.test(typeof s === 'object' ? s.u || '' : String(s)))) { rel.src = (rel.src || []).concat([srcDg]); mudou = true; }
+          if (escolhida) {
+            // a mesma música já cadastrada com outra numeração (ex.: "3" → "A3") vira a faixa do Discogs, sem duplicar
+            const igual = (rel.tracks || []).find((t) => t.n === escolhida.n) || (rel.tracks || []).find((t) => t.song && t.song === escolhida.song && !t.ver);
+            if (!igual) { rel.tracks = (rel.tracks || []).concat([clone(escolhida)]); rel.partial = true; mudou = true; }
+            else if (igual.n !== escolhida.n || (!igual.len && escolhida.len)) {
+              igual.n = escolhida.n;
+              if (!igual.len && escolhida.len) igual.len = escolhida.len;
+              mudou = true;
+            }
+          }
         }
         // ano original da música (quando é diferente do ano do disco, ex.: coletânea)
         const faixa = escolhida ? (rel.tracks || []).find((t) => t.n === escolhida.n) : null;
