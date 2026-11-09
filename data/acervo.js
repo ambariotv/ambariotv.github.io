@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-09",
-  "rev": 11,
+  "rev": 12,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1168,6 +1168,7 @@ window.AMB_DATA = {
     {
       "id": "camisa-de-venus",
       "name": "Camisa de Vênus",
+      "photo": "media/artistas/camisa-de-venus.jpg?v=mw972ubk",
       "country": "BR",
       "origin": "Salvador",
       "releases": [
