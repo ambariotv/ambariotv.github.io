@@ -22,6 +22,23 @@
   /* =================== utilidades =================== */
   const clone = (o) => (o == null ? o : JSON.parse(JSON.stringify(o)));
   const linhas = (t) => String(t || '').split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+  // Campo "em inglês" de um texto (vazio = tradução automática ao salvar)
+  const campoEn = (nome, rotulo, valor, rows) => campo(nome + '_en', rotulo + ' (em inglês)', valor || '', { tipo: 'textarea', rows: rows || 2,
+    ajuda: '(aparece no site em inglês; deixe vazio para traduzir automaticamente ao salvar)' });
+  // Preenche os campos _en: mantém o que foi escrito à mão; traduz quando está vazio ou quando o português
+  // mudou e o inglês continua o de antes (ficaria desatualizado).
+  async function completarIngles(o, original, campos, msg) {
+    for (const k of campos) {
+      const pt = o[k];
+      const enK = k + '_en';
+      if (!pt) { delete o[enK]; continue; }
+      const antigo = original ? original[enK] || '' : '';
+      const ptMudou = !original || original[k] !== pt;
+      if (o[enK] && !(ptMudou && o[enK] === antigo)) continue;
+      if (msg) { msg.className = 'form-msg adm-msg'; msg.textContent = 'Traduzindo para o inglês…'; }
+      try { o[enK] = await AMB.traduzir(pt); } catch (e) { delete o[enK]; } // sem tradutor: o site traduz na hora
+    }
+  }
   function put(o, k, x) {
     const vazio = x === '' || x == null || (Array.isArray(x) && !x.length) || (typeof x === 'object' && !Array.isArray(x) && !Object.keys(x).length);
     if (vazio) delete o[k]; else o[k] = x;
@@ -33,10 +50,10 @@
     return n;
   }
   const ORDEM_VIDEO = ['id', 'artist', 'artist_name', 'song', 'song_title', 'ver', 'title', 'kind', 'date', 'program', 'channel', 'director', 'status',
-    'capa', 'fit', 'aspect', 'duration', 'file', 'audio', 'credits', 'source', 'description', 'note', 'src', 'refs', 'tags', 'test', 'added', 'added_by'];
-  const ORDEM_ARTISTA = ['id', 'name', 'photo', 'alt', 'country', 'origin', 'years', 'members', 'intro', 'src', 'releases'];
+    'capa', 'fit', 'aspect', 'duration', 'file', 'audio', 'credits', 'source', 'description', 'description_en', 'note', 'note_en', 'src', 'refs', 'tags', 'test', 'added', 'added_by'];
+  const ORDEM_ARTISTA = ['id', 'name', 'photo', 'alt', 'country', 'origin', 'years', 'members', 'intro', 'intro_en', 'src', 'releases'];
   const ORDEM_DISCO = ['id', 'type', 'title', 'credit', 'year', 'date', 'label', 'format', 'partial', 'note', 'src', 'tracks'];
-  const ORDEM_ACERVO = ['id', 'name', 'roles', 'since', 'city', 'bio', 'links', 'avatar'];
+  const ORDEM_ACERVO = ['id', 'name', 'roles', 'since', 'city', 'bio', 'bio_en', 'links', 'avatar'];
 
   function normData(t) {
     t = String(t || '').trim();
@@ -505,7 +522,9 @@
 
       '<fieldset><legend>Textos e fontes</legend><div class="adm-grade">' +
         campo('description', 'Descrição', v.description || '', { tipo: 'textarea', rows: 3 }) +
+        campoEn('description', 'Descrição', v.description_en, 3) +
         campo('note', 'Nota do curador', v.note || '', { tipo: 'textarea', rows: 2 }) +
+        campoEn('note', 'Nota do curador', v.note_en, 2) +
         campo('src', 'Fontes', fontesParaTexto(v.src), { tipo: 'textarea', rows: 3, ajuda: '(uma por linha: “Título | https://link”, ou o id de uma fonte já cadastrada)' }) +
         campo('refs', 'Referências e cópias', fontesParaTexto(v.refs), { tipo: 'textarea', rows: 2, ajuda: '(“Título | https://link”, uma por linha)' }) +
       '</div></fieldset>' +
@@ -886,14 +905,16 @@
       ['deck', 'deck'], ['capcard', 'capture'], ['notes', 'notes']].forEach(([k, n]) => put(so, n, k === 'aired' ? normData(val(k)) : val(k)));
     put(v, 'source', so);
     put(v, 'description', val('description'));
+    put(v, 'description_en', val('description_en'));
     put(v, 'note', val('note'));
+    put(v, 'note_en', val('note_en'));
     put(v, 'src', src);
     put(v, 'refs', refs);
     if (!original) { v.added = GH.hoje(); put(v, 'added_by', AMB.cfg('CURADOR', '')); }
     return { v: ordenar(v, ORDEM_VIDEO), artistaNovo, artistaDisco, caminhoCapa };
   }
 
-  function salvarVideo(f, original, botao) {
+  async function salvarVideo(f, original, botao) {
     const msg = f.querySelector('.adm-msg');
     const r = coletarVideo(f, original, false);
     if (r.erro) {
@@ -903,6 +924,10 @@
       if (c && c.focus) { const det = c.closest('details'); if (det) det.open = true; c.focus(); }
       return;
     }
+    if (botao) botao.disabled = true;
+    await completarIngles(r.v, original, ['description', 'note'], msg);
+    if (botao) botao.disabled = false;
+    r.v = ordenar(r.v, ORDEM_VIDEO);
     const v = r.v;
     const ops = [];
     if (E.capaNova) ops.push({ t: 'arquivo', caminho: r.caminhoCapa, dataUrl: E.capaNova });
@@ -994,6 +1019,7 @@
         campo('origin', 'Cidade / origem', a.origin || '') +
         campo('years', 'Em atividade', a.years || '', { ph: '1983–1990' }) +
         campo('intro', 'Sobre', a.intro || '', { tipo: 'textarea', rows: 4, ajuda: '(com as suas palavras; cite as fontes abaixo)' }) +
+        campoEn('intro', 'Sobre', a.intro_en, 3) +
         campo('members', 'Formação', (a.members || []).map((m) => m.name + (m.role || m.years ? ' | ' + (m.role || '') : '') + (m.years ? ' | ' + m.years : '')).join('\n'), { tipo: 'textarea', rows: 3, ajuda: '(uma pessoa por linha: “Nome | função | anos”)' }) +
         campo('src', 'Fontes', fontesParaTexto(a.src), { tipo: 'textarea', rows: 3, ajuda: '(uma por linha: “Título | https://link”, ou o id de uma fonte cadastrada)' }) +
       '</div>' + datalistPaises() + '</fieldset>' +
@@ -1116,6 +1142,7 @@
     put(a, 'origin', val('origin'));
     put(a, 'years', val('years'));
     put(a, 'intro', val('intro'));
+    put(a, 'intro_en', val('intro_en'));
     put(a, 'members', linhas(val('members')).map((l) => {
       const p = l.split('|').map((s) => s.trim());
       const m = { name: p[0] };
@@ -1177,7 +1204,7 @@
     return { a: ordenar(a, ORDEM_ARTISTA) };
   }
 
-  function salvarArtista(f, original, botao) {
+  async function salvarArtista(f, original, botao) {
     const msg = f.querySelector('.adm-msg');
     const r = coletarArtista(f, original);
     if (r.erro) {
@@ -1186,6 +1213,9 @@
       if (r.campo && f.elements[r.campo]) f.elements[r.campo].focus();
       return;
     }
+    if (botao) botao.disabled = true;
+    await completarIngles(r.a, original, ['intro'], msg);
+    if (botao) botao.disabled = false;
     const ops = [];
     let foto = String(f.elements.photo.value || '').trim();
     if (E.fotoNova) {
@@ -1256,6 +1286,7 @@
         '<div class="larga adm-papeis"><b class="mini">Colabora com</b> ' + Object.keys(AMB.ROLES).map((k) =>
           '<label class="adm-check"><input type="checkbox" name="role_' + k + '"' + ((c.roles || []).indexOf(k) >= 0 ? ' checked' : '') + '> ' + esc(AMB.ROLES[k]) + '</label>').join('') + '</div>' +
         campo('bio', 'Sobre', c.bio || '', { tipo: 'textarea', rows: 3 }) +
+        campoEn('bio', 'Sobre', c.bio_en, 2) +
         campo('links', 'Links', fontesParaTexto(c.links), { tipo: 'textarea', rows: 2, ajuda: '(“Texto | https://link”, um por linha)' }) +
       '</div></fieldset>' +
       '<fieldset><legend>Foto ou logo</legend><div class="adm-capa adm-foto">' +
@@ -1295,7 +1326,7 @@
     });
     mostrar();
   }
-  function salvarAcervo(f, original, botao) {
+  async function salvarAcervo(f, original, botao) {
     const val = (k) => String((f.elements[k] && f.elements[k].value) || '').trim();
     const msg = f.querySelector('.adm-msg');
     const falha = (t, campo_) => { msg.className = 'form-msg adm-msg erro'; msg.textContent = t; if (campo_ && f.elements[campo_]) f.elements[campo_].focus(); };
@@ -1314,6 +1345,7 @@
     put(c, 'since', val('since'));
     put(c, 'city', val('city'));
     put(c, 'bio', val('bio'));
+    put(c, 'bio_en', val('bio_en'));
     put(c, 'links', links);
     const ops = [];
     let avatar = val('avatar');
@@ -1323,6 +1355,7 @@
       ops.push({ t: 'arquivo', caminho, dataUrl: E.fotoNova });
     }
     put(c, 'avatar', avatar);
+    await completarIngles(c, original, ['bio'], msg);
     ops.push({ t: 'acervo', id, dados: ordenar(c, ORDEM_ACERVO) });
     salvarOps(ops, { msgEl: msg, botoes: [botao], ok: nome + (original ? ' foi atualizado.' : ' entrou na lista de acervos.'), depois: '#admin/acervos', ver: '#c-' + id });
   }

@@ -111,6 +111,24 @@
     });
   }
 
+  // textos que entram depois (abas, "mostrar mais", comentários…) também são traduzidos
+  if (AMB.en && typeof MutationObserver !== 'undefined') {
+    let pend = false;
+    new MutationObserver(() => {
+      if (pend) return;
+      pend = true;
+      requestAnimationFrame(() => { pend = false; if (main.querySelector('[data-tr]')) AMB.traduzirPagina(main); });
+    }).observe(main, { childList: true, subtree: true });
+  }
+  // passar o mouse (ou o dedo) num vídeo já descobre os servidores do Internet Archive: o player começa mais rápido
+  const preaquecer = (e) => {
+    const a = e.target.closest && e.target.closest('a[href^="#v-"]');
+    if (!a || !AMB.iaFontes) return;
+    const v = AMB.videos.find((x) => '#v-' + x.id === a.getAttribute('href'));
+    if (v && v.hasFile) AMB.iaFontes(v.file.video).catch(() => {});
+  };
+  document.addEventListener('mouseover', preaquecer, { passive: true });
+  document.addEventListener('touchstart', preaquecer, { passive: true });
   function render(opts) {
     opts = opts || {};
     if (player) { player.destroy(); player = null; }
@@ -158,6 +176,7 @@
       html = V.naoAchei();
     }
     main.innerHTML = html;
+    AMB.traduzirPagina(main);
     avisoLocal();
     titulo(tit);
     marcarAba(aba);

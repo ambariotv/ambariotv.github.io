@@ -7,6 +7,16 @@
   const esc = AMB.esc;
   const T = AMB.t;
   const V = (AMB.V = {});
+  // Texto escrito no acervo, no idioma do site: a versão em inglês salva (campo_en) ou, se não tiver,
+  // o português marcado para ser traduzido na hora (AMB.traduzirPagina)
+  V.tx = (o, campo, max) => {
+    const pt = String((o && o[campo]) || '');
+    const corta = (s) => (max && s.length > max ? s.slice(0, max - 3) + '…' : s);
+    if (!AMB.en || !pt) return esc(corta(pt));
+    const en = o[campo + '_en'] || AMB.traduzido(pt);
+    if (en) return '<span lang="en">' + esc(corta(en)) + '</span>';
+    return '<span data-tr="' + esc(pt) + '"' + (max ? ' data-tr-max="' + max + '"' : '') + '>' + esc(corta(pt)) + '</span>';
+  };
 
   /* ---------------- peças pequenas ---------------- */
   const hue = (s) => { let h = 0; String(s || '').split('').forEach((c) => { h = (h * 31 + c.charCodeAt(0)) % 360; }); return h; };
@@ -52,7 +62,7 @@
     return '<div class="linha">' + V.thumb(v, 'm') +
       '<div class="linha-txt">' +
         '<a class="linha-tit" href="#v-' + esc(v.id) + '">' + esc(v.artistObj.name) + ' — ' + esc(v.title) + '</a>' + (v.status !== 'no-acervo' ? ' ' + V.selo(v.status) : '') +
-        (v.description ? '<p class="linha-desc">' + esc(v.description.length > 170 ? v.description.slice(0, 167) + '…' : v.description) + '</p>' : '') +
+        (v.description ? '<p class="linha-desc">' + V.tx(v, 'description', 170) + '</p>' : '') +
         '<div class="linha-meta">' + esc(v.kindLabel) + (v.date ? ' · ' + esc(AMB.fmtDate(v.date)) : '') +
           (v.program || v.channel ? ' · ' + esc([v.program, v.channel].filter(Boolean).join(', ')) : '') + '</div>' +
         '<div class="linha-meta">' + [cr && cr.w ? esc(cr.papel) + ': ' + V.quem(cr.w) : '', v.hasFile ? V.statsSlot(v) : ''].filter(Boolean).join(' · ') + '</div>' +
@@ -249,8 +259,8 @@
                 (c ? '<br><span class="mini">' + T('Registros: ', 'Recordings: ') + qtd + '</span>' : '') + '</div>' +
               (c ? '<a class="btn btn-y btn-p" href="#c-' + esc(c.id) + '">' + T('Ver acervo', 'See collection') + '</a>' : '') + '</div>' : '') +
             '<div class="de-info"><span class="mini">' + (v.added ? T('Adicionado em ', 'Added ') + esc(AMB.fmtDate(v.added)) : '') + '</span> ' + V.selo(v.status) +
-              (v.description ? '<p>' + esc(v.description) + '</p>' : '') +
-              (v.note ? '<p class="nota-cur"><b>' + T('Nota do curador:', 'Curator’s note:') + '</b> “' + esc(v.note) + '”</p>' : '') +
+              (v.description ? '<p>' + V.tx(v, 'description') + '</p>' : '') +
+              (v.note ? '<p class="nota-cur"><b>' + T('Nota do curador:', 'Curator’s note:') + '</b> “' + V.tx(v, 'note') + '”</p>' : '') +
               '<p class="mini de-tipo">' + esc(v.kindLabel) + (v.date ? ' · ' + esc(AMB.fmtDate(v.date)) : '') +
                 (v.program || v.channel ? ' · ' + esc([v.program, v.channel].filter(Boolean).join(', ')) : '') + (v.director ? T(' · direção de ', ' · directed by ') + esc(v.director) : '') + '</p>' +
             '</div>' +
@@ -431,7 +441,7 @@
   };
 
   V.sobreArtista = (a) => {
-    return (a.intro ? '<p class="art-intro">' + esc(a.intro) + '</p>' : V.vazio(T('Ainda não escrevemos sobre ', 'We have not written about ') + esc(a.name) + T('.', ' yet.'))) +
+    return (a.intro ? '<p class="art-intro">' + V.tx(a, 'intro') + '</p>' : V.vazio(T('Ainda não escrevemos sobre ', 'We have not written about ') + esc(a.name) + T('.', ' yet.'))) +
       (a.members && a.members.length ? '<h3 class="sub">' + T('Formação', 'Members') + '</h3><table class="membros"><tbody>' + a.members.map((m) =>
         '<tr><td><b>' + esc(m.name) + '</b></td><td>' + esc(m.role || '') + '</td><td class="mini">' + esc(m.years || '') + '</td></tr>').join('') + '</tbody></table>' : '') +
       V.fontes(a.src);
@@ -467,7 +477,7 @@
       '<div class="art-topo-txt"><h1>' + esc(c.name) + '</h1>' +
         '<dl class="art-info">' + ((c.roles || []).length ? '<dt>' + T('Colabora com', 'Contributes') + '</dt><dd>' + esc(c.roles.map((r) => AMB.ROLES[r] || r).join(', ')) + '</dd>' : '') +
           (c.since ? '<dt>' + T('Desde', 'Since') + '</dt><dd>' + esc(AMB.fmtMonth(c.since)) + '</dd>' : '') + (c.city ? '<dt>' + T('Cidade', 'City') + '</dt><dd>' + esc(c.city) + '</dd>' : '') + '</dl>' +
-        (c.bio ? '<p>' + esc(c.bio) + '</p>' : '') +
+        (c.bio ? '<p>' + V.tx(c, 'bio') + '</p>' : '') +
         ((c.links || []).length ? '<p class="links">' + c.links.map((l) => '<a href="' + esc(l.u) + '" target="_blank" rel="noopener">' + esc(l.t) + ' ↗</a>').join(' · ') + '</p>' : '') +
       '</div></div>' +
       (corpo || V.vazio(T('Os trabalhos de ' + esc(c.name) + ' aparecem aqui assim que os vídeos com o crédito dele entrarem no acervo.', esc(c.name) + '’s work shows up here as soon as videos credited to them enter the archive.'))) +

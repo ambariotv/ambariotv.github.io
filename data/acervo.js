@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-09",
-  "rev": 20,
+  "rev": 21,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -169,6 +169,7 @@ window.AMB_DATA = {
       "roles": ["curadoria", "captura", "sincronizacao"],
       "since": "2026-11",
       "bio": "Arquivista e curador do Ambário. Sincroniza o áudio dos discos com os vídeos usando o EternalDub, ferramenta própria de código aberto.",
+      "bio_en": "Archivist and curator of Ambário. Syncs record audio to the videos using EternalDub, his own open-source tool.",
       "links": [
         { "t": "moguell.neocities.org", "u": "https://moguell.neocities.org/" },
         { "t": "EternalDub no GitHub", "u": "https://github.com/Moguel0818/EternalDub" }
@@ -202,6 +203,7 @@ window.AMB_DATA = {
         { "name": "Pedro Albuquerque", "role": "baixo", "years": "2002–2004" }
       ],
       "intro": "Banda paulistana formada em 1978 por amigos do Lycée Pasteur, primeiro com o nome A Gota Suspensa. Virou Metrô em 1984, estreou pela Epic com o compacto “Beat Acelerado” e estourou com o LP Olhar (1985), de “Tudo Pode Mudar”, “Ti Ti Ti” (abertura da novela da Globo) e “Johnny Love” (do filme Rock Estrela). Virginie Boutaud saiu em 1986; com Pedro Parq nos vocais veio A Mão de Mao (1987), e a banda parou em 1988. Voltou para gravar Déjà-Vu (2002) e se reuniu de novo a partir de 2014.",
+      "intro_en": "São Paulo band formed in 1978 by friends from the Lycée Pasteur, first under the name A Gota Suspensa. It became Metrô in 1984, debuted on Epic with the single “Beat Acelerado” and broke through with the LP Olhar (1985), featuring “Tudo Pode Mudar”, “Ti Ti Ti” (theme of the Globo telenovela) and “Johnny Love” (from the film Rock Estrela). Virginie Boutaud left in 1986; with Pedro Parq on vocals came A Mão de Mao (1987), and the band split in 1988. It came back to record Déjà-Vu (2002) and reunited again from 2014 on.",
       "src": ["wp-metro", "vagalume-metro"],
       "releases": [
         {
@@ -269,6 +271,7 @@ window.AMB_DATA = {
       "country": "BR",
       "origin": "Rio Grande do Sul",
       "intro": "Cantor e compositor gaúcho. Depois de dois compactos simples (1983 e 1984), lançou em 1985 o LP Tudo Pode Mudar, pela RCA, com produção de Gutti. Também escreveu para o Metrô: é coautor de “Johnny Love” e de “Tudo Pode Mudar”, que a banda gravou no LP Olhar (1985). Em 1989 saiu o álbum Joe, com vocais de Virginie Boutaud, do Metrô, em duas faixas.",
+      "intro_en": "Singer-songwriter from Rio Grande do Sul. After two singles (1983 and 1984), he released the LP Tudo Pode Mudar on RCA in 1985, produced by Gutti. He also wrote for Metrô: he co-wrote “Johnny Love” and “Tudo Pode Mudar”, which the band recorded on the LP Olhar (1985). In 1989 came the album Joe, with Metrô's Virginie Boutaud on vocals in two tracks.",
       "src": ["scribd-rock-gaucho", "ddb-joe-1985", "letras-joe", "wp-tudo", "wp-virginie"],
       "releases": [
         {
@@ -367,6 +370,7 @@ window.AMB_DATA = {
         { "name": "Renato Rocha", "role": "baixo" }
       ],
       "intro": "Banda de Brasília liderada por Renato Russo. O primeiro disco, Legião Urbana, saiu pela EMI-Odeon em 1985 com “Será”, “Ainda É Cedo” e “Geração Coca-Cola”, e o clipe de “Será” foi o primeiro da banda. A formação acima é a da época desse disco.",
+      "intro_en": "Brasília band led by Renato Russo. Their first album, Legião Urbana, came out on EMI-Odeon in 1985 with “Será”, “Ainda É Cedo” and “Geração Coca-Cola”, and the video for “Será” was the band's first. The lineup above is the one from that album.",
       "src": ["wp-legiao", "wp-legiao-album", "cm-legiao-2025"],
       "releases": [
         {
@@ -393,6 +397,7 @@ window.AMB_DATA = {
       "origin": "Brasília, DF",
       "years": "1981–",
       "intro": "Banda de Brasília, da mesma cena da Legião Urbana. Herbert Vianna, dos Paralamas do Sucesso, produziu o primeiro disco, o mini-LP O Concreto Já Rachou, de sete faixas, que vendeu mais de 250 mil cópias. “Até Quando Esperar” abre o disco e virou a música mais conhecida da banda.",
+      "intro_en": "Brasília band from the same scene as Legião Urbana. Herbert Vianna, of Paralamas do Sucesso, produced their first record, the seven-track mini-LP O Concreto Já Rachou, which sold more than 250,000 copies. “Até Quando Esperar” opens the record and became the band's best-known song.",
       "src": ["em-plebe-2025", "bb-plebe-2026", "nb-plebe-2026"],
       "releases": [
         {
@@ -422,6 +427,7 @@ window.AMB_DATA = {
         { "name": "Paulo P. A. Pagni", "role": "bateria" }
       ],
       "intro": "Banda paulistana de Paulo Ricardo e Luiz Schiavon. Estreou em 1984 com um compacto de “Louras Geladas” e “Revoluções por Minuto” e lançou o LP Revoluções por Minuto em 1985. O disco ao vivo Rádio Pirata (1986), gravado no Anhembi, em São Paulo, trouxe as inéditas “Alvorada Voraz” e “Naja”. A formação acima é a dos anos 1980.",
+      "intro_en": "São Paulo band led by Paulo Ricardo and Luiz Schiavon. It debuted in 1984 with a single of “Louras Geladas” and “Revoluções por Minuto” and released the LP Revoluções por Minuto in 1985. The live album Rádio Pirata (1986), recorded at the Anhembi in São Paulo, brought the new songs “Alvorada Voraz” and “Naja”. The lineup above is the 1980s one.",
       "src": ["gs-rpm", "wp-rpm", "agora-rpm-2026", "bb-rpm-2026"],
       "releases": [
         {
@@ -452,6 +458,7 @@ window.AMB_DATA = {
         { "name": "Susanne Kuhnke" }
       ],
       "intro": "Grupo só de mulheres de Berlim Ocidental, formado em 1981 por Bettina Köster e Gudrun Gut. Gravou “You You” duas vezes: em Nova York, em agosto de 1983, e no Hansa Studio, em Berlim; as duas saíram no 12\" Beat the Distance (1984). O clipe de “You You” foi dirigido por Anne Carlisle, atriz do filme Liquid Sky.",
+      "intro_en": "All-female band from West Berlin, formed in 1981 by Bettina Köster and Gudrun Gut. They recorded “You You” twice: in New York in August 1983 and at Hansa Studio in Berlin; both came out on the 12\" Beat the Distance (1984). The video for “You You” was directed by Anne Carlisle, an actress in the film Liquid Sky.",
       "src": ["wp-malaria", "tapemag-malaria", "dm-malaria"],
       "releases": [
         {
@@ -530,6 +537,7 @@ window.AMB_DATA = {
         "from": "Reprise no canal Multishow (a logo do canal aparece no canto da tela)"
       },
       "description": "Videoclipe do primeiro compacto do Metrô, com Virginie Boutaud nos vocais. Esta cópia tem 2min33s, mais curta que a faixa do compacto (3min46s).",
+      "description_en": "Music video for Metrô's first single, with Virginie Boutaud on vocals. This copy runs 2:33, shorter than the single's track (3:46).",
       "src": ["wp-beat"],
       "refs": [
         {
@@ -566,6 +574,7 @@ window.AMB_DATA = {
       "credits": { "sync": "moguell" },
       "source": { "medium": "Cópia digital" },
       "description": "Primeiro videoclipe da Legião Urbana. Foi gravado de 25 a 27 de maio de 1985 na boate Rose Bom Bom, em São Paulo, com direção de Toniko Melo: a banda toca num cenário pequeno e anda pela cidade à noite.",
+      "description_en": "Legião Urbana's first music video. It was shot from May 25 to 27, 1985, at the Rose Bom Bom nightclub in São Paulo, directed by Toniko Melo: the band plays on a small set and walks around the city at night.",
       "src": ["wp-legiao-album", "imdb-sera"],
       "added": "2026-11-07",
       "added_by": "moguell"
@@ -609,6 +618,7 @@ window.AMB_DATA = {
       "credits": { "sync": "Miguel Lins", "tape": "MofoTV" },
       "source": { "medium": "Cópia digital", "from": "Cópia com a marca d’água “MofoTV”", "aired": "1985" },
       "description": "Joe Euthanazia canta “Me Leva pra Casa”, do compacto de 1984, no Programa Vamos Nessa.",
+      "description_en": "Joe Euthanazia sings “Me Leva pra Casa”, from his 1984 single, on the TV show Programa Vamos Nessa.",
       "src": ["scribd-rock-gaucho"],
       "refs": [
         {
@@ -642,6 +652,7 @@ window.AMB_DATA = {
       "credits": { "sync": "moguell" },
       "source": { "medium": "Cópia digital" },
       "description": "Videoclipe da faixa que abre O Concreto Já Rachou: a banda toca num cenário pequeno que imita um lugar abandonado. O IMDb registra o clipe como de 1985.",
+      "description_en": "Music video for the opening track of O Concreto Já Rachou: the band plays on a small set made to look like an abandoned place. IMDb lists the video as from 1985.",
       "src": ["imdb-ate-quando", "em-plebe-2025"],
       "added": "2026-11-07",
       "added_by": "moguell"
@@ -670,6 +681,7 @@ window.AMB_DATA = {
       "credits": { "sync": "moguell" },
       "source": { "medium": "Cópia digital" },
       "description": "Clipe de “You You” dirigido por Anne Carlisle, atriz do filme Liquid Sky. A banda gravou a música duas vezes (em Nova York e em Berlim); ainda não confirmamos qual das duas está no clipe.",
+      "description_en": "Video for “You You” directed by Anne Carlisle, an actress in the film Liquid Sky. The band recorded the song twice (in New York and in Berlin); we have not yet confirmed which of the two is in the video.",
       "src": ["wp-malaria", "dm-malaria", "curador"],
       "refs": [{ "t": "Cópia de referência (YouTube)", "u": "https://www.youtube.com/watch?v=ssCzKzZSBN8" }],
       "added": "2026-11-07",
@@ -700,6 +712,7 @@ window.AMB_DATA = {
       "credits": { "sync": "moguell" },
       "source": { "medium": "Cópia digital" },
       "description": "Clipe de “Alvorada Voraz”, uma das inéditas do disco ao vivo Rádio Pirata (1986). Mistura cenas do show, imagens aéreas e closes da banda.",
+      "description_en": "Video for “Alvorada Voraz”, one of the new songs on the live album Rádio Pirata (1986). It mixes concert footage, aerial shots and close-ups of the band.",
       "src": ["agora-rpm-2026"],
       "added": "2026-11-07",
       "added_by": "moguell"
@@ -731,6 +744,7 @@ window.AMB_DATA = {
         "notes": "O arquivo é 16:9 com a imagem 4:3 no meio (bordas pretas nas laterais); o player corta as bordas."
       },
       "description": "Videoclipe de 1985 da música de Rita Lee e Roberto de Carvalho que abria a novela Ti Ti Ti, da Rede Globo.",
+      "description_en": "1985 music video for the Rita Lee and Roberto de Carvalho song that opened the Rede Globo telenovela Ti Ti Ti.",
       "src": ["wp-titi"],
       "refs": [
         {
@@ -780,6 +794,7 @@ window.AMB_DATA = {
         "from": "Cópia com marcas d’água de colecionador (“Rei dos Arquivos Raros”, “Renato 1980”, “Nacionais Anos 80’s”)"
       },
       "description": "Joe Euthanazia e banda tocam “Febre Tropical”, do LP Tudo Pode Mudar (RCA, 1985), num palco de TV.",
+      "description_en": "Joe Euthanazia and his band play “Febre Tropical”, from the LP Tudo Pode Mudar (RCA, 1985), on a TV stage.",
       "src": ["ddb-joe-1985"],
       "added": "2026-11-07",
       "added_by": "moguell"
@@ -814,6 +829,7 @@ window.AMB_DATA = {
         "notes": "O arquivo está esticado para 16:9; a imagem original é 4:3 (o player corrige)."
       },
       "description": "A Legião Urbana toca “Geração Coca-Cola”, do primeiro disco, num programa de TV com plateia. O nome do programa vem do título da cópia; a emissora ainda não foi confirmada.",
+      "description_en": "Legião Urbana plays “Geração Coca-Cola”, from their first album, on a TV show with a studio audience. The show's name comes from the title of the copy; the channel has not been confirmed yet.",
       "src": ["wp-legiao-album"],
       "added": "2026-11-07",
       "added_by": "moguell"
@@ -850,6 +866,7 @@ window.AMB_DATA = {
         "notes": "O arquivo é 16:9 com a imagem 4:3 no meio (bordas pretas nas laterais); o player corta as bordas."
       },
       "description": "Cena do filme Rock Estrela, de Lael Rodrigues, com o Metrô no palco tocando “Johnny Love”. A versão da trilha do filme, com Léo Jaime, saiu como faixa-bônus da edição de 30 anos do LP Olhar (2016). Segundo o IMDb, o filme estreou em 17 de fevereiro de 1986.",
+      "description_en": "Scene from Lael Rodrigues' film Rock Estrela, with Metrô on stage playing “Johnny Love”. The soundtrack version, with Léo Jaime, came out as a bonus track on the 30th-anniversary edition of the LP Olhar (2016). According to IMDb, the film premiered on February 17, 1986.",
       "src": ["wp-metro", "imdb-rock-estrela", "filmow-rock-estrela"],
       "added": "2026-11-07",
       "added_by": "moguell"
@@ -889,6 +906,7 @@ window.AMB_DATA = {
       "credits": { "sync": "moguell", "tape": "Virginie Boutaud" },
       "source": { "medium": "Cópia digital", "aired": "1985" },
       "description": "Joe Euthanazia canta “Brigitte”, do LP Tudo Pode Mudar (RCA, 1985), num palco de TV.",
+      "description_en": "Joe Euthanazia sings “Brigitte”, from the LP Tudo Pode Mudar (RCA, 1985), on a TV stage.",
       "src": ["ddb-joe-1985"],
       "added": "2026-11-07",
       "added_by": "moguell"
@@ -917,6 +935,7 @@ window.AMB_DATA = {
       "credits": { "sync": "moguell" },
       "source": { "medium": "Cópia digital" },
       "description": "O Metrô em “Sândalo de Dândi”, lado B do compacto Beat Acelerado, com cenas gravadas na praia, na exibição do Programa Raul Gil. A data exata ainda não foi confirmada (1984 ou 1985).",
+      "description_en": "Metrô performing “Sândalo de Dândi”, the B-side of the Beat Acelerado single, with scenes shot on the beach, as aired on Programa Raul Gil. The exact date has not been confirmed (1984 or 1985).",
       "src": ["vagalume-metro", "wp-beat"],
       "added": "2026-11-07",
       "added_by": "moguell"
@@ -950,6 +969,7 @@ window.AMB_DATA = {
         "notes": "O arquivo é 16:9 com a imagem 4:3 no meio (bordas pretas nas laterais); o player corta as bordas."
       },
       "description": "Outra cena de Rock Estrela com o Metrô no palco, desta vez com “Stabilo”, do LP Olhar (1985).",
+      "description_en": "Another Rock Estrela scene with Metrô on stage, this time playing “Stabilo”, from the LP Olhar (1985).",
       "src": ["imdb-rock-estrela", "filmow-rock-estrela"],
       "added": "2026-11-07",
       "added_by": "moguell"
@@ -989,6 +1009,7 @@ window.AMB_DATA = {
       ],
       "credits": { "tape": "Canal CMB", "sync": "Miguel Lins" },
       "description": "Videoclipe de \"Simca Chambord\", de Camisa de Vênus (1986)",
+      "description_en": "Music video for “Simca Chambord” by Camisa de Vênus (1986).",
       "added": "2026-11-09",
       "added_by": "moguell"
     }

@@ -35,6 +35,61 @@
   };
   const T = AMB.t;
 
+  /* ---------------- tradução automática (PT → EN) ----------------
+   * Os textos escritos no acervo (descrição, nota, sobre…) podem ter a versão em inglês salva no próprio
+   * registro (campo_en). Quando não têm, o site em inglês traduz na hora pelo tradutor do Google e guarda
+   * o resultado neste navegador.
+   */
+  const TR_CHAVE = 'amb.tr';
+  let trCache = null;
+  const trMemo = {};
+  function trGuardado() {
+    if (trCache) return trCache;
+    try { trCache = JSON.parse(localStorage.getItem(TR_CHAVE) || '{}') || {}; } catch (e) { trCache = {}; }
+    return trCache;
+  }
+  function trHash(s) { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36) + s.length; }
+  AMB.traduzido = (pt) => trGuardado()[trHash(String(pt || ''))] || '';
+  AMB.traduzir = (pt, de, para) => {
+    const txt = String(pt || '').trim();
+    if (!txt) return Promise.resolve('');
+    const h = trHash(txt) + (para && para !== 'en' ? ':' + para : '');
+    const c = trGuardado()[h];
+    if (c) return Promise.resolve(c);
+    if (trMemo[h]) return trMemo[h];
+    const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const limite = setTimeout(() => { if (ctrl) ctrl.abort(); }, 8000);
+    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&dt=t&sl=' + (de || 'pt') + '&tl=' + (para || 'en') + '&q=' + encodeURIComponent(txt);
+    trMemo[h] = fetch(url, ctrl ? { signal: ctrl.signal } : {})
+      .then((r) => { if (!r.ok) throw new Error('tradutor ' + r.status); return r.json(); })
+      .then((j) => {
+        const en = (j && j[0] ? j[0].map((p) => (p && p[0]) || '').join('') : '').trim();
+        if (!en) throw new Error('tradução vazia');
+        const g = trGuardado();
+        g[h] = en;
+        const ks = Object.keys(g);
+        if (ks.length > 400) ks.slice(0, ks.length - 400).forEach((k) => delete g[k]); // não deixa crescer sem fim
+        try { localStorage.setItem(TR_CHAVE, JSON.stringify(g)); } catch (e) { /* cheio: fica só na memória */ }
+        return en;
+      })
+      .finally(() => { clearTimeout(limite); delete trMemo[h]; });
+    return trMemo[h];
+  };
+  // Traduz na página tudo que foi marcado com data-tr (texto original) e data-tr-max (corte opcional)
+  AMB.traduzirPagina = (raiz) => {
+    if (!AMB.en) return;
+    (raiz || document).querySelectorAll('[data-tr]').forEach((el) => {
+      const pt = el.getAttribute('data-tr');
+      el.removeAttribute('data-tr');
+      const max = Number(el.getAttribute('data-tr-max')) || 0;
+      AMB.traduzir(pt).then((en) => {
+        el.textContent = max && en.length > max ? en.slice(0, max - 3) + '…' : en;
+        el.setAttribute('lang', 'en');
+        el.title = el.title || 'Automatic translation';
+      }).catch(() => { /* fica em português */ });
+    });
+  };
+
   /* ---------------- utilidades ---------------- */
   const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
   AMB.esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ESC[c]);

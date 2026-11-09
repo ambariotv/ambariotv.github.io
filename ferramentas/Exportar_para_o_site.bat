@@ -156,7 +156,7 @@ if defined FITA set /a FITA0=FITA-1
 
 echo.
 echo [1/3] Imagem + audio do disco: %NOME%.mp4  (pode levar alguns minutos)
-"%FFMPEG%" -hide_banner -loglevel error -stats -y -i "%ENTRADA%" -map 0:v:0 -map 0:a:%PRI0% -vf "%FILTRO%" -c:v libx264 -preset slow -crf 18 -profile:v high -pix_fmt yuv420p -af "aresample=async=1:first_pts=0" -c:a aac -b:a 256k -movflags +faststart -map_metadata -1 -map_chapters -1 "%SAIDA%\%NOME%.mp4"
+"%FFMPEG%" -hide_banner -loglevel error -stats -y -i "%ENTRADA%" -map 0:v:0 -map 0:a:%PRI0% -vf "%FILTRO%" -c:v libx264 -preset slow -crf 19 -maxrate 3500k -bufsize 7000k -g 120 -keyint_min 24 -profile:v high -level 4.1 -pix_fmt yuv420p -af "aresample=async=1:first_pts=0" -c:a aac -b:a 256k -movflags +faststart -map_metadata -1 -map_chapters -1 "%SAIDA%\%NOME%.mp4"
 if errorlevel 1 goto :erro
 
 if not defined FITA goto :capa

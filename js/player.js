@@ -34,11 +34,11 @@
     if (IA.pedidos[id]) return IA.pedidos[id];
     const chave = 'amb.ia.' + id;
     try {
-      const s = JSON.parse(sessionStorage.getItem(chave) || 'null');
+      const s = JSON.parse(localStorage.getItem(chave) || 'null');
       if (s && Date.now() - s.t < 6 * 3600e3) { IA.ok[id] = s; return (IA.pedidos[id] = Promise.resolve(s)); }
     } catch (e) { /* sem armazenamento */ }
     const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
-    const limite = setTimeout(() => { if (ctrl) ctrl.abort(); }, 3000);
+    const limite = setTimeout(() => { if (ctrl) ctrl.abort(); }, 1800);
     IA.pedidos[id] = fetch('https://archive.org/metadata/' + encodeURIComponent(id), ctrl ? { signal: ctrl.signal } : {})
       .then((r) => (r.ok ? r.json() : null))
       .then((m) => {
@@ -48,7 +48,7 @@
         if (!servidores.length) return null;
         const s = { t: Date.now(), dir: m.dir, servidores };
         IA.ok[id] = s;
-        try { sessionStorage.setItem(chave, JSON.stringify(s)); } catch (e) { /* ok */ }
+        try { localStorage.setItem(chave, JSON.stringify(s)); } catch (e) { /* ok */ }
         return s;
       })
       .catch(() => null)
@@ -64,6 +64,25 @@
   AMB.iaFontes = (url) => {
     const p = iaPartes(url);
     return p ? iaServidores(p.id).then((s) => iaLista(url, s)) : Promise.resolve([url]);
+  };
+  // Pede o primeiro byte do arquivo a cada servidor ao mesmo tempo e põe na frente o que responder primeiro
+  // (os servidores do Internet Archive variam muito de velocidade). Não espera mais que 1,5 s.
+  AMB.iaMaisRapido = (lista) => {
+    if (!lista || lista.length < 2 || typeof fetch === 'undefined') return Promise.resolve(lista);
+    return new Promise((ok) => {
+      let feito = false;
+      const ctrls = [];
+      const fim = (l) => { if (feito) return; feito = true; clearTimeout(lim); ctrls.forEach((c) => { try { c.abort(); } catch (e) { /* ok */ } }); ok(l); };
+      const lim = setTimeout(() => fim(lista), 1500);
+      let falhas = 0;
+      lista.forEach((u) => {
+        const c = typeof AbortController !== 'undefined' ? new AbortController() : null;
+        if (c) ctrls.push(c);
+        fetch(u, { headers: { Range: 'bytes=0-1' }, cache: 'no-store', signal: c ? c.signal : undefined })
+          .then((r) => { if (r.ok || r.status === 206) fim([u].concat(lista.filter((x) => x !== u))); else throw new Error(); })
+          .catch(() => { if (++falhas === lista.length) fim(lista); });
+      });
+    });
   };
   const iaFontesJa = (url) => { const p = iaPartes(url); return iaLista(url, p && IA.ok[p.id]); };
   const unicos = (l) => l.filter((u, i) => u && l.indexOf(u) === i);
@@ -271,11 +290,13 @@
     video.volume = this.volume;
     this.carregando(true);
     Promise.all(this.fontes.map((u) => AMB.iaFontes(u))).catch(() => [this.fontes])
-      .then((listas) => { if (!this.morto) this.comecar(unicos([].concat.apply([], listas))); });
+      .then((listas) => AMB.iaMaisRapido(unicos([].concat.apply([], listas))))
+      .then((lista) => { if (!this.morto) this.comecar(lista); });
   };
   Player.prototype.comecar = function (fontes) {
     const video = this.video;
     if (fontes.length) this.fontes = fontes;
+    if (this.opts.autoplay) video.preload = 'auto';
     video.src = this.fontes[0];
     this.carregando(false);
     // Sempre começa no áudio de melhor qualidade (o do disco); o áudio original da fita fica só como opção.
@@ -501,8 +522,8 @@
     if (continuar !== false) this.vigiar();
   };
  
-  // O vídeo deveria estar tocando mas está esperando dados. Se nada chegar em 8 s (ou se continuar
-  // travado por 25 s, mesmo chegando aos pouquinhos), reconecta, pulando para o outro servidor.
+  // O vídeo deveria estar tocando mas está esperando dados. Se nada chegar em 5 s (ou se continuar
+  // travado por 15 s, mesmo chegando aos pouquinhos), reconecta, pulando para o outro servidor.
   Player.prototype.vigiar = function () {
     if (this._travaDesde) return;
     this._travaDesde = this._dados = performance.now();
@@ -511,7 +532,7 @@
       const v = this.video, agora = performance.now();
       if (v.paused && !this._recuperando) { this.desvigiar(); return; }
       if (v.readyState >= 3 && !v.seeking) { this.desvigiar(); return; }
-      if (agora - this._dados > 8000 || agora - this._travaDesde > 25000) { this.desvigiar(); this.recuperar(); return; }
+      if (agora - this._dados > 5000 || agora - this._travaDesde > 15000) { this.desvigiar(); this.recuperar(); return; }
       this.timer('trava', checar, 1000);
     };
     this.timer('trava', checar, 1000);
