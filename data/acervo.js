@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-09",
-  "rev": 8,
+  "rev": 9,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1164,6 +1164,13 @@ window.AMB_DATA = {
           ]
         }
       ]
+    },
+    {
+      "id": "camisa-de-venus",
+      "name": "Camisa de Vênus",
+      "country": "BR",
+      "origin": "Salvador",
+      "releases": []
     }
   ],
   "videos": [
@@ -1615,6 +1622,41 @@ window.AMB_DATA = {
       "description": "Outra cena de Rock Estrela com o Metrô no palco, desta vez com “Stabilo”, do LP Olhar (1985).",
       "src": ["imdb-rock-estrela", "filmow-rock-estrela"],
       "added": "2026-11-07",
+      "added_by": "moguell"
+    },
+    {
+      "id": "camisa-de-venus-simca-chambord-1986-clipe-1986",
+      "artist": "camisa-de-venus",
+      "title": "Simca Chambord (1986)",
+      "kind": "clipe",
+      "date": "1986",
+      "status": "no-acervo",
+      "capa": "media/capas/camisa-de-venus-simca-chambord-1986-clipe-1986.jpg?v=mw95zb48",
+      "duration": 240,
+      "file": {
+        "video": "https://archive.org/download/ambario-camisa-de-venus-simca-chambord-1986/camisa-de-venus-simca-chambord-1986.mp4",
+        "ia": "ambario-camisa-de-venus-simca-chambord-1986"
+      },
+      "audio": [
+        {
+          "id": "principal",
+          "short": "DISCO",
+          "label": "Áudio do disco",
+          "kind": "cd",
+          "by": "Daniel Skiter",
+          "embedded": true
+        },
+        {
+          "id": "original",
+          "short": "ORIGINAL",
+          "label": "Som original da gravação",
+          "kind": "vhs",
+          "url": "https://archive.org/download/ambario-camisa-de-venus-simca-chambord-1986/camisa-de-venus-simca-chambord-1986-fita.m4a"
+        }
+      ],
+      "credits": { "tape": "Canal CMB", "sync": "Miguel Lins" },
+      "description": "Videoclipe de \"Simca Chambord\", de Camisa de Vênus (1986)",
+      "added": "2026-11-09",
       "added_by": "moguell"
     }
   ]
