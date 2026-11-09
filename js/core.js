@@ -112,8 +112,17 @@
       if (velho || (Number(SERVIDO.rev) || 0) >= (Number(p.rev) || 0)) { AMB.store.del('amb.publicado'); return null; }
       return p;
     },
-    salvarPublicado(dados, commit) {
-      return AMB.store.set('amb.publicado', { rev: Number(dados.rev) || 0, em: new Date().toISOString(), commit: commit || '', dados });
+    // ops: as operações publicadas; as imagens enviadas ficam guardadas aqui até o GitHub Pages terminar de
+    // publicar (senão a foto/capa nova aparece preta por alguns minutos, porque o arquivo ainda não está no ar)
+    salvarPublicado(dados, commit, ops) {
+      const ant = AMB.store.get('amb.publicado', null);
+      const arquivos = Object.assign({}, (ant && ant.arquivos) || {});
+      (ops || []).forEach((op) => {
+        if (op && op.t === 'arquivo' && op.dataUrl) arquivos[semQuery(op.caminho)] = op.dataUrl;
+        if (op && op.t === 'apagar-arquivo') delete arquivos[semQuery(op.caminho)];
+      });
+      const reg = { rev: Number(dados.rev) || 0, em: new Date().toISOString(), commit: commit || '', dados, arquivos };
+      return AMB.store.set('amb.publicado', reg) || AMB.store.set('amb.publicado', Object.assign(reg, { arquivos: {} }));
     },
     pendente() {
       const p = AMB.store.get('amb.pendente', null);
@@ -175,7 +184,7 @@
     const base = pub ? pub.dados : SERVIDO;
     const pend = AMB.local.pendente();
     AMB.estado = { publicado: pub ? { rev: pub.rev, em: pub.em } : null, pendentes: pend ? pend.ops.length : 0, baseRev: Number(base.rev) || 0, erro: '' };
-    capasPendentes = {};
+    capasPendentes = Object.assign({}, (pub && pub.arquivos) || {});
     if (!pend) return { dados: base, base };
     pend.ops.forEach((op) => {
       if (op.t === 'arquivo' && op.dataUrl) capasPendentes[semQuery(op.caminho)] = op.dataUrl;

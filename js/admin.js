@@ -195,7 +195,7 @@
     try {
       const r = await GH.publicar(con, todas, mensagemCommit(todas), (t) => aviso(esc(t)));
       AMB.local.limparPendente();
-      AMB.local.salvarPublicado(r.dados, r.commit);
+      AMB.local.salvarPublicado(r.dados, r.commit, todas);
       AMB.build();
       E.sujo = false;
       E.flash = { tipo: 'ok', html: '<b>Publicado!</b> ' + esc(o.ok || '') + ' O site público atualiza sozinho em 1 ou 2 minutos. ' +
@@ -1186,7 +1186,7 @@
         try {
           const r = await GH.publicar(con, ops, mensagemCommit(ops), (t) => { msgEl.className = 'form-msg adm-msg'; msgEl.textContent = t; });
           AMB.local.limparPendente();
-          AMB.local.salvarPublicado(r.dados, r.commit);
+          AMB.local.salvarPublicado(r.dados, r.commit, ops);
           AMB.build();
           E.flash = { tipo: 'ok', html: '<b>Publicado!</b> ' + V.pl(ops.length, 'alteração', 'alterações') + ' no GitHub. O site público atualiza em 1 ou 2 minutos. <a href="' + esc(r.url) + '" target="_blank" rel="noopener">Ver o commit ↗</a>' };
           AMB.render();
