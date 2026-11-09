@@ -15,8 +15,8 @@
  *   sources   : { id: { t: título, u: link } } (usadas por id nos campos src)
  */
 window.AMB_DATA = {
-  "updated": "2026-11-08",
-  "rev": 4,
+  "updated": "2026-11-09",
+  "rev": 5,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1523,23 +1523,33 @@ window.AMB_DATA = {
       "title": "Brigitte",
       "kind": "tv",
       "date": "1985",
-      "status": "na-fila",
+      "status": "no-acervo",
       "capa": "media/capas/joe-euthanazia-brigitte-1985.jpg",
-      "duration": 73,
+      "duration": 59,
+      "file": {
+        "video": "https://archive.org/download/ambario-joe-euthanazia-brigitte-1985/joe-euthanazia-brigitte-1985.mp4",
+        "ia": "ambario-joe-euthanazia-brigitte-1985"
+      },
       "audio": [
         {
           "id": "principal",
           "short": "DISCO",
           "label": "Áudio do disco (FLAC)",
           "kind": "digital",
-          "embedded": true,
           "release": "tudo-pode-mudar-1985",
-          "note": "faixa 9"
+          "note": "faixa 9",
+          "embedded": true
         },
-        { "id": "original", "short": "ORIGINAL", "label": "Som original da gravação", "kind": "tv" }
+        {
+          "id": "original",
+          "short": "ORIGINAL",
+          "label": "Som original da gravação",
+          "kind": "tv",
+          "url": "https://archive.org/download/ambario-joe-euthanazia-brigitte-1985/joe-euthanazia-brigitte-1985-fita.m4a"
+        }
       ],
-      "credits": { "sync": "moguell" },
-      "source": { "medium": "Cópia digital" },
+      "credits": { "sync": "moguell", "tape": "Virginie Boutaud" },
+      "source": { "medium": "Cópia digital", "aired": "1985" },
       "description": "Joe Euthanazia canta “Brigitte”, do LP Tudo Pode Mudar (RCA, 1985), num palco de TV.",
       "src": ["ddb-joe-1985"],
       "added": "2026-11-07",
