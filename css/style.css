@@ -354,6 +354,8 @@ table.faixas { width: 100%; border-collapse: collapse; font-size: 12.5px; }
 .f-t { font-weight: 700; }
 .faixas tr.nao .f-t { font-weight: 400; }
 .f-feat { font-weight: 400; color: #666; }
+.f-ano { font-weight: 400; color: #777; font-size: .9em; }
+.disco-semvid { margin: 8px 12px; }
 .f-w { display: block; font: 400 11px Arial; color: #888; }
 .f-d { width: 54px; color: #777; }
 .f-v { width: 44%; }
@@ -700,3 +702,5 @@ html.vr-trava { overflow: hidden; }
 .adm-form .adm-dg-faixas label { display: flex; align-items: baseline; gap: 6px; margin: 0; font-weight: normal; cursor: pointer; }
 .adm-form .adm-dg-faixas input[type="radio"] { flex: none; width: auto; height: auto; margin: 0; padding: 0; border: 0; box-shadow: none; }
 .adm-dg-faixas input:checked + b { color: #1d66c9; }
+.adm-form .adm-dg-ano { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 0 0 6px; font-weight: 700; }
+.adm-form .adm-dg-ano input { width: 70px; }

@@ -571,9 +571,12 @@
       const t = d && d.tracks[i];
       if (!t) return;
       E.discogs.faixa = i;
+      const anoIn = dRes.querySelector('input[name="dg_ano"]');
+      if (anoIn) { const ano = t.year || d.year || ''; anoIn.value = ano; E.discogs.ano = ano ? Number(ano) : null; }
       el('song').value = t.song;
       el('title').value = AMB.cleanTitle(t.t);
-      if (!el('date').value.trim() && d.year) el('date').value = String(d.year);
+      const anoVideo = E.discogs.ano || d.year || (t.year ? Number(t.year) : '');
+      if (anoVideo && (!el('date').value.trim() || el('date').value.trim() === E.discogs.dataAuto)) { el('date').value = String(anoVideo); E.discogs.dataAuto = el('date').value; }
       // áudio principal = o disco
       const sel = el('a1_release');
       if (!Array.from(sel.options).some((o) => o.value === d.id)) {
@@ -616,6 +619,7 @@
           E.discogs = { disco: Object.assign({}, jaTem, { tracks: jaTem.tracks.map((t) => Object.assign({}, t)) }), existente: true };
         } else E.discogs = { disco, existente: false };
         const d = E.discogs.disco;
+        E.discogs.ano = d.year || null;
         // faixa sugerida: a que bate com o título já escrito; senão a primeira (lado A do compacto)
         const tit = AMB.norm(AMB.cleanTitle(el('title').value || el('song').value || ''));
         let sug = tit ? d.tracks.findIndex((t) => AMB.norm(AMB.cleanTitle(t.t)) === tit || t.song === el('song').value) : -1;
@@ -624,11 +628,20 @@
           '<p><b>' + esc(nomeArt) + ' — ' + esc(d.title) + '</b> <span class="mini">' + esc([AMB.RELTYPES[d.type] || d.type, d.year, d.label, d.format, r.country].filter(Boolean).join(' · ')) + '</span>' +
             ' <a class="mini" href="https://www.discogs.com/release/' + esc(r.id) + '" target="_blank" rel="noopener">abrir no Discogs ↗</a></p>' +
           '<p class="mini">' + (E.discogs.existente ? 'Este disco <b>já está</b> na discografia do artista: nada muda nela.' : 'Este disco <b>entra na discografia</b> do artista quando você salvar o vídeo.') + ' Qual faixa é a do vídeo?</p>' +
+          '<label class="adm-dg-ano">Ano original da música <input type="text" name="dg_ano" inputmode="numeric" maxlength="4" value="' + esc(d.year || '') + '"> <small>(ex.: coletânea de 2001 com uma música de 1986)</small></label>' +
           '<ul class="adm-dg-faixas">' + d.tracks.map((t, i) => '<li><label><input type="radio" name="dg_faixa" value="' + i + '"> <b>' + esc(t.n) + '</b> ' + esc(t.t) +
             (t.len ? ' <span class="mini">' + esc(t.len) + '</span>' : '') + '</label></li>').join('') + '</ul>' +
           (d.tracks.length ? '' : '<p class="erro">O Discogs não trouxe a lista de faixas deste disco.</p>') +
         '</div>';
         dRes.querySelectorAll('input[name="dg_faixa"]').forEach((rd) => rd.addEventListener('change', () => escolherFaixa(Number(rd.value))));
+        const anoIn = dRes.querySelector('input[name="dg_ano"]');
+        anoIn.addEventListener('input', () => {
+          const ano = anoIn.value.trim();
+          E.discogs.ano = /^\d{4}$/.test(ano) ? Number(ano) : null;
+          // a data do vídeo acompanha o ano enquanto não foi mudada à mão
+          if (E.discogs.ano && (!el('date').value.trim() || el('date').value.trim() === E.discogs.dataAuto)) { el('date').value = String(E.discogs.ano); E.discogs.dataAuto = el('date').value; idPrevisto(); }
+          E.sujo = true;
+        });
         if (d.tracks.length) escolherFaixa(sug);
         dMsg.textContent = 'Pronto: confira a faixa marcada e os campos preenchidos abaixo.';
       } catch (er) {
@@ -744,11 +757,16 @@
       const base = artistaNovo || (rawArtista(artista) ? clone(rawArtista(artista)) : null);
       if (base) {
         base.releases = base.releases || [];
-        const ja = base.releases.find((x) => (x.discogs && String(x.discogs) === String(d.discogs)) || x.id === d.id);
-        if (!ja) {
-          base.releases.push(ordenar(clone(d), ORDEM_DISCO.concat(['discogs'])));
-          if (artistaNovo) artistaNovo = base; else artistaDisco = ordenar(base, ORDEM_ARTISTA);
+        let mudou = false;
+        let rel = base.releases.find((x) => (x.discogs && String(x.discogs) === String(d.discogs)) || x.id === d.id);
+        if (!rel) { rel = ordenar(clone(d), ORDEM_DISCO.concat(['discogs'])); base.releases.push(rel); mudou = true; }
+        // ano original da música (quando é diferente do ano do disco, ex.: coletânea)
+        const faixa = E.discogs.faixa != null ? (rel.tracks || []).find((t) => t.n === (d.tracks[E.discogs.faixa] || {}).n) : null;
+        if (faixa) {
+          const ano = E.discogs.ano && String(E.discogs.ano) !== String(rel.year) ? E.discogs.ano : undefined;
+          if (String(faixa.year || '') !== String(ano || '')) { if (ano) faixa.year = ano; else delete faixa.year; mudou = true; }
         }
+        if (mudou) { if (artistaNovo) artistaNovo = base; else artistaDisco = ordenar(base, ORDEM_ARTISTA); }
       }
     }
     const a = AMB.artists[artista];

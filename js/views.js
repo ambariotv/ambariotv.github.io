@@ -405,7 +405,6 @@
         ['no-acervo', 'na-fila', 'procura-se'].map((k) => '<span class="cb-' + k + '" style="width:' + larg(k) + '"></span>').join('') + '</div>' +
       '<div class="cob-leg">' + ['no-acervo', 'na-fila', 'procura-se'].map((k) => '<span class="leg leg-' + k + '">' + esc(AMB.STATUS[k].t) + ' (' + (cob.cont[k] || 0) + ')</span>').join('') +
         '<span class="leg leg-outra">' + T('outra versão da música', 'different version of the song') + '</span></div>' +
-      '<label class="cob-so"><input type="checkbox" data-acao="so-com-video"> ' + T('Mostrar só as faixas com vídeo', 'Show only tracks with video') + '</label>' +
     '</div>';
     const discos = cob.discos.map((d) => {
       const r = d.r;
@@ -420,14 +419,14 @@
             '<span class="mini-barra"><span style="width:' + pct + '%"></span></span></div>' +
         '</div>' +
         (r.note ? '<p class="disco-nota">' + esc(r.note) + '</p>' : '') +
-        '<table class="faixas"><thead><tr><th scope="col">' + T('Faixa', 'Track') + '</th><th scope="col">' + T('Música', 'Song') + '</th><th scope="col">' + T('Duração', 'Length') + '</th><th scope="col">' + T('Registros em vídeo', 'Video recordings') + '</th></tr></thead><tbody>' +
-        d.linhas.map((l) => '<tr class="' + (l.regs.length ? 'tem' : 'nao') + '">' +
+        (d.comVideo ? '<table class="faixas"><thead><tr><th scope="col">' + T('Faixa', 'Track') + '</th><th scope="col">' + T('Música', 'Song') + '</th><th scope="col">' + T('Duração', 'Length') + '</th><th scope="col">' + T('Registros em vídeo', 'Video recordings') + '</th></tr></thead><tbody>' +
+        d.linhas.filter((l) => l.regs.length).map((l) => '<tr class="tem">' +
           '<td class="f-n">' + esc(l.t.n) + '</td>' +
-          '<td class="f-t">' + esc(l.t.t) + (l.t.feat ? ' <span class="f-feat">(' + esc(/^(com |coro|vocal)/.test(l.t.feat) ? l.t.feat : T('part. ', 'feat. ') + l.t.feat) + ')</span>' : '') +
+          '<td class="f-t">' + esc(l.t.t) + (l.t.year && String(l.t.year) !== String(r.year) ? ' <span class="f-ano" title="' + T('Ano original da música', 'Original year of the song') + '">(' + esc(l.t.year) + ')</span>' : '') + (l.t.feat ? ' <span class="f-feat">(' + esc(/^(com |coro|vocal)/.test(l.t.feat) ? l.t.feat : T('part. ', 'feat. ') + l.t.feat) + ')</span>' : '') +
             (l.t.w || l.t.note ? '<span class="f-w">' + esc([l.t.w, l.t.note].filter(Boolean).join(' · ')) + '</span>' : '') + '</td>' +
           '<td class="f-d">' + esc(l.t.len || '') + '</td>' +
           '<td class="f-v">' + (l.regs.length ? l.regs.map(V.vchip).join('') : '<span class="f-sem">—</span>') + '</td></tr>').join('') +
-        '</tbody></table>' +
+        '</tbody></table>' : '<p class="mini disco-semvid">' + T('Nenhuma faixa deste disco tem registro em vídeo ainda.', 'No track from this record has a video recording yet.') + '</p>') +
         (r.partial ? '<p class="mini">' + T('Lista parcial: só as faixas que conhecemos.', 'Partial list: only the tracks we know.') + '</p>' : '') +
         V.fontes(r.src) +
       '</section>';
