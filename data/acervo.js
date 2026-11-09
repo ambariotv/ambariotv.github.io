@@ -15,8 +15,8 @@
  *   sources   : { id: { t: título, u: link } } (usadas por id nos campos src)
  */
 window.AMB_DATA = {
-  "updated": "2026-11-07",
-  "rev": 3,
+  "updated": "2026-11-08",
+  "rev": 4,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1410,22 +1410,33 @@ window.AMB_DATA = {
       "title": "Febre Tropical",
       "kind": "tv",
       "date": "1985",
-      "status": "na-fila",
+      "status": "no-acervo",
       "capa": "media/capas/joe-euthanazia-febre-tropical-1985.jpg",
       "duration": 164,
+      "file": {
+        "video": "https://archive.org/download/ambario-joe-euthanazia-febre-tropical-1985/joe-euthanazia-febre-tropical-1985.mp4",
+        "ia": "ambario-joe-euthanazia-febre-tropical-1985"
+      },
       "audio": [
         {
           "id": "principal",
           "short": "DISCO",
           "label": "Áudio do disco (FLAC)",
-          "kind": "digital",
-          "embedded": true,
+          "kind": "lp",
           "release": "tudo-pode-mudar-1985",
-          "note": "faixa 3"
+          "by": "vinilcdbrasil",
+          "note": "faixa 3",
+          "embedded": true
         },
-        { "id": "original", "short": "ORIGINAL", "label": "Som original da gravação", "kind": "tv" }
+        {
+          "id": "original",
+          "short": "ORIGINAL",
+          "label": "Som original da gravação",
+          "kind": "tv",
+          "url": "https://archive.org/download/ambario-joe-euthanazia-febre-tropical-1985/joe-euthanazia-febre-tropical-1985-fita.m4a"
+        }
       ],
-      "credits": { "sync": "moguell" },
+      "credits": { "sync": "Miguel Lins", "tape": "Renato" },
       "source": {
         "medium": "Cópia digital",
         "from": "Cópia com marcas d’água de colecionador (“Rei dos Arquivos Raros”, “Renato 1980”, “Nacionais Anos 80’s”)"
