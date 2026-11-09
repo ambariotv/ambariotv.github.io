@@ -5,7 +5,7 @@
   <link rel="preconnect" href="https://archive.org">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ambário — acervo de videoclipes</title>
-  <meta name="description" content="Acervo público de videoclipes e apresentações musicais gravados em fita, brasileiros e gringos, com o áudio dos discos sincronizado, os créditos de quem guardou cada fita e a discografia comparada à videografia de cada artista.">
+  <meta name="description" content="Acervo público de videoclipes e apresentações musicais, brasileiros e gringos, com o áudio dos discos sincronizado, os créditos de quem guardou cada fita e a discografia comparada à videografia de cada artista.">
   <meta name="theme-color" content="#2f77d0">
   <meta property="og:title" content="Ambário — acervo de videoclipes">
   <meta property="og:site_name" content="Ambário">
@@ -15,10 +15,10 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <a class="pular" href="#main">Pular para o conteúdo</a>
+  <a class="pular" href="#main" data-en="Skip to content">Pular para o conteúdo</a>
   <header class="topo">
     <div class="topo-in">
-      <a class="logo" href="#inicio" aria-label="Início">
+      <a class="logo" href="#inicio" aria-label="Início" data-en-al="Home">
         <svg class="logo-tv" viewBox="0 0 64 56" aria-hidden="true">
           <defs>
             <linearGradient id="lg-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f8fd"/><stop offset=".5" stop-color="#c9d6e6"/><stop offset=".5" stop-color="#b3c4d9"/><stop offset="1" stop-color="#dfe8f3"/></linearGradient>
@@ -38,32 +38,33 @@
         <span class="logo-txt"><span class="logo-nome"><em>Ambário</em></span><span class="logo-sub">Acervo de videoclipes</span></span>
       </a>
       <nav class="topo-links" aria-label="Links">
-        <a href="#sobre">Sobre</a><span>|</span><a href="#colaborar">Como colaborar</a><span>|</span><a href="#politica">Política</a>
+        <a href="#sobre" data-en="About">Sobre</a><span>|</span><a href="#colaborar" data-en="Contribute">Como colaborar</a><span>|</span><a href="#politica" data-en="Policy">Política</a>
+        <span class="lang" role="group" aria-label="Idioma / Language"><button type="button" data-lang="pt" title="Português">PT</button><button type="button" data-lang="en" title="English">EN</button></span>
       </nav>
     </div>
-    <nav class="abas-topo" aria-label="Seções">
-      <a href="#inicio" data-tab="inicio">Início</a>
-      <a href="#videos" data-tab="videos">Vídeos</a>
-      <a href="#artistas" data-tab="artistas">Artistas</a>
-      <a href="#acervos" data-tab="acervos">Acervos</a>
-      <a href="#procura-se" data-tab="procura-se">Procura-se</a>
+    <nav class="abas-topo" aria-label="Seções" data-en-al="Sections">
+      <a href="#inicio" data-tab="inicio" data-en="Home">Início</a>
+      <a href="#videos" data-tab="videos" data-en="Videos">Vídeos</a>
+      <a href="#artistas" data-tab="artistas" data-en="Artists">Artistas</a>
+      <a href="#acervos" data-tab="acervos" data-en="Collections">Acervos</a>
+      <a href="#procura-se" data-tab="procura-se" data-en="Wanted">Procura-se</a>
     </nav>
     <div class="barra-busca">
       <form class="busca" role="search" id="form-busca">
-        <input type="search" name="q" id="q" placeholder="Artista, música, programa, ano…" aria-label="Buscar no acervo" autocomplete="off">
-        <button type="submit" class="btn">Buscar</button>
+        <input type="search" name="q" id="q" placeholder="Artista, música, programa, ano…" aria-label="Buscar no acervo" data-en-ph="Artist, song, TV show, year…" data-en-al="Search the archive" autocomplete="off">
+        <button type="submit" class="btn" data-en="Search">Buscar</button>
       </form>
-      <a class="btn btn-y btn-colab" href="#colaborar">Colaborar</a>
+      <a class="btn btn-y btn-colab" href="#colaborar" data-en="Contribute">Colaborar</a>
     </div>
   </header>
 
   <main id="main" class="conteudo" tabindex="-1">
-    <noscript><p class="vazio">O acervo precisa de JavaScript ligado para funcionar.</p></noscript>
+    <noscript><p class="vazio">O acervo precisa de JavaScript ligado para funcionar. / This archive needs JavaScript to work.</p></noscript>
   </main>
 
   <footer class="rodape">
-    <nav><a href="#sobre">Sobre</a> · <a href="#colaborar">Como colaborar</a> · <a href="#politica">Política e pedidos de remoção</a> · <a href="#procura-se">Procura-se</a> · <a href="#admin">Área do curador</a></nav>
-    <p>Acervo sem fins lucrativos. Nenhum vídeo daqui está no YouTube: os arquivos são enviados pelos colaboradores e guardados no Internet Archive.</p>
+    <nav><a href="#sobre" data-en="About">Sobre</a> · <a href="#colaborar" data-en="Contribute">Como colaborar</a> · <a href="#politica" data-en="Policy and takedown requests">Política e pedidos de remoção</a> · <a href="#procura-se" data-en="Wanted">Procura-se</a> · <a href="#admin" data-en="Curator area">Área do curador</a></nav>
+    <p data-en="Non-profit archive. Files are preserved at the Internet Archive.">Acervo sem fins lucrativos. Os arquivos são preservados no Internet Archive.</p>
     <p class="mini" id="modo"></p>
   </footer>
 

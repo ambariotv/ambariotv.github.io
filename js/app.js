@@ -9,6 +9,7 @@
   const AMB = window.AMB;
   const V = AMB.V;
   const esc = AMB.esc;
+  const T = AMB.t;
   const main = document.getElementById('main');
 
   const ST = {
@@ -30,9 +31,21 @@
     const el = document.querySelector('.logo-nome');
     if (el) el.innerHTML = (partes.length ? esc(partes.join(' ')) + ' ' : '') + '<em>' + esc(ultima) + '</em>';
     const sub = document.querySelector('.logo-sub');
-    if (sub) sub.textContent = AMB.cfg('SITE_TAGLINE', 'Acervo de videoclipes');
+    if (sub) sub.textContent = T(AMB.cfg('SITE_TAGLINE', 'Acervo de videoclipes'), AMB.cfg('SITE_TAGLINE_EN', 'Music video archive'));
     const modo = document.getElementById('modo');
-    if (modo) modo.textContent = AMB.api.live() ? '' : 'Modo demonstração: comentários, exibições e avaliações ficam só neste navegador até o servidor (Apps Script) ser ligado.';
+    if (modo) modo.textContent = AMB.api.live() ? '' : T('Modo demonstração: comentários, exibições e avaliações ficam só neste navegador até o servidor (Apps Script) ser ligado.', 'Demo mode: comments, views and ratings stay in this browser only until the server (Apps Script) is connected.');
+    // textos fixos do index.html: data-en (texto), data-en-ph (placeholder), data-en-al (aria-label)
+    document.documentElement.lang = AMB.en ? 'en' : 'pt-BR';
+    if (AMB.en) {
+      document.querySelectorAll('[data-en]').forEach((el) => { el.textContent = el.dataset.en; });
+      document.querySelectorAll('[data-en-ph]').forEach((el) => { el.placeholder = el.dataset.enPh; });
+      document.querySelectorAll('[data-en-al]').forEach((el) => { el.setAttribute('aria-label', el.dataset.enAl); });
+    }
+    // seletor de idioma
+    document.querySelectorAll('[data-lang]').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.lang === AMB.lang));
+      b.addEventListener('click', () => { if (b.dataset.lang !== AMB.lang) AMB.setLang(b.dataset.lang); });
+    });
   }
 
   // Aviso para quem edita: alterações que só existem neste navegador, ou a versão recém-publicada
@@ -88,7 +101,7 @@
 
   function titulo(t) {
     const site = AMB.cfg('SITE_NAME', 'Ambário');
-    document.title = t ? t + ' — ' + site : site + ' — ' + AMB.cfg('SITE_TAGLINE', 'Acervo de videoclipes');
+    document.title = t ? t + ' — ' + site : site + ' — ' + T(AMB.cfg('SITE_TAGLINE', 'Acervo de videoclipes'), AMB.cfg('SITE_TAGLINE_EN', 'Music video archive'));
   }
   function marcarAba(aba) {
     document.querySelectorAll('.abas-topo a').forEach((a) => {
@@ -107,30 +120,30 @@
     if (!h || h === 'inicio') {
       html = V.home(ST.home); aba = 'inicio'; depois = posHome;
     } else if (h === 'videos') {
-      html = V.videos(ST.videos); aba = 'videos'; tit = 'Vídeos';
+      html = V.videos(ST.videos); aba = 'videos'; tit = T('Vídeos', 'Videos');
     } else if (h.indexOf('v-') === 0) {
       const v = AMB.videoById[h.slice(2)];
       if (v) { html = V.watch(v); aba = 'videos'; tit = v.artistObj.name + ' — ' + v.title; depois = () => posWatch(v); }
-      else html = V.naoAchei('este vídeo');
+      else html = V.naoAchei(T('este vídeo', 'this video'));
     } else if (h.indexOf('a-') === 0) {
       const [id, sub] = h.slice(2).split('--');
       const a = AMB.artists[id];
       if (a) { html = V.artista(a, sub); aba = 'artistas'; tit = a.name; depois = posArtista; }
-      else html = V.naoAchei('este artista');
+      else html = V.naoAchei(T('este artista', 'this artist'));
     } else if (h === 'artistas') {
-      html = V.artistas(ST.artistas); aba = 'artistas'; tit = 'Artistas';
+      html = V.artistas(ST.artistas); aba = 'artistas'; tit = T('Artistas', 'Artists');
     } else if (h === 'acervos') {
-      html = V.acervos(); aba = 'acervos'; tit = 'Acervos';
+      html = V.acervos(); aba = 'acervos'; tit = T('Acervos', 'Collections');
     } else if (h.indexOf('c-') === 0) {
       const c = AMB.acervos[h.slice(2)];
       if (c) { html = V.acervo(c); aba = 'acervos'; tit = c.name; }
-      else html = V.naoAchei('este acervo');
+      else html = V.naoAchei(T('este acervo', 'this collection'));
     } else if (h === 'procura-se') {
-      html = V.procura(); aba = 'procura-se'; tit = 'Procura-se';
+      html = V.procura(); aba = 'procura-se'; tit = AMB.STATUS['procura-se'].t;
     } else if (h === 'busca') {
-      html = ST.q ? V.busca(ST.q) : V.naoAchei('o que buscar: digite na caixa de busca'); tit = 'Busca';
+      html = ST.q ? V.busca(ST.q) : V.naoAchei(T('o que buscar: digite na caixa de busca', 'anything to search for: type in the search box')); tit = T('Busca', 'Search');
     } else if (h === 'sobre' || h === 'colaborar' || h === 'politica') {
-      html = V.sobre(h); tit = h === 'colaborar' ? 'Como colaborar' : h === 'politica' ? 'Política' : 'Sobre';
+      html = V.sobre(h); tit = h === 'colaborar' ? T('Como colaborar', 'How to contribute') : h === 'politica' ? T('Política', 'Policy') : T('Sobre', 'About');
       depois = () => { if (h !== 'sobre') rolarPara('sec-' + h); };
     } else if (h === 'admin' || h.indexOf('admin/') === 0) {
       html = '<div id="admin" class="adm-pg"><p class="mini">Carregando a área do curador…</p></div>'; tit = 'Área do curador';
@@ -173,14 +186,14 @@
     raiz.querySelectorAll('[data-st]').forEach((el) => {
       const x = s[el.dataset.st];
       if (!x) return;
-      el.innerHTML = (el.dataset.curto ? AMB.fmtNum(x.v) + ' exib.' : V.pl(x.v || 0, 'exibição', 'exibições')) + (x.n ? ' ' + V.estrelas(x.r, x.n, 'est-p') : '');
+      el.innerHTML = (el.dataset.curto ? AMB.fmtNum(x.v) + T(' exib.', ' views') : V.pl(x.v || 0, T('exibição', 'view'), T('exibições', 'views'))) + (x.n ? ' ' + V.estrelas(x.r, x.n, 'est-p') : '');
     });
     raiz.querySelectorAll('[data-st-views]').forEach((el) => { const x = s[el.dataset.stViews]; if (x) el.textContent = AMB.fmtNum(x.v || 0); });
     raiz.querySelectorAll('[data-st-rate]').forEach((el) => {
       const x = s[el.dataset.stRate];
       if (!x) return;
       const meu = AMB.myVote(el.dataset.stRate);
-      el.innerHTML = (x.n ? V.estrelas(x.r, x.n) + ' ' + V.pl(x.n, 'avaliação', 'avaliações') : 'Seja o primeiro a avaliar') + (meu ? ' · <span class="mini">você deu ' + meu + '</span>' : '');
+      el.innerHTML = (x.n ? V.estrelas(x.r, x.n) + ' ' + V.pl(x.n, T('avaliação', 'rating'), T('avaliações', 'ratings')) : T('Seja o primeiro a avaliar', 'Be the first to rate')) + (meu ? ' · <span class="mini">' + T('você deu ', 'you gave ') + meu + '</span>' : '');
       pintarVoto(meu);
     });
     raiz.querySelectorAll('[data-st-com]').forEach((el) => { const x = s[el.dataset.stCom]; if (x && x.c) el.textContent = '(' + x.c + ')'; });
@@ -200,10 +213,10 @@
         const v = AMB.videoById[c.video_id];
         return '<li><b>' + esc(c.nome) + '</b> <span class="mini">' + esc(AMB.ago(c.criado_em)) + '</span>' +
           '<p>“' + esc(String(c.texto).length > 110 ? String(c.texto).slice(0, 107) + '…' : c.texto) + '”</p>' +
-          (v ? '<a class="mini" href="#v-' + esc(v.id) + '">em ' + esc(v.artistObj.name + ' — ' + v.title) + '</a>' : '') + '</li>';
-      }).join('') + '</ul>' : '<p class="mini">Ainda não há comentários. Que tal deixar o primeiro?</p>';
+          (v ? '<a class="mini" href="#v-' + esc(v.id) + '">' + T('em ', 'on ') + esc(v.artistObj.name + ' — ' + v.title) + '</a>' : '') + '</li>';
+      }).join('') + '</ul>' : '<p class="mini">' + T('Ainda não há comentários. Que tal deixar o primeiro?', 'No comments yet. Why not leave the first one?') + '</p>';
     } catch (e) {
-      box.innerHTML = '<p class="mini">Não deu para carregar os comentários agora.</p>';
+      box.innerHTML = '<p class="mini">' + T('Não deu para carregar os comentários agora.', 'Could not load comments right now.') + '</p>';
     }
   }
 
@@ -233,8 +246,8 @@
     if (v.hasFile) {
       const atalhos = document.createElement('p');
       atalhos.className = 'mini atalhos';
-      atalhos.innerHTML = 'Atalhos: <kbd>espaço</kbd> tocar/pausar · <kbd>←</kbd><kbd>→</kbd> 5 s · ' + (v.audio.length > 1 ? '<kbd>A</kbd> trocar o áudio · ' : '') +
-        '<kbd>F</kbd> tela cheia · <kbd>M</kbd> som · <kbd>C</kbd> filtro CRT';
+      atalhos.innerHTML = T('Atalhos: <kbd>espaço</kbd> tocar/pausar', 'Shortcuts: <kbd>space</kbd> play/pause') + ' · <kbd>←</kbd><kbd>→</kbd> 5 s · ' + (v.audio.length > 1 ? '<kbd>A</kbd> ' + T('trocar o áudio', 'switch audio') + ' · ' : '') +
+        '<kbd>F</kbd> ' + T('tela cheia', 'fullscreen') + ' · <kbd>M</kbd> ' + T('som', 'mute') + ' · <kbd>C</kbd> ' + T('filtro CRT', 'CRT filter');
       box.after(atalhos);
     }
     carregarComentarios(v.id);
@@ -246,10 +259,10 @@
     if (!box || !t) return;
     const outra = v.audio.find((x) => x !== t && (x.embedded || x.url));
     const rel = t.release ? v.artistObj.releases.find((r) => r.id === t.release) : null;
-    box.innerHTML = '<span class="ai-rot">Você está ouvindo:</span> <b>' + esc(t.label || t.short) + '</b>' +
+    box.innerHTML = '<span class="ai-rot">' + T('Você está ouvindo:', 'You are listening to:') + '</span> <b>' + esc(t.label || t.short) + '</b>' +
       (rel ? ' — <a href="#a-' + esc(v.artistObj.id) + '" data-disco="' + esc(rel.id) + '">' + esc(rel.title) + '</a> (' + esc(AMB.RELTYPES[rel.type] || '') + (rel.year ? ', ' + esc(rel.year) : '') + ')' : '') +
-      (t.by ? ', digitalizado por ' + V.quem(AMB.who(t.by)) : '') +
-      (outra ? ' <button type="button" class="btn btn-p" data-acao="trocar-audio" data-id="' + esc(outra.id) + '">Ouvir: ' + esc(outra.label || outra.short) + '</button>' : '');
+      (t.by ? T(', digitalizado por ', ', digitized by ') + V.quem(AMB.who(t.by)) : '') +
+      (outra ? ' <button type="button" class="btn btn-p" data-acao="trocar-audio" data-id="' + esc(outra.id) + '">' + T('Ouvir: ', 'Listen to: ') + esc(outra.label || outra.short) + '</button>' : '');
   }
 
   async function carregarComentarios(id) {
@@ -258,7 +271,7 @@
     try {
       const l = await AMB.api.comments(id);
       if (!document.body.contains(box)) return;
-      box.innerHTML = l.length ? l.map(V.comentario).join('') : '<p class="mini">Nenhum comentário ainda.</p>';
+      box.innerHTML = l.length ? l.map(V.comentario).join('') : '<p class="mini">' + T('Nenhum comentário ainda.', 'No comments yet.') + '</p>';
       const n = document.querySelector('[data-st-com="' + id + '"]');
       if (n) n.textContent = l.length ? '(' + l.length + ')' : '';
     } catch (e) {
@@ -279,7 +292,7 @@
     ultimoFoco = document.activeElement;
     const fundo = document.createElement('div');
     fundo.className = 'modal-fundo';
-    fundo.innerHTML = '<div class="modal" role="dialog" aria-modal="true" aria-label="' + esc(rotulo || 'Janela') + '"><button type="button" class="modal-x" data-acao="fechar" aria-label="Fechar">×</button>' + html + '</div>';
+    fundo.innerHTML = '<div class="modal" role="dialog" aria-modal="true" aria-label="' + esc(rotulo || T('Janela', 'Dialog')) + '"><button type="button" class="modal-x" data-acao="fechar" aria-label="' + T('Fechar', 'Close') + '">×</button>' + html + '</div>';
     document.body.appendChild(fundo);
     document.documentElement.classList.add('com-modal');
     const primeiro = fundo.querySelector('input:not([type=hidden]):not([tabindex="-1"]),textarea,select');
@@ -297,33 +310,35 @@
 
   function formTenho(v) {
     const rot = v ? esc(v.artistObj.name + ' — ' + v.title + (v.year ? ' (' + v.year + ')' : '')) : '';
-    abrirModal('<h2>Tenho essa gravação</h2>' +
-      (v ? '<p class="mini">Sobre: <b>' + rot + '</b></p>' : '') +
-      '<p>Que bom! Conte o que você tem. A fita continua sua: o acervo digitaliza (ou orienta você a digitalizar) e devolve, e seu nome entra nos créditos.</p>' +
+    abrirModal('<h2>' + T('Tenho essa gravação', 'I have this recording') + '</h2>' +
+      (v ? '<p class="mini">' + T('Sobre: ', 'About: ') + '<b>' + rot + '</b></p>' : '') +
+      '<p>' + T('Que bom! Conte o que você tem. A fita continua sua: o acervo digitaliza (ou orienta você a digitalizar) e devolve, e seu nome entra nos créditos.', 'Great! Tell us what you have. The tape stays yours: the archive digitizes it (or helps you do it) and returns it, and your name goes in the credits.') + '</p>' +
       '<form class="form-modal" data-tipo="tenho" data-video="' + esc(v ? v.id : '') + '" novalidate>' +
-        '<label>Seu nome ou apelido <input type="text" name="nome" maxlength="60" required></label>' +
-        '<label>Como falar com você <small>(e-mail, Instagram ou WhatsApp — só a moderação vê)</small><input type="text" name="contato" maxlength="120" required></label>' +
-        '<label>Em que formato? <select name="formato"><option>Fita VHS</option><option>Fita Betamax</option><option>Fita U-matic</option><option>Fita Hi8 / Video8</option><option>LaserDisc</option><option>DVD</option><option>Arquivo digital (cópia de melhor qualidade)</option><option>Outro</option></select></label>' +
-        '<label>Detalhes <textarea name="mensagem" rows="4" maxlength="2000" required placeholder="De onde é a gravação? Programa, emissora, ano, se é a fita original ou cópia, como está a fita…"></textarea></label>' +
-        '<label class="hp" aria-hidden="true">Não preencha <input type="text" name="website" tabindex="-1" autocomplete="off"></label>' +
-        '<div class="form-pe"><button type="submit" class="btn btn-y">Enviar</button><button type="button" class="btn" data-acao="fechar">Cancelar</button></div>' +
+        '<label>' + T('Seu nome ou apelido', 'Your name or nickname') + ' <input type="text" name="nome" maxlength="60" required></label>' +
+        '<label>' + T('Como falar com você', 'How to reach you') + ' <small>' + T('(e-mail, Instagram ou WhatsApp — só a moderação vê)', '(e-mail, Instagram or WhatsApp — only moderators see this)') + '</small><input type="text" name="contato" maxlength="120" required></label>' +
+        '<label>' + T('Em que formato?', 'What format?') + ' <select name="formato">' + [T('Fita VHS', 'VHS tape'), T('Fita Betamax', 'Betamax tape'), T('Fita U-matic', 'U-matic tape'), T('Fita Hi8 / Video8', 'Hi8 / Video8 tape'), 'LaserDisc', 'DVD',
+          T('Arquivo digital (cópia de melhor qualidade)', 'Digital file (better-quality copy)'), T('Outro', 'Other')].map((o) => '<option>' + esc(o) + '</option>').join('') + '</select></label>' +
+        '<label>' + T('Detalhes', 'Details') + ' <textarea name="mensagem" rows="4" maxlength="2000" required placeholder="' + T('De onde é a gravação? Programa, emissora, ano, se é a fita original ou cópia, como está a fita…', 'Where is the recording from? Show, channel, year, original tape or copy, tape condition…') + '"></textarea></label>' +
+        '<label class="hp" aria-hidden="true">' + T('Não preencha', 'Leave blank') + ' <input type="text" name="website" tabindex="-1" autocomplete="off"></label>' +
+        '<div class="form-pe"><button type="submit" class="btn btn-y">' + T('Enviar', 'Send') + '</button><button type="button" class="btn" data-acao="fechar">' + T('Cancelar', 'Cancel') + '</button></div>' +
         '<p class="form-msg" role="status"></p>' +
-      '</form>', 'Tenho essa gravação');
+      '</form>', T('Tenho essa gravação', 'I have this recording'));
   }
 
   function formCorrigir(v, a) {
     const alvo = v ? esc(v.artistObj.name + ' — ' + v.title) : a ? esc(a.name) : '';
-    abrirModal('<h2>Sugerir correção</h2>' +
-      (alvo ? '<p class="mini">Sobre: <b>' + alvo + '</b></p>' : '') +
+    abrirModal('<h2>' + T('Sugerir correção', 'Suggest a correction') + '</h2>' +
+      (alvo ? '<p class="mini">' + T('Sobre: ', 'About: ') + '<b>' + alvo + '</b></p>' : '') +
       '<form class="form-modal" data-tipo="correcao" data-video="' + esc(v ? v.id : '') + '" data-artista="' + esc(a ? a.id : v ? v.artistObj.id : '') + '" novalidate>' +
-        '<label>O que está errado ou faltando? <select name="campo"><option>Título ou música</option><option>Data, programa ou emissora</option><option>Créditos (quem cedeu, digitalizou…)</option><option>Discografia (discos e faixas)</option><option>Outra versão / outro registro conhecido</option><option>Pedido de remoção</option><option>Outro</option></select></label>' +
-        '<label>Explique <textarea name="mensagem" rows="4" maxlength="2000" required></textarea></label>' +
-        '<label>Fonte (link de onde veio a informação) <input type="url" name="fonte_url" maxlength="500" placeholder="https://"></label>' +
-        '<label>Contato <small>(opcional, só a moderação vê)</small><input type="text" name="contato" maxlength="120"></label>' +
-        '<label class="hp" aria-hidden="true">Não preencha <input type="text" name="website" tabindex="-1" autocomplete="off"></label>' +
-        '<div class="form-pe"><button type="submit" class="btn btn-y">Enviar</button><button type="button" class="btn" data-acao="fechar">Cancelar</button></div>' +
+        '<label>' + T('O que está errado ou faltando?', 'What is wrong or missing?') + ' <select name="campo">' + [T('Título ou música', 'Title or song'), T('Data, programa ou emissora', 'Date, show or channel'), T('Créditos (quem cedeu, digitalizou…)', 'Credits (who lent, digitized…)'),
+          T('Discografia (discos e faixas)', 'Discography (records and tracks)'), T('Outra versão / outro registro conhecido', 'Other version / other known recording'), T('Pedido de remoção', 'Takedown request'), T('Outro', 'Other')].map((o) => '<option>' + esc(o) + '</option>').join('') + '</select></label>' +
+        '<label>' + T('Explique', 'Explain') + ' <textarea name="mensagem" rows="4" maxlength="2000" required></textarea></label>' +
+        '<label>' + T('Fonte (link de onde veio a informação)', 'Source (link to where the information came from)') + ' <input type="url" name="fonte_url" maxlength="500" placeholder="https://"></label>' +
+        '<label>' + T('Contato', 'Contact') + ' <small>' + T('(opcional, só a moderação vê)', '(optional, only moderators see this)') + '</small><input type="text" name="contato" maxlength="120"></label>' +
+        '<label class="hp" aria-hidden="true">' + T('Não preencha', 'Leave blank') + ' <input type="text" name="website" tabindex="-1" autocomplete="off"></label>' +
+        '<div class="form-pe"><button type="submit" class="btn btn-y">' + T('Enviar', 'Send') + '</button><button type="button" class="btn" data-acao="fechar">' + T('Cancelar', 'Cancel') + '</button></div>' +
         '<p class="form-msg" role="status"></p>' +
-      '</form>', 'Sugerir correção');
+      '</form>', T('Sugerir correção', 'Suggest a correction'));
   }
 
   async function enviarSugestao(form) {
@@ -331,12 +346,12 @@
     const d = Object.fromEntries(new FormData(form).entries());
     const tipo = form.dataset.tipo;
     const falta = Array.from(form.querySelectorAll('[required]')).find((el) => !String(el.value || '').trim());
-    if (falta) { msg.className = 'form-msg erro'; msg.textContent = 'Preencha os campos obrigatórios.'; falta.focus(); return; }
-    if (d.fonte_url && !AMB.isUrl(d.fonte_url)) { msg.className = 'form-msg erro'; msg.textContent = 'O link da fonte precisa começar com http:// ou https://'; return; }
+    if (falta) { msg.className = 'form-msg erro'; msg.textContent = T('Preencha os campos obrigatórios.', 'Fill in the required fields.'); falta.focus(); return; }
+    if (d.fonte_url && !AMB.isUrl(d.fonte_url)) { msg.className = 'form-msg erro'; msg.textContent = T('O link da fonte precisa começar com http:// ou https://', 'The source link must start with http:// or https://'); return; }
     const v = AMB.videoById[form.dataset.video || ''];
     const botao = form.querySelector('button[type=submit]');
     botao.disabled = true;
-    msg.className = 'form-msg'; msg.textContent = 'Enviando…';
+    msg.className = 'form-msg'; msg.textContent = T('Enviando…', 'Sending…');
     try {
       const r = await AMB.api.suggest({
         tipo, video: form.dataset.video || '', artista: form.dataset.artista || (v ? v.artistObj.id : ''),
@@ -346,7 +361,7 @@
       });
       form.querySelectorAll('input,textarea,select,button').forEach((el) => { el.disabled = true; });
       msg.className = 'form-msg ok';
-      msg.textContent = r.demo ? 'Recebido (modo demonstração: a mensagem ficou só neste navegador).' : 'Recebido! A moderação vai ler e, se precisar, responder pelo contato que você deixou. Obrigado!';
+      msg.textContent = r.demo ? T('Recebido (modo demonstração: a mensagem ficou só neste navegador).', 'Received (demo mode: the message stayed in this browser only).') : T('Recebido! A moderação vai ler e, se precisar, responder pelo contato que você deixou. Obrigado!', 'Received! Moderators will read it and, if needed, reply using the contact you left. Thank you!');
     } catch (e) {
       botao.disabled = false;
       msg.className = 'form-msg erro';
@@ -363,14 +378,14 @@
     const desde = Date.now() - Number(form.dataset.aberto || 0);
     const botao = form.querySelector('button[type=submit]');
     botao.disabled = true;
-    msg.className = 'com-msg'; msg.textContent = 'Enviando…';
+    msg.className = 'com-msg'; msg.textContent = T('Enviando…', 'Sending…');
     try {
       const r = await AMB.api.postComment(id, nome, texto, { website: form.website.value, t: desde });
       AMB.store.set('amb.nome', nome.trim());
       form.texto.value = '';
       contarResta(form);
-      if (r.pendente) { msg.className = 'com-msg ok'; msg.textContent = 'Recebido! Seu comentário aparece depois que a moderação aprovar.'; }
-      else { msg.className = 'com-msg ok'; msg.textContent = r.demo ? 'Publicado (modo demonstração: só neste navegador).' : 'Publicado!'; }
+      if (r.pendente) { msg.className = 'com-msg ok'; msg.textContent = T('Recebido! Seu comentário aparece depois que a moderação aprovar.', 'Received! Your comment will show up once moderators approve it.'); }
+      else { msg.className = 'com-msg ok'; msg.textContent = r.demo ? T('Publicado (modo demonstração: só neste navegador).', 'Posted (demo mode: this browser only).') : T('Publicado!', 'Posted!'); }
       carregarComentarios(id);
     } catch (e) {
       msg.className = 'com-msg erro'; msg.textContent = AMB.erroMsg(e);
@@ -378,7 +393,7 @@
   }
   function contarResta(form) {
     const el = form.querySelector('.com-resta');
-    if (el) { const n = 500 - form.texto.value.length; el.textContent = 'Restam ' + n + ' caracteres'; el.classList.toggle('pouco', n < 40); }
+    if (el) { const n = 500 - form.texto.value.length; el.textContent = T('Restam ' + n + ' caracteres', n + ' characters left'); el.classList.toggle('pouco', n < 40); }
   }
 
   async function copiar(txt, botao) {
@@ -387,7 +402,7 @@
       const inp = botao && botao.parentNode.querySelector('input');
       if (inp) { inp.select(); try { ok = document.execCommand('copy'); } catch (e2) { ok = false; } }
     }
-    if (botao) { const antes = botao.textContent; botao.textContent = ok ? 'Copiado!' : 'Selecione e copie'; setTimeout(() => { botao.textContent = antes; }, 1600); }
+    if (botao) { const antes = botao.textContent; botao.textContent = ok ? T('Copiado!', 'Copied!') : T('Selecione e copie', 'Select and copy'); setTimeout(() => { botao.textContent = antes; }, 1600); }
   }
 
   /* ---------------- cliques (um ouvinte para o site todo) ---------------- */
@@ -413,7 +428,7 @@
       case 'favoritar': {
         const on = AMB.favs.toggle(el.dataset.video);
         el.classList.toggle('ativo', on);
-        el.innerHTML = '<i class="ico ico-fav"></i>' + (on ? 'Favoritado' : 'Favoritar');
+        el.innerHTML = '<i class="ico ico-fav"></i>' + (on ? T('Favoritado', 'Favorited') : T('Favoritar', 'Favorite'));
         break;
       }
       case 'votar': {

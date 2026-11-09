@@ -17,6 +17,7 @@
   'use strict';
   const AMB = window.AMB;
   const esc = AMB.esc;
+  const T = AMB.t;
   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
  
   /* ---------- Internet Archive: endereços diretos dos servidores ---------- */
@@ -145,9 +146,9 @@
             // fit: "cover" corta bordas pretas laterais (4:3 dentro de 16:9); "fill" desfaz imagem 4:3 esticada para 16:9
             '<video class="vr-video' + (v.fit ? ' vr-fit-' + esc(v.fit) : '') + '" style="--ar:' + esc(ar) + '" playsinline webkit-playsinline preload="metadata"></video>' +
             '<div class="vr-semsinal" hidden></div>' +
-            '<div class="vr-erro"><strong>SEM SINAL</strong><span class="vr-erro-msg"></span>' +
-              '<span class="vr-erro-acoes"><button type="button" data-a="tentar">TENTAR DE NOVO</button>' +
-              (v.file && v.file.ia ? '<a href="https://archive.org/details/' + encodeURIComponent(v.file.ia) + '" target="_blank" rel="noopener">ABRIR NO INTERNET ARCHIVE ↗</a>' : '') +
+            '<div class="vr-erro"><strong>' + T('SEM SINAL', 'NO SIGNAL') + '</strong><span class="vr-erro-msg"></span>' +
+              '<span class="vr-erro-acoes"><button type="button" data-a="tentar">' + T('TENTAR DE NOVO', 'TRY AGAIN') + '</button>' +
+              (v.file && v.file.ia ? '<a href="https://archive.org/details/' + encodeURIComponent(v.file.ia) + '" target="_blank" rel="noopener">' + T('ABRIR NO INTERNET ARCHIVE ↗', 'OPEN ON INTERNET ARCHIVE ↗') + '</a>' : '') +
               '</span></div>' +
             '<canvas class="vr-camada vr-noise"></canvas>' +
             '<div class="vr-camada vr-scanlines"></div>' +
@@ -155,30 +156,30 @@
             '<div class="vr-camada vr-reflexo"></div>' +
             '<div class="vr-osd vr-osd-canal"></div>' +
             '<div class="vr-osd vr-osd-modo"></div>' +
-            '<div class="vr-carregando" hidden>CARREGANDO<span>…</span></div>' +
+            '<div class="vr-carregando" hidden>' + T('CARREGANDO', 'LOADING') + '<span>…</span></div>' +
             '<div class="vr-sensor"></div>' +
-            '<button type="button" class="vr-grande" data-a="pp" aria-label="Tocar">' + ICONE.play + '</button>' +
+            '<button type="button" class="vr-grande" data-a="pp" aria-label="' + T('Tocar', 'Play') + '">' + ICONE.play + '</button>' +
             '<div class="vr-fim" hidden></div>' +
-            '<button type="button" class="vr-fs-btn vr-fs-prev' + (this.opts.prev ? '' : ' vr-sem') + '" data-a="prev" aria-label="Vídeo anterior">' + ICONE.prev + '</button>' +
-            '<button type="button" class="vr-fs-btn vr-fs-next' + (this.opts.next ? '' : ' vr-sem') + '" data-a="next" aria-label="Próximo vídeo">' + ICONE.next + '</button>' +
-            '<button type="button" class="vr-sair-tela" data-a="tela">✕ SAIR</button>' +
+            '<button type="button" class="vr-fs-btn vr-fs-prev' + (this.opts.prev ? '' : ' vr-sem') + '" data-a="prev" aria-label="' + T('Vídeo anterior', 'Previous video') + '">' + ICONE.prev + '</button>' +
+            '<button type="button" class="vr-fs-btn vr-fs-next' + (this.opts.next ? '' : ' vr-sem') + '" data-a="next" aria-label="' + T('Próximo vídeo', 'Next video') + '">' + ICONE.next + '</button>' +
+            '<button type="button" class="vr-sair-tela" data-a="tela">✕ ' + T('SAIR', 'EXIT') + '</button>' +
           '</div>' +
           '<div class="vr-transporte"' + (v.hasFile ? '' : ' hidden') + '>' +
-            '<button type="button" class="vr-t-btn vr-pp" data-a="pp" aria-label="Tocar">' + ICONE.play + '</button>' +
+            '<button type="button" class="vr-t-btn vr-pp" data-a="pp" aria-label="' + T('Tocar', 'Play') + '">' + ICONE.play + '</button>' +
             '<span class="vr-tempo"><b class="vr-t-atual">0:00</b><i>/</i><span class="vr-t-total">' + (v.duration ? AMB.fmtDur(v.duration) : '0:00') + '</span></span>' +
             '<div class="vr-seek"><div class="vr-seek-trilho"><div class="vr-seek-buf"></div><div class="vr-seek-pos"></div></div>' +
-              '<input type="range" class="vr-seek-in" min="0" max="1000" step="1" value="0" aria-label="Posição no vídeo"></div>' +
-            '<button type="button" class="vr-t-btn vr-mudo" data-a="mudo" aria-label="Tirar o som">' + ICONE.som + '</button>' +
+              '<input type="range" class="vr-seek-in" min="0" max="1000" step="1" value="0" aria-label="' + T('Posição no vídeo', 'Video position') + '"></div>' +
+            '<button type="button" class="vr-t-btn vr-mudo" data-a="mudo" aria-label="' + T('Tirar o som', 'Mute') + '">' + ICONE.som + '</button>' +
             '<input type="range" class="vr-vol" min="0" max="100" step="1" value="' + Math.round(this.volume * 100) + '" aria-label="Volume">' +
-            (trilhas ? '<div class="vr-audio" role="group" aria-label="Escolher o áudio">' + trilhas + '</div>' : '') +
+            (trilhas ? '<div class="vr-audio" role="group" aria-label="' + T('Escolher o áudio', 'Choose audio') + '">' + trilhas + '</div>' : '') +
           '</div>' +
         '</div>' +
         '<div class="vr-controles">' +
-          '<button type="button" class="vr-btn" data-a="power"><b>↻</b>REINICIAR</button>' +
-          '<button type="button" class="vr-btn" data-a="crt"><b>▣</b>CRT: <span class="vr-crt-status ' + (this.crt ? 'vr-on">SIM' : 'vr-off">NÃO') + '</span></button>' +
-          '<button type="button" class="vr-btn" data-a="prev"' + (this.opts.prev ? '' : ' disabled') + '><b>◀◀</b>ANTERIOR</button>' +
-          '<button type="button" class="vr-btn" data-a="next"' + (this.opts.next ? '' : ' disabled') + '><b>▶▶</b>PRÓXIMO</button>' +
-          '<button type="button" class="vr-btn vr-btn-tela" data-a="tela"><b>[ ]</b>TELA CHEIA</button>' +
+          '<button type="button" class="vr-btn" data-a="power"><b>↻</b>' + T('REINICIAR', 'RESTART') + '</button>' +
+          '<button type="button" class="vr-btn" data-a="crt"><b>▣</b>CRT: <span class="vr-crt-status ' + (this.crt ? 'vr-on">' + T('SIM', 'ON') : 'vr-off">' + T('NÃO', 'OFF')) + '</span></button>' +
+          '<button type="button" class="vr-btn" data-a="prev"' + (this.opts.prev ? '' : ' disabled') + '><b>◀◀</b>' + T('ANTERIOR', 'PREVIOUS') + '</button>' +
+          '<button type="button" class="vr-btn" data-a="next"' + (this.opts.next ? '' : ' disabled') + '><b>▶▶</b>' + T('PRÓXIMO', 'NEXT') + '</button>' +
+          '<button type="button" class="vr-btn vr-btn-tela" data-a="tela"><b>[ ]</b>' + T('TELA CHEIA', 'FULLSCREEN') + '</button>' +
         '</div>' +
       '</div>';
     this.tv = this.$('.vr-tv');
@@ -202,7 +203,7 @@
   Player.prototype.osdModo = function (msg, ms) {
     this.osdModoEl.textContent = msg || '';
     clearTimeout(this._t.modo);
-    if (ms) this.timer('modo', () => { this.osdModoEl.textContent = this.video.paused && this.v.hasFile && !this.video.ended ? '❚❚ PAUSA' : ''; }, ms);
+    if (ms) this.timer('modo', () => { this.osdModoEl.textContent = this.video.paused && this.v.hasFile && !this.video.ended ? T('❚❚ PAUSA', '❚❚ PAUSE') : ''; }, ms);
   };
  
   /* ---------- chuvisco (o mesmo do player original) ---------- */
@@ -239,10 +240,10 @@
   Player.prototype.semSinal = function () {
     const v = this.v;
     const box = this.$('.vr-semsinal');
-    const titulo = v.status === 'procura-se' ? 'PROCURA-SE ESTA FITA' : 'NA FILA DO ACERVO';
+    const titulo = v.status === 'procura-se' ? T('PROCURA-SE ESTA FITA', 'THIS TAPE IS WANTED') : T('NA FILA DO ACERVO', 'QUEUED IN THE ARCHIVE');
     const sub = v.status === 'procura-se'
-      ? 'Sabemos que este registro existe, mas ainda não temos uma cópia.'
-      : 'Este registro já foi separado pelo curador e o arquivo ainda vai ser enviado.';
+      ? T('Sabemos que este registro existe, mas ainda não temos uma cópia.', 'We know this recording exists, but we do not have a copy yet.')
+      : T('Este registro já foi separado pelo curador e o arquivo ainda vai ser enviado.', 'The curator has set this recording aside and the file will be uploaded soon.');
     // com capa, a tela azul fica por cima dela, meio transparente (como um quadro congelado do videocassete)
     if (v.thumb) {
       // endereço completo: dentro de uma variável CSS, um caminho relativo seria lido a partir da pasta css/
@@ -256,8 +257,8 @@
       '<div class="vr-ss-meio"><b>' + titulo + '</b>' +
         '<span class="vr-ss-nome">' + esc(v.artistObj.name) + ' — ' + esc(v.title) + (v.year ? ' (' + esc(v.year) + ')' : '') + '</span>' +
         '<span class="vr-ss-sub">' + esc(sub) + '</span>' +
-        '<button type="button" data-acao="tenho" data-video="' + esc(v.id) + '">TENHO ESSA GRAVAÇÃO</button></div>' +
-      '<div class="vr-ss-base">SEM SINAL</div>';
+        '<button type="button" data-acao="tenho" data-video="' + esc(v.id) + '">' + T('TENHO ESSA GRAVAÇÃO', 'I HAVE THIS RECORDING') + '</button></div>' +
+      '<div class="vr-ss-base">' + T('SEM SINAL', 'NO SIGNAL') + '</div>';
     box.hidden = false;
     this.$('.vr-grande').hidden = true;
     this.tv.classList.add('vr-sem-arquivo');
@@ -327,11 +328,11 @@
     this.on(a, 'error', () => {
       if (a !== this.extAtivo) return;
       if (this.outroServidorAudio(t, a)) return;
-      this.osd('ÁUDIO INDISPONÍVEL');
+      this.osd(T('ÁUDIO INDISPONÍVEL', 'AUDIO UNAVAILABLE'));
       this.pausadoPeloAudio = false;
       this.carregando(false);
       if (this.tracks[0] && this.tracks[0] !== t) this.selecionar(this.tracks[0].id, true);
-      this.osdModo('ÁUDIO DA FITA INDISPONÍVEL', 3500);
+      this.osdModo(T('ÁUDIO DA FITA INDISPONÍVEL', 'TAPE AUDIO UNAVAILABLE'), 3500);
     });
     this.ext[t.id] = a;
     return a;
@@ -371,7 +372,7 @@
     if (b) {
       const calado = this.mudo || this.volume === 0;
       b.innerHTML = calado ? ICONE.mudo : ICONE.som;
-      b.setAttribute('aria-label', calado ? 'Ligar o som' : 'Tirar o som');
+      b.setAttribute('aria-label', calado ? T('Ligar o som', 'Unmute') : T('Tirar o som', 'Mute'));
     }
   };
  
@@ -394,7 +395,7 @@
     this.root.querySelectorAll('[data-a="audio"]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === t.id)));
     if (!quieto) {
       this.glitch(180);
-      this.osdModo('ÁUDIO: ' + String(t.label || t.short).toUpperCase(), 2600);
+      this.osdModo(T('ÁUDIO: ', 'AUDIO: ') + String(t.label || t.short).toUpperCase(), 2600);
     }
     if (this.opts.onTrack) this.opts.onTrack(t);
   };
@@ -451,7 +452,7 @@
       clearTimeout(this._t.espera);
       if (this.extAtivo) this.extAtivo.pause();
       this.carregando(false);
-      this.osdModo('❚❚ PAUSA', 0);
+      this.osdModo(T('❚❚ PAUSA', '❚❚ PAUSE'), 0);
       return;
     }
     if (this.video.paused || this.video.ended) this.tocar(); else this.video.pause();
@@ -465,26 +466,26 @@
     this.mudo = !this.mudo;
     if (!this.mudo && this.volume === 0) { this.volume = 0.6; this.$('.vr-vol').value = 60; }
     this.aplicarSom();
-    this.osdModo(this.mudo ? 'SEM SOM' : 'SOM: ' + Math.round(this.volume * 100), 1500);
+    this.osdModo(this.mudo ? T('SEM SOM', 'MUTED') : T('SOM: ', 'VOLUME: ') + Math.round(this.volume * 100), 1500);
   };
   Player.prototype.alternarCRT = function () {
     this.crt = !this.crt;
     this.tv.classList.toggle('vr-crt-off', !this.crt);
     const st = this.$('.vr-crt-status');
-    st.textContent = this.crt ? 'SIM' : 'NÃO';
+    st.textContent = this.crt ? T('SIM', 'ON') : T('NÃO', 'OFF');
     st.className = 'vr-crt-status ' + (this.crt ? 'vr-on' : 'vr-off');
     AMB.store.set('amb.crt', this.crt);
-    this.osd(this.crt ? 'FILTRO CRT LIGADO' : 'FILTRO CRT DESLIGADO');
+    this.osd(this.crt ? T('FILTRO CRT LIGADO', 'CRT FILTER ON') : T('FILTRO CRT DESLIGADO', 'CRT FILTER OFF'));
   };
   Player.prototype.reiniciar = function () {
     this.glitch();
     this.esconderFim();
-    if (!this.v.hasFile) { this.osd('SEM SINAL'); return; }
+    if (!this.v.hasFile) { this.osd(T('SEM SINAL', 'NO SIGNAL')); return; }
     this.$('.vr-erro').classList.remove('ativo');
     if (this.video.error) { this.falhas = 0; this.trocarFonte(this.fonteIdx, 0); return; }
     this.video.currentTime = 0;
     this.tocar();
-    this.osd('PLAYER REINICIADO');
+    this.osd(T('PLAYER REINICIADO', 'PLAYER RESTARTED'));
   };
   Player.prototype.trocarFonte = function (i, tempo, continuar) {
     this.fonteIdx = i;
@@ -528,12 +529,12 @@
       this._recuperando = false;
       this.carregando(false);
       this.glitch();
-      this.$('.vr-erro-msg').textContent = 'Não foi possível carregar o vídeo agora. O Internet Archive pode estar lento ou fora do ar; tente de novo em alguns minutos.';
+      this.$('.vr-erro-msg').textContent = T('Não foi possível carregar o vídeo agora. O Internet Archive pode estar lento ou fora do ar; tente de novo em alguns minutos.', 'The video could not be loaded right now. The Internet Archive may be slow or down; try again in a few minutes.');
       this.$('.vr-erro').classList.add('ativo');
       return;
     }
     this._recuperando = continuar;
-    this.osd(this.fontes.length > 1 ? 'TROCANDO DE SERVIDOR' : 'RECONECTANDO');
+    this.osd(this.fontes.length > 1 ? T('TROCANDO DE SERVIDOR', 'SWITCHING SERVER') : T('RECONECTANDO', 'RECONNECTING'));
     this.glitch();
     const prox = (this.fonteIdx + 1) % this.fontes.length;
     // espera um pouco a cada volta completa, para não martelar um servidor fora do ar
@@ -575,15 +576,15 @@
     const prox = this.opts.next;
     const box = this.$('.vr-fim');
     if (!prox || !this.opts.autoNext) {
-      this.osdModo('FIM DA FITA', 0);
+      this.osdModo(T('FIM DA FITA', 'END OF TAPE'), 0);
       this.$('.vr-grande').hidden = false;
       return;
     }
     let n = 5;
     const desenha = () => {
-      box.innerHTML = '<span class="vr-fim-rot">PRÓXIMA FITA EM ' + n + '</span>' +
+      box.innerHTML = '<span class="vr-fim-rot">' + T('PRÓXIMA FITA EM ', 'NEXT TAPE IN ') + n + '</span>' +
         '<strong>' + esc(prox.artistObj.name) + ' — ' + esc(prox.title) + '</strong>' +
-        '<span class="vr-fim-acoes"><button type="button" data-a="next">IR AGORA</button><button type="button" data-a="cancelar">CANCELAR</button></span>';
+        '<span class="vr-fim-acoes"><button type="button" data-a="next">' + T('IR AGORA', 'GO NOW') + '</button><button type="button" data-a="cancelar">' + T('CANCELAR', 'CANCEL') + '</button></span>';
     };
     desenha();
     box.hidden = false;
@@ -625,7 +626,7 @@
     const tocando = !this.video.paused && !this.video.ended;
     const b = this.$('.vr-pp');
     b.innerHTML = tocando ? ICONE.pause : ICONE.play;
-    b.setAttribute('aria-label', tocando ? 'Pausar' : 'Tocar');
+    b.setAttribute('aria-label', tocando ? T('Pausar', 'Pause') : T('Tocar', 'Play'));
     this.tv.classList.toggle('vr-tocando', tocando);
   };
  
@@ -645,7 +646,7 @@
         case 'crt': this.alternarCRT(); break;
         case 'prev': if (this.opts.onPrev && this.opts.prev) this.opts.onPrev(); break;
         case 'next': this.esconderFim(); if (this.opts.onNext && this.opts.next) this.opts.onNext(); break;
-        case 'cancelar': this.esconderFim(); this.osdModo('FIM DA FITA', 0); this.$('.vr-grande').hidden = false; break;
+        case 'cancelar': this.esconderFim(); this.osdModo(T('FIM DA FITA', 'END OF TAPE'), 0); this.$('.vr-grande').hidden = false; break;
         case 'tela': this.alternarTela(); break;
         case 'tentar': this.$('.vr-erro').classList.remove('ativo'); this.falhas = 0; this.trocarFonte(0, video.readyState > 0 ? video.currentTime : (this._tempoAlvo || 0)); break;
         case 'som': {
@@ -705,7 +706,7 @@
     this.on(video, 'pause', () => {
       this.iconePP();
       if (this.extAtivo && !this.pausadoPeloAudio) this.extAtivo.pause();
-      if (!this.pausadoPeloAudio && !video.ended) this.osdModo('❚❚ PAUSA', 0);
+      if (!this.pausadoPeloAudio && !video.ended) this.osdModo(T('❚❚ PAUSA', '❚❚ PAUSE'), 0);
     });
     this.on(video, 'playing', () => {
       this.carregando(false);

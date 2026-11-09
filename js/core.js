@@ -8,6 +8,33 @@
   const CFG = window.AMB_CONFIG || window.TDT_CONFIG || {}; // TDT_CONFIG: config.js antigo, de antes do nome Ambário
   AMB.cfg = (k, d) => (CFG[k] !== undefined && CFG[k] !== null && CFG[k] !== '' ? CFG[k] : d);
 
+  /* ---------------- idioma ----------------
+   * Português para quem está no Brasil (fuso horário brasileiro) ou usa o navegador em português;
+   * inglês para o resto do mundo. A escolha feita no seletor PT/EN (ou ?lang=en no endereço) vale por cima.
+   */
+  AMB.lang = (function () {
+    try {
+      const q = (location.search.match(/[?&]lang=(pt|en)\b/) || [])[1];
+      if (q) { localStorage.setItem('amb.lang', JSON.stringify(q)); return q; }
+      const s = JSON.parse(localStorage.getItem('amb.lang') || 'null');
+      if (s === 'pt' || s === 'en') return s;
+    } catch (e) { /* sem armazenamento */ }
+    const langs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || '']).map((l) => String(l).toLowerCase());
+    let fuso = '';
+    try { fuso = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { /* ok */ }
+    const fusosBR = /^America\/(Sao_Paulo|Fortaleza|Recife|Bahia|Belem|Maceio|Araguaina|Manaus|Cuiaba|Campo_Grande|Porto_Velho|Boa_Vista|Rio_Branco|Eirunepe|Santarem|Noronha)$/;
+    return fusosBR.test(fuso) || langs.some((l) => l.indexOf('pt') === 0) ? 'pt' : 'en';
+  })();
+  AMB.en = AMB.lang === 'en';
+  // AMB.t('texto em português', 'English text') → o texto no idioma do site
+  AMB.t = (pt, en) => (AMB.en && en != null ? en : pt);
+  AMB.setLang = (l) => {
+    try { localStorage.setItem('amb.lang', JSON.stringify(l)); } catch (e) { /* ok */ }
+    if (/[?&]lang=/.test(location.search)) location.href = location.pathname + location.hash; // tira o ?lang= do endereço
+    else location.reload();
+  };
+  const T = AMB.t;
+
   /* ---------------- utilidades ---------------- */
   const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
   AMB.esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ESC[c]);
@@ -34,7 +61,7 @@
     localStorage.removeItem('tdt.rascunhos');
   } catch (e) { /* sem armazenamento */ }
 
-  AMB.fmtNum = (n) => Number(n || 0).toLocaleString('pt-BR');
+  AMB.fmtNum = (n) => Number(n || 0).toLocaleString(AMB.en ? 'en-US' : 'pt-BR');
   AMB.fmtDur = (s) => {
     s = Math.max(0, Math.round(Number(s) || 0));
     const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60;
@@ -45,12 +72,18 @@
     if (!p.length || p.some(isNaN)) return 0;
     return p.reduce((a, b) => a * 60 + b, 0);
   };
-  const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
-  const MESES_C = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  const MESES_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const MESES = AMB.en ? MESES_EN : ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+  const MESES_C = AMB.en ? MESES_EN.map((m) => m.slice(0, 3)) : ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
   AMB.year = (d) => ((String(d || '').match(/^(\d{4})/) || [])[1] || '');
   AMB.fmtDate = (d) => {
     const m = String(d || '').match(/^(\d{4})(?:-(\d{1,2}))?(?:-(\d{1,2}))?/);
     if (!m) return String(d || '');
+    if (AMB.en) {
+      if (m[3]) return MESES[Number(m[2]) - 1] + ' ' + Number(m[3]) + ', ' + m[1];
+      if (m[2]) return MESES[Number(m[2]) - 1] + ' ' + m[1];
+      return m[1];
+    }
     if (m[3]) return Number(m[3]) + ' de ' + MESES[Number(m[2]) - 1] + ' de ' + m[1];
     if (m[2]) return MESES[Number(m[2]) - 1] + ' de ' + m[1];
     return m[1];
@@ -63,32 +96,32 @@
     const t = Date.parse(iso);
     if (!t) return '';
     const s = Math.max(0, (Date.now() - t) / 1000);
-    const f = (n, a, b) => 'há ' + n + ' ' + (n === 1 ? a : b);
-    if (s < 60) return 'agora há pouco';
-    if (s < 3600) return f(Math.floor(s / 60), 'minuto', 'minutos');
-    if (s < 86400) return f(Math.floor(s / 3600), 'hora', 'horas');
-    if (s < 86400 * 30) return f(Math.floor(s / 86400), 'dia', 'dias');
-    if (s < 86400 * 365) return f(Math.floor(s / (86400 * 30)), 'mês', 'meses');
-    return f(Math.floor(s / (86400 * 365)), 'ano', 'anos');
+    const f = (n, a, b, ea) => (AMB.en ? n + ' ' + ea + (n === 1 ? '' : 's') + ' ago' : 'há ' + n + ' ' + (n === 1 ? a : b));
+    if (s < 60) return T('agora há pouco', 'just now');
+    if (s < 3600) return f(Math.floor(s / 60), 'minuto', 'minutos', 'minute');
+    if (s < 86400) return f(Math.floor(s / 3600), 'hora', 'horas', 'hour');
+    if (s < 86400 * 30) return f(Math.floor(s / 86400), 'dia', 'dias', 'day');
+    if (s < 86400 * 365) return f(Math.floor(s / (86400 * 30)), 'mês', 'meses', 'month');
+    return f(Math.floor(s / (86400 * 365)), 'ano', 'anos', 'year');
   };
   let regionNames = null;
-  try { regionNames = new Intl.DisplayNames(['pt-BR'], { type: 'region' }); } catch (e) { regionNames = null; }
+  try { regionNames = new Intl.DisplayNames([AMB.en ? 'en' : 'pt-BR'], { type: 'region' }); } catch (e) { regionNames = null; }
   AMB.country = (code) => {
     if (!code) return '';
     try { return (regionNames && regionNames.of(String(code).toUpperCase())) || code; } catch (e) { return code; }
   };
 
   /* ---------------- rótulos ---------------- */
-  AMB.KINDS = { clipe: 'Videoclipe', tv: 'Apresentação na TV', 'ao-vivo': 'Show ao vivo', filme: 'Cena de filme', entrevista: 'Entrevista', comercial: 'Comercial', outro: 'Registro' };
-  AMB.KINDS_SHORT = { clipe: 'Clipe', tv: 'Na TV', 'ao-vivo': 'Ao vivo', filme: 'Filme', entrevista: 'Entrevista', comercial: 'Comercial', outro: 'Registro' };
+  AMB.KINDS = { clipe: T('Videoclipe', 'Music video'), tv: T('Apresentação na TV', 'TV performance'), 'ao-vivo': T('Show ao vivo', 'Live concert'), filme: T('Cena de filme', 'Film scene'), entrevista: T('Entrevista', 'Interview'), comercial: T('Comercial', 'Commercial'), outro: T('Registro', 'Recording') };
+  AMB.KINDS_SHORT = { clipe: T('Clipe', 'Video'), tv: T('Na TV', 'On TV'), 'ao-vivo': T('Ao vivo', 'Live'), filme: T('Filme', 'Film'), entrevista: T('Entrevista', 'Interview'), comercial: T('Comercial', 'Commercial'), outro: T('Registro', 'Recording') };
   AMB.STATUS = {
-    'no-acervo': { t: 'No acervo', d: 'O arquivo está no ar e toca aqui.' },
-    'na-fila': { t: 'Na fila', d: 'Registro separado pelo curador. O arquivo ainda não foi enviado.' },
-    'procura-se': { t: 'Procura-se', d: 'Sabemos que o registro existe, mas ninguém do acervo tem uma cópia ainda.' }
+    'no-acervo': { t: T('No acervo', 'In the archive'), d: T('O arquivo está no ar e toca aqui.', 'The file is online and plays here.') },
+    'na-fila': { t: T('Na fila', 'Queued'), d: T('Registro separado pelo curador. O arquivo ainda não foi enviado.', 'Set aside by the curator. The file has not been uploaded yet.') },
+    'procura-se': { t: T('Procura-se', 'Wanted'), d: T('Sabemos que o registro existe, mas ninguém do acervo tem uma cópia ainda.', 'We know this recording exists, but nobody in the archive has a copy yet.') }
   };
-  AMB.RELTYPES = { lp: 'LP', compacto: 'Compacto', single: 'Single', ep: 'EP', cd: 'CD', coletanea: 'Coletânea', participacao: 'Participação', digital: 'Digital' };
-  AMB.ROLES = { curadoria: 'Curadoria', fitas: 'Fitas cedidas', captura: 'Captura de vídeo', audio: 'Digitalização de discos', sincronizacao: 'Sincronização', restauracao: 'Restauração' };
-  AMB.AUDIO_KINDS = { lp: 'LP', compacto: 'Compacto', cd: 'CD', fita: 'Fita cassete', vhs: 'Fita VHS', tv: 'TV', digital: 'Digital' };
+  AMB.RELTYPES = { lp: 'LP', compacto: T('Compacto', '7" single'), single: 'Single', ep: 'EP', cd: 'CD', coletanea: T('Coletânea', 'Compilation'), participacao: T('Participação', 'Guest appearance'), digital: 'Digital' };
+  AMB.ROLES = { curadoria: T('Curadoria', 'Curation'), fitas: T('Fitas cedidas', 'Tapes lent'), captura: T('Captura de vídeo', 'Video capture'), audio: T('Digitalização de discos', 'Record digitizing'), sincronizacao: T('Sincronização', 'Syncing'), restauracao: T('Restauração', 'Restoration') };
+  AMB.AUDIO_KINDS = { lp: 'LP', compacto: T('Compacto', '7" single'), cd: 'CD', fita: T('Fita cassete', 'Cassette'), vhs: T('Fita VHS', 'VHS tape'), tv: 'TV', digital: 'Digital' };
 
   /* ---------------- dados ----------------
    * Tudo que o site mostra vem de data/acervo.js (window.AMB_DATA), que fica no GitHub.
@@ -251,7 +284,7 @@
     v.sortKey = chaveData(v.date);
     let a = artists[v.artist];
     if (!a) {
-      a = normArtist({ id: v.artist || AMB.slug(v.artist_name || 'desconhecido'), name: v.artist_name || v.artist || 'Artista não identificado' });
+      a = normArtist({ id: v.artist || AMB.slug(v.artist_name || 'desconhecido'), name: v.artist_name || v.artist || T('Artista não identificado', 'Unknown artist') });
       artists[a.id] = a;
     }
     v.artistObj = a;
@@ -261,9 +294,9 @@
       v.songObj = a.songs[v.song];
     } else v.songObj = null;
     if (!v.audio || !v.audio.length) {
-      v.audio = v.hasFile ? [{ id: 'principal', short: 'Original', label: 'Som do arquivo', embedded: true }] : [];
+      v.audio = v.hasFile ? [{ id: 'principal', short: 'Original', label: T('Som do arquivo', 'File audio'), embedded: true }] : [];
     }
-    v.audio = v.audio.map((t, i) => Object.assign({ id: 'faixa' + i, short: t.short || AMB.AUDIO_KINDS[t.kind] || ('Áudio ' + (i + 1)) }, t, {
+    v.audio = v.audio.map((t, i) => Object.assign({ id: 'faixa' + i, short: t.short || AMB.AUDIO_KINDS[t.kind] || (T('Áudio ', 'Audio ') + (i + 1)) }, t, {
       embedded: t.embedded === true || (!t.url && i === 0)
     }));
     // capa: imagem escolhida pelo curador (media/capas/…); senão a do arquivo ou a do Internet Archive
@@ -346,11 +379,11 @@
   // Quem aparece no quadro "Acervo" da página do vídeo (como o "From:" dos sites de vídeo antigos)
   AMB.mainCredit = (v) => {
     const cr = v.credits || {};
-    if (cr.tape) return { papel: 'Fita cedida por', w: AMB.who(cr.tape) };
-    if (cr.capture) return { papel: 'Digitalizado por', w: AMB.who(cr.capture) };
-    if (v.added_by) return { papel: 'Cadastrado por', w: AMB.who(v.added_by) };
+    if (cr.tape) return { papel: T('Fita cedida por', 'Tape lent by'), w: AMB.who(cr.tape) };
+    if (cr.capture) return { papel: T('Digitalizado por', 'Digitized by'), w: AMB.who(cr.capture) };
+    if (v.added_by) return { papel: T('Cadastrado por', 'Added by'), w: AMB.who(v.added_by) };
     const cur = AMB.cfg('CURADOR', '');
-    return cur ? { papel: 'Cadastrado por', w: AMB.who(cur) } : null;
+    return cur ? { papel: T('Cadastrado por', 'Added by'), w: AMB.who(cur) } : null;
   };
 
   AMB.src = (id) => {
@@ -448,11 +481,11 @@
   AMB.checkComment = (nome, texto) => {
     nome = String(nome || '').trim();
     texto = String(texto || '').trim();
-    if (nome.length < 2) return 'Escreva seu nome ou apelido.';
-    if (nome.length > 40) return 'O nome pode ter até 40 caracteres.';
-    if (texto.length < 2) return 'Escreva o comentário.';
-    if (texto.length > 500) return 'O comentário pode ter até 500 caracteres.';
-    if (AMB.LINK.test(nome) || AMB.LINK.test(texto)) return 'Links não são permitidos nos comentários.';
+    if (nome.length < 2) return T('Escreva seu nome ou apelido.', 'Write your name or nickname.');
+    if (nome.length > 40) return T('O nome pode ter até 40 caracteres.', 'The name can have up to 40 characters.');
+    if (texto.length < 2) return T('Escreva o comentário.', 'Write your comment.');
+    if (texto.length > 500) return T('O comentário pode ter até 500 caracteres.', 'Comments can have up to 500 characters.');
+    if (AMB.LINK.test(nome) || AMB.LINK.test(texto)) return T('Links não são permitidos nos comentários.', 'Links are not allowed in comments.');
     return '';
   };
 
@@ -592,18 +625,18 @@
   AMB.erroMsg = (e) => {
     const m = String((e && e.message) || e || '');
     const mapa = {
-      sem_links: 'Links não são permitidos nos comentários.',
-      muitos_comentarios: 'Muitos comentários em pouco tempo. Espere alguns minutos.',
-      muitas_sugestoes: 'Muitas mensagens em pouco tempo. Tente de novo mais tarde.',
-      texto_curto: 'Escreva um pouco mais.', texto_longo: 'O texto passou do limite.',
-      nome_invalido: 'Confira o seu nome ou apelido.', video_invalido: 'Vídeo não encontrado.',
-      rapido_demais: 'Espere alguns segundos antes de enviar.', grande_demais: 'A mensagem ficou grande demais.',
-      AbortError: 'O servidor demorou para responder. Tente de novo.'
+      sem_links: T('Links não são permitidos nos comentários.', 'Links are not allowed in comments.'),
+      muitos_comentarios: T('Muitos comentários em pouco tempo. Espere alguns minutos.', 'Too many comments in a short time. Wait a few minutes.'),
+      muitas_sugestoes: T('Muitas mensagens em pouco tempo. Tente de novo mais tarde.', 'Too many messages in a short time. Try again later.'),
+      texto_curto: T('Escreva um pouco mais.', 'Write a little more.'), texto_longo: T('O texto passou do limite.', 'The text is too long.'),
+      nome_invalido: T('Confira o seu nome ou apelido.', 'Check your name or nickname.'), video_invalido: T('Vídeo não encontrado.', 'Video not found.'),
+      rapido_demais: T('Espere alguns segundos antes de enviar.', 'Wait a few seconds before sending.'), grande_demais: T('A mensagem ficou grande demais.', 'The message is too long.'),
+      AbortError: T('O servidor demorou para responder. Tente de novo.', 'The server took too long to answer. Try again.')
     };
     if (mapa[m]) return mapa[m];
     if (/abort/i.test(m)) return mapa.AbortError;
-    if (/failed to fetch|networkerror|load failed/i.test(m)) return 'Sem conexão com o servidor agora. Tente de novo em instantes.';
-    return m || 'Algo deu errado.';
+    if (/failed to fetch|networkerror|load failed/i.test(m)) return T('Sem conexão com o servidor agora. Tente de novo em instantes.', 'Cannot reach the server right now. Try again in a moment.');
+    return m || T('Algo deu errado.', 'Something went wrong.');
   };
 
   AMB.build();

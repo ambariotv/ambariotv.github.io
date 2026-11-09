@@ -67,6 +67,11 @@ code { font: 12px Consolas, 'Courier New', monospace; background: #f1f4f8; paddi
 /* Ambário: o nome em âmbar, o mesmo dourado dos botões amarelos */
 .logo-nome em:only-child { background-image: linear-gradient(#ffd86e 0%, #f5a51c 47%, #d97a00 53%, #f3b23e 100%); filter: drop-shadow(0 1px 0 rgba(255,255,255,.95)) drop-shadow(0 0 1px rgba(140,70,0,.45)); }
 .logo-sub { margin-top: 3px; font-size: 11px; color: #6c7a8c; letter-spacing: .02em; }
+/* seletor de idioma PT / EN */
+.lang { display: inline-flex; margin-left: 8px; border: 1px solid #b9c7d8; border-radius: 3px; overflow: hidden; }
+.lang button { padding: 1px 6px; font: 700 11px Arial, sans-serif; color: #5a6b80; background: linear-gradient(#fff, #e6edf5); border: 0; cursor: pointer; }
+.lang button + button { border-left: 1px solid #b9c7d8; }
+.lang button[aria-pressed="true"] { color: #fff; background: linear-gradient(#5aa0e8, #2f77d0); cursor: default; }
 .topo-links { position: relative; font-size: 12px; color: #999; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
  
 .abas-topo { position: relative; max-width: 980px; margin: 0 auto; padding: 0 10px; display: flex; gap: 3px; align-items: flex-end; overflow-x: auto; scrollbar-width: none; }
@@ -636,7 +641,7 @@ html.vr-trava { overflow: hidden; }
 @media (max-width: 600px) {
   body { font-size: 14px; }
   .topo-in { flex-wrap: wrap; }
-  .topo-links { display: none; }
+  .topo-links > :not(.lang) { display: none; }
   .logo-nome { font-size: 24px; }
   .logo-tv { width: 48px; height: 42px; }
   .abas-topo a { padding: 6px 12px 5px; font-size: 13px; }
