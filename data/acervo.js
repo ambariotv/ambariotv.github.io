@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-09",
-  "rev": 10,
+  "rev": 11,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1189,6 +1189,80 @@ window.AMB_DATA = {
             { "n": "B", "t": "Simca Chambord", "song": "simca-chambord", "len": "4:05" }
           ],
           "discogs": 6755600
+        },
+        {
+          "id": "tijolo-na-vidraca-2001",
+          "type": "coletanea",
+          "title": "Tijolo Na Vidraça",
+          "year": 2001,
+          "label": "Som Livre (0145-2)",
+          "format": "3×CD, Compilation",
+          "src": [
+            {
+              "t": "Discogs — Marcelo Nova – Tijolo Na Vidraça",
+              "u": "https://www.discogs.com/release/8821064"
+            }
+          ],
+          "tracks": [
+            { "n": "1-1", "t": "Controle Total", "song": "controle-total" },
+            { "n": "1-2", "t": "Beth Morreu", "song": "beth-morreu" },
+            { "n": "1-3", "t": "Eu Não Matei Joana D' Arc", "song": "eu-nao-matei-joana-d-arc" },
+            { "n": "1-4", "t": "Rosto E Aeroportos", "song": "rosto-e-aeroportos" },
+            { "n": "1-5", "t": "O Adventista", "song": "o-adventista" },
+            { "n": "1-6", "t": "A Ferro E Fogo", "song": "a-ferro-e-fogo" },
+            {
+              "n": "1-7",
+              "t": "Muita Estrela, Pouca Constelação",
+              "song": "muita-estrela-pouca-constelacao"
+            },
+            { "n": "1-8", "t": "Algum Lugar", "song": "algum-lugar" },
+            { "n": "1-9", "t": "Quando Eu Morri", "song": "quando-eu-morri" },
+            { "n": "1-10", "t": "Muito Além Do Jardim", "song": "muito-alem-do-jardim" },
+            { "n": "1-11", "t": "Estranho No Ninho", "song": "estranho-no-ninho" },
+            { "n": "1-12", "t": "Correndo Sem Parar (Ao Vivo)", "song": "correndo-sem-parar" },
+            { "n": "1-13", "t": "O Ponteiro Tá Subindo", "song": "o-ponteiro-ta-subindo" },
+            { "n": "1-14", "t": "Check Up", "song": "check-up" },
+            { "n": "1-15", "t": "When The Leave Breaks", "song": "when-the-leave-breaks" },
+            { "n": "1-16", "t": "Ainda Não Está Escuro", "song": "ainda-nao-esta-escuro" },
+            { "n": "1-17", "t": "Love Me Two Times", "song": "love-me-two-times" },
+            { "n": "2-1", "t": "Meu Primo Zé", "song": "meu-primo-ze" },
+            { "n": "2-2", "t": "Gotham City", "song": "gotham-city" },
+            { "n": "2-3", "t": "Silvia", "song": "silvia" },
+            { "n": "2-4", "t": "Simca Chambord", "song": "simca-chambord" },
+            { "n": "2-5", "t": "Só O Fim", "song": "so-o-fim" },
+            { "n": "2-6", "t": "Enigma", "song": "enigma" },
+            { "n": "2-7", "t": "Ela Saiu Um Dia", "song": "ela-saiu-um-dia" },
+            { "n": "2-8", "t": "Carpinteiro Do Universo", "song": "carpinteiro-do-universo" },
+            { "n": "2-9", "t": "Fogo Do Inferno", "song": "fogo-do-inferno" },
+            { "n": "2-10", "t": "Coração Satânico", "song": "coracao-satanico" },
+            { "n": "2-11", "t": "Eu Vi O Futuro", "song": "eu-vi-o-futuro" },
+            {
+              "n": "2-12",
+              "t": "Don't Let Me Be Misunderstood",
+              "song": "don-t-let-me-be-misunderstood"
+            },
+            { "n": "2-13", "t": "Noite", "song": "noite" },
+            { "n": "2-14", "t": "Não Sei O Que Fazer", "song": "nao-sei-o-que-fazer" },
+            { "n": "2-15", "t": "Noite E Dia", "song": "noite-e-dia" },
+            { "n": "2-16", "t": "Passatempo", "song": "passatempo" },
+            { "n": "2-17", "t": "Bomba Relógio Ambulante", "song": "bomba-relogio-ambulante" },
+            { "n": "3-1", "t": "My Way", "song": "my-way" },
+            { "n": "3-2", "t": "Deus Me Dê Grana", "song": "deus-me-de-grana" },
+            { "n": "3-3", "t": "Rock'n Roll", "song": "rock-n-roll" },
+            { "n": "3-4", "t": "Robocop", "song": "robocop" },
+            { "n": "3-5", "t": "O Mal Que Habita Em Mim", "song": "o-mal-que-habita-em-mim" },
+            { "n": "3-6", "t": "A Garota Da Motocicleta", "song": "a-garota-da-motocicleta" },
+            { "n": "3-7", "t": "Faça A Coisa Certa", "song": "faca-a-coisa-certa" },
+            { "n": "3-8", "t": "Cocaína", "song": "cocaina" },
+            { "n": "3-9", "t": "One More Cup Of Coffee", "song": "one-more-cup-of-coffee" },
+            { "n": "3-10", "t": "Eu Não Matei Joana D'Arc", "song": "eu-nao-matei-joana-d-arc" },
+            { "n": "3-11", "t": "O Que Você Quer", "song": "o-que-voce-quer" },
+            { "n": "3-12", "t": "Não Fosse O Cabral", "song": "nao-fosse-o-cabral" },
+            { "n": "3-13", "t": "I Fought The Law", "song": "i-fought-the-law" },
+            { "n": "3-14", "t": "Um Lugar Para Deus", "song": "um-lugar-para-deus" },
+            { "n": "3-15", "t": "Quando Eu Morri", "song": "quando-eu-morri" }
+          ],
+          "discogs": 8821064
         }
       ]
     }
@@ -1662,11 +1736,11 @@ window.AMB_DATA = {
         {
           "id": "principal",
           "short": "DISCO",
-          "label": "7\" single Simca Chambord (WEA, 1986)",
-          "kind": "compacto",
-          "release": "simca-chambord-1986",
+          "label": "Compilation Tijolo Na Vidraça (Som Livre, 2001)",
+          "kind": "lp",
+          "release": "tijolo-na-vidraca-2001",
           "by": "Daniel Skiter",
-          "note": "faixa A",
+          "note": "faixa 2-4",
           "embedded": true
         },
         {
