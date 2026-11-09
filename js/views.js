@@ -298,7 +298,7 @@
     add(T('Exibido em', 'Aired on'), esc([v.channel, v.program, s.aired ? AMB.fmtDate(s.aired) : ''].filter(Boolean).join(' — ')));
     add(T('Gravado de', 'Recorded from'), esc(s.from || ''));
     add(T('Mídia', 'Media'), esc([s.medium, s.standard, s.speed ? T('velocidade ', 'speed ') + s.speed : '', s.generation].filter(Boolean).join(' · ')));
-    if (cr.tape) add(T('Fita cedida por', 'Tape lent by'), V.quem(AMB.who(cr.tape)));
+    if (cr.tape) add(T('Fita de', 'Tape from'), V.quem(AMB.who(cr.tape)));
     if (cr.capture) add(T('Captura do vídeo', 'Video capture'), V.quem(AMB.who(cr.capture)) + (s.deck || s.capture ? ' <span class="mini">(' + esc([s.deck, s.capture].filter(Boolean).join(' → ')) + ')</span>' : ''));
     (v.audio || []).forEach((t, i) => {
       const rel = t.release ? v.artistObj.releases.find((r) => r.id === t.release) : null;

@@ -379,7 +379,7 @@
   // Quem aparece no quadro "Acervo" da página do vídeo (como o "From:" dos sites de vídeo antigos)
   AMB.mainCredit = (v) => {
     const cr = v.credits || {};
-    if (cr.tape) return { papel: T('Fita cedida por', 'Tape lent by'), w: AMB.who(cr.tape) };
+    if (cr.tape) return { papel: T('Fita de', 'Tape from'), w: AMB.who(cr.tape) };
     if (cr.capture) return { papel: T('Digitalizado por', 'Digitized by'), w: AMB.who(cr.capture) };
     if (v.added_by) return { papel: T('Cadastrado por', 'Added by'), w: AMB.who(v.added_by) };
     const cur = AMB.cfg('CURADOR', '');

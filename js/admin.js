@@ -489,7 +489,7 @@
       '</div></fieldset>' +
 
       '<fieldset><legend>Créditos e origem da gravação</legend><div class="adm-grade">' +
-        campo('tape', 'Fita cedida por', cr.tape || '', { list: 'adm-acervos', ajuda: '(id de um acervo ou nome)' }) +
+        campo('tape', 'Fita de', cr.tape || '', { list: 'adm-acervos', ajuda: '(id de um acervo ou nome)' }) +
         campo('capture', 'Captura do vídeo', cr.capture || '', { list: 'adm-acervos' }) +
         campo('sync', 'Sincronização (EternalDub)', cr.sync || '', { list: 'adm-acervos' }) +
         campo('medium', 'Mídia', so.medium || '', { ph: 'VHS' }) +
