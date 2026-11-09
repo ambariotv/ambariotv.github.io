@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-09",
-  "rev": 12,
+  "rev": 13,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -205,470 +205,6 @@ window.AMB_DATA = {
       "src": ["wp-metro", "vagalume-metro"],
       "releases": [
         {
-          "id": "a-gota-suspensa-1983",
-          "type": "lp",
-          "title": "A Gota Suspensa",
-          "credit": "lançado como A Gota Suspensa",
-          "year": 1983,
-          "label": "Underground Discos e Artes",
-          "format": "LP",
-          "note": "Produção de Luiz Antônio Ribas. Segundo a Wikipédia, nunca saiu em CD.",
-          "src": ["wp-gota"],
-          "tracks": [
-            {
-              "n": "1",
-              "t": "High Society",
-              "song": "high-society",
-              "len": "1:35",
-              "w": "música: Yann Laouenan (instrumental)"
-            },
-            {
-              "n": "2",
-              "t": "Convite ao Amor",
-              "song": "convite-ao-amor",
-              "len": "3:44",
-              "w": "letra: Vicente França, A Gota Suspensa; música: Alec Haiat"
-            },
-            {
-              "n": "3",
-              "t": "Pourquoi?",
-              "song": "pourquoi",
-              "len": "2:27",
-              "w": "letra: A Gota Suspensa; música: Alec Haiat"
-            },
-            {
-              "n": "4",
-              "t": "As Aventuras do Homem-Arame",
-              "song": "as-aventuras-do-homem-arame",
-              "len": "3:11",
-              "w": "letra: Eli Joory, A Gota Suspensa; música: Yann Laouenan"
-            },
-            {
-              "n": "5",
-              "t": "Voyage",
-              "song": "voyage",
-              "len": "7:53",
-              "w": "música: Yann Laouenan (instrumental)"
-            },
-            {
-              "n": "6",
-              "t": "A Gota",
-              "song": "a-gota",
-              "len": "4:38",
-              "w": "letra: Alec Haiat, Dany Roland, Eli Joory, Freddy Haiat, Mike; música: Alec Haiat, Freddy Haiat"
-            },
-            {
-              "n": "7",
-              "t": "Sonho",
-              "song": "sonho",
-              "len": "2:23",
-              "w": "letra: Elvira, A Gota Suspensa; música: Yann Laouenan"
-            },
-            {
-              "n": "8",
-              "t": "Apocalypse",
-              "song": "apocalypse",
-              "len": "7:25",
-              "w": "música: Alec Haiat (instrumental)"
-            },
-            {
-              "n": "9",
-              "t": "Lotus",
-              "song": "lotus",
-              "len": "2:52",
-              "w": "música: Alec Haiat, Yann Laouenan (instrumental)"
-            }
-          ]
-        },
-        {
-          "id": "beat-acelerado-1984",
-          "type": "compacto",
-          "title": "Beat Acelerado",
-          "year": 1984,
-          "label": "Epic (CBS)",
-          "format": "Compacto simples 7\"",
-          "note": "Primeiro lançamento com o nome Metrô.",
-          "src": ["wp-beat", "vagalume-metro"],
-          "tracks": [
-            {
-              "n": "A",
-              "t": "Beat Acelerado",
-              "song": "beat-acelerado",
-              "ver": "1984",
-              "len": "3:46",
-              "w": "Alec Haiat, Vicente França, Yann Laouenan"
-            },
-            {
-              "n": "B",
-              "t": "Sândalo de Dândi",
-              "song": "sandalo-de-dandi",
-              "len": "3:53",
-              "w": "letra: Tavinho Paes; música: Alec Haiat, Yann Laouenan"
-            }
-          ]
-        },
-        {
-          "id": "olhar-1985",
-          "type": "lp",
-          "title": "Olhar",
-          "year": 1985,
-          "label": "Epic (CBS)",
-          "format": "LP e fita cassete",
-          "note": "Produção de Luiz Carlos Maluly. Participações de Léo Jaime, Guilherme Isnard (do Zero) e da banda Degradée.",
-          "src": ["wp-olhar", "vagalume-metro"],
-          "tracks": [
-            {
-              "n": "1",
-              "t": "Olhar",
-              "song": "olhar",
-              "len": "4:16",
-              "w": "Vicente França, Yann Laouenan"
-            },
-            {
-              "n": "2",
-              "t": "Cenas Obscenas",
-              "feat": "Léo Jaime",
-              "song": "cenas-obscenas",
-              "len": "4:22",
-              "w": "letra: Léo Jaime, Leoni; música: Alec Haiat, Yann Laouenan"
-            },
-            {
-              "n": "3",
-              "t": "Johnny Love",
-              "song": "johnny-love",
-              "len": "4:51",
-              "w": "letra: Alec Haiat, Joe Euthanazia, Yann Laouenan; música: Alec Haiat, Yann Laouenan"
-            },
-            {
-              "n": "4",
-              "t": "Sândalo de Dândi",
-              "song": "sandalo-de-dandi",
-              "len": "3:53",
-              "w": "letra: Tavinho Paes; música: Alec Haiat, Yann Laouenan"
-            },
-            {
-              "n": "5",
-              "t": "Melodix",
-              "feat": "coro da banda Degradée",
-              "song": "melodix",
-              "len": "2:15",
-              "w": "letra: Metrô; música: Alec Haiat"
-            },
-            {
-              "n": "6",
-              "t": "Beat Acelerado (2ª versão)",
-              "song": "beat-acelerado",
-              "ver": "2a-versao",
-              "len": "1:11",
-              "w": "letra: Alec Haiat, Vicente França, Yann Laouenan; música: Vicente França, Yann Laouenan",
-              "note": "versão curta, diferente da do compacto"
-            },
-            {
-              "n": "7",
-              "t": "Tudo Pode Mudar",
-              "feat": "vocal de apoio: Guilherme Isnard",
-              "song": "tudo-pode-mudar",
-              "len": "3:34",
-              "w": "Joe Euthanazia, Ronaldo Santos"
-            },
-            {
-              "n": "8",
-              "t": "Hawaii–Bombay",
-              "song": "hawaii-bombay",
-              "len": "3:58",
-              "w": "José María Cano (versão em português: Fernando Naporano)",
-              "note": "versão de uma música do Mecano"
-            },
-            {
-              "n": "9",
-              "t": "Solução",
-              "song": "solucao",
-              "len": "2:54",
-              "w": "letra: Wagner, Metrô; música: Alec Haiat"
-            },
-            {
-              "n": "10",
-              "t": "Stabilo",
-              "song": "stabilo",
-              "len": "3:20",
-              "w": "letra: Ângelo Palumbo; música: Alec Haiat"
-            },
-            {
-              "n": "11",
-              "t": "Que Loucura!",
-              "song": "que-loucura",
-              "len": "3:21",
-              "w": "letra: Yann Laouenan; música: Alec Haiat, Xavier Leblanc, Yann Laouenan"
-            },
-            {
-              "n": "12",
-              "t": "Ti Ti Ti",
-              "song": "ti-ti-ti",
-              "len": "2:57",
-              "w": "Rita Lee, Roberto de Carvalho"
-            }
-          ]
-        },
-        {
-          "id": "ti-ti-ti-1985",
-          "type": "compacto",
-          "title": "Ti Ti Ti",
-          "year": 1985,
-          "label": "Epic (CBS)",
-          "format": "Compacto",
-          "note": "“Ti Ti Ti” foi o tema de abertura da novela Ti Ti Ti (Rede Globo, 1985–1986).",
-          "src": ["wp-titi"],
-          "tracks": [
-            { "n": "A", "t": "Ti Ti Ti", "song": "ti-ti-ti", "len": "2:57" },
-            { "n": "B", "t": "Tudo Pode Mudar", "song": "tudo-pode-mudar", "len": "3:34" }
-          ]
-        },
-        {
-          "id": "cenas-obscenas-1985",
-          "type": "single",
-          "title": "Cenas Obscenas",
-          "year": 1985,
-          "label": "Epic (CBS)",
-          "format": "Single (formato a confirmar)",
-          "partial": true,
-          "note": "A Wikipédia lista como single de 1985, sem dizer o formato nem o lado B. Sabe? Sugira uma correção.",
-          "src": ["wp-metro"],
-          "tracks": [
-            {
-              "n": "A",
-              "t": "Cenas Obscenas",
-              "feat": "Léo Jaime",
-              "song": "cenas-obscenas",
-              "len": "4:22"
-            }
-          ]
-        },
-        {
-          "id": "balao-magico-1985",
-          "type": "participacao",
-          "title": "A Turma do Balão Mágico",
-          "credit": "disco da Turma do Balão Mágico",
-          "year": 1985,
-          "format": "LP (participação)",
-          "partial": true,
-          "note": "O Metrô gravou “Não Dá pra Parar a Música” com a Turma do Balão Mágico, para o disco da série infantil da TV.",
-          "src": ["wp-metro", "vagalume-metro"],
-          "tracks": [
-            {
-              "n": "—",
-              "t": "Não Dá pra Parar a Música",
-              "feat": "com a Turma do Balão Mágico",
-              "song": "nao-da-pra-parar-a-musica"
-            }
-          ]
-        },
-        {
-          "id": "a-mao-de-mao-1987",
-          "type": "lp",
-          "title": "A Mão de Mao",
-          "year": 1987,
-          "label": "Epic (CBS)",
-          "format": "LP",
-          "note": "Único disco com Pedro Parq (Pedro d’Orey) nos vocais. Letras de Pedro Parq e músicas do Metrô; produção de Luiz Carlos Maluly. Singles: “Gato Preto” e “Lágrimas Imóveis”.",
-          "src": ["wp-mao", "mb-mao"],
-          "tracks": [
-            { "n": "1", "t": "A Mão de Mao", "song": "a-mao-de-mao", "len": "5:08" },
-            { "n": "2", "t": "Habhitantes", "song": "habhitantes", "len": "3:37" },
-            { "n": "3", "t": "Cinema Branco", "song": "cinema-branco", "len": "3:45" },
-            {
-              "n": "4",
-              "t": "Atlântico, 7 de Novembro",
-              "song": "atlantico-7-de-novembro",
-              "len": "3:08"
-            },
-            { "n": "5", "t": "Boca", "song": "boca", "len": "3:56" },
-            { "n": "6", "t": "Gato Preto", "song": "gato-preto", "len": "3:49" },
-            { "n": "7", "t": "Ahnimais (Wiss)", "song": "ahnimais-wiss", "len": "5:23" },
-            {
-              "n": "8",
-              "t": "The Red Prayer (Idiot Love)",
-              "song": "the-red-prayer",
-              "len": "3:46"
-            },
-            { "n": "9", "t": "Lágrimas Imóveis", "song": "lagrimas-imoveis", "len": "4:20" }
-          ]
-        },
-        {
-          "id": "deja-vu-2002",
-          "type": "cd",
-          "title": "Déjà-Vu",
-          "year": 2002,
-          "label": "Trama",
-          "format": "CD",
-          "note": "Produção de Dany Roland e Yann Laouenan. As faixas 16 a 19 são remixes (bônus).",
-          "src": ["wp-dejavu"],
-          "tracks": [
-            {
-              "n": "1",
-              "t": "Mensagem de Amor",
-              "song": "mensagem-de-amor",
-              "len": "4:44",
-              "w": "Herbert Vianna",
-              "note": "dos Paralamas do Sucesso"
-            },
-            {
-              "n": "2",
-              "t": "Achei Bonito",
-              "song": "achei-bonito",
-              "len": "3:13",
-              "w": "tradicional (arranjo: Dany Roland, Virginie Boutaud, Xavier Leblanc, Yann Laouenan)"
-            },
-            {
-              "n": "3",
-              "t": "Que Nêga É Essa?",
-              "feat": "Preta Gil",
-              "song": "que-nega-e-essa",
-              "len": "4:23",
-              "w": "Jorge Ben Jor"
-            },
-            {
-              "n": "4",
-              "t": "Coração Vagabundo",
-              "song": "coracao-vagabundo",
-              "len": "3:12",
-              "w": "Caetano Veloso"
-            },
-            {
-              "n": "5",
-              "t": "Aquarela do Brasil",
-              "feat": "Preta Gil",
-              "song": "aquarela-do-brasil",
-              "len": "4:30",
-              "w": "Ary Barroso"
-            },
-            { "n": "6", "t": "Johnny Love", "song": "johnny-love", "ver": "2002", "len": "4:16" },
-            {
-              "n": "7",
-              "t": "Resemblances",
-              "song": "resemblances",
-              "len": "5:15",
-              "w": "letra: Arto Lindsay; música: Andres Levin, Arto Lindsay, Melvin Gibbs",
-              "note": "de Arto Lindsay"
-            },
-            {
-              "n": "8",
-              "t": "Missing You",
-              "song": "missing-you",
-              "len": "3:44",
-              "w": "Yann Laouenan"
-            },
-            {
-              "n": "9",
-              "t": "Rapaz da Moda",
-              "song": "rapaz-da-moda",
-              "len": "3:43",
-              "w": "Evaldo Gouveia, Jair Amorim",
-              "note": "sucesso de Jair Rodrigues"
-            },
-            {
-              "n": "10",
-              "t": "Everyone’s Wrong but Me",
-              "song": "everyones-wrong-but-me",
-              "len": "0:59",
-              "w": "Sammy Cahn, Saul Chaplin",
-              "note": "gravada por Ella Fitzgerald"
-            },
-            {
-              "n": "11",
-              "t": "Beat Acelerado",
-              "song": "beat-acelerado",
-              "ver": "2002",
-              "len": "4:36"
-            },
-            {
-              "n": "12",
-              "t": "Sândalo de Dândi",
-              "song": "sandalo-de-dandi",
-              "ver": "2002",
-              "len": "4:12"
-            },
-            {
-              "n": "13",
-              "t": "Leva Meu Samba",
-              "feat": "Jorge Mautner",
-              "song": "leva-meu-samba",
-              "len": "2:53",
-              "w": "Ataulfo Alves"
-            },
-            {
-              "n": "14",
-              "t": "Silence",
-              "song": "silence",
-              "len": "5:37",
-              "w": "Charlie Haden (instrumental)"
-            },
-            {
-              "n": "15",
-              "t": "Déjà-Vu",
-              "feat": "Otto e Waly Salomão",
-              "song": "deja-vu",
-              "len": "5:53",
-              "w": "Dany Roland, Yann Laouenan"
-            },
-            {
-              "n": "16",
-              "t": "Coração Vagabundo (remix de DJ Vu e Maga Bo)",
-              "song": "coracao-vagabundo",
-              "ver": "remix",
-              "len": "3:04"
-            },
-            {
-              "n": "17",
-              "t": "Beat Acelerado (remix de Bruno LT e Gustavo Garcia)",
-              "song": "beat-acelerado",
-              "ver": "remix-2002",
-              "len": "4:16"
-            },
-            {
-              "n": "18",
-              "t": "Achei Bonito (remix de DJ Vu)",
-              "song": "achei-bonito",
-              "ver": "remix",
-              "len": "4:54"
-            },
-            {
-              "n": "19",
-              "t": "Déjà-Vu (remix de Apollo 9)",
-              "song": "deja-vu",
-              "ver": "remix",
-              "len": "5:00"
-            }
-          ]
-        },
-        {
-          "id": "amalia-revisited-2005",
-          "type": "coletanea",
-          "title": "Amália Revisited",
-          "credit": "tributo a Amália Rodrigues",
-          "year": 2005,
-          "label": "Different World",
-          "format": "CD (coletânea)",
-          "partial": true,
-          "src": ["wp-metro"],
-          "tracks": [
-            {
-              "n": "—",
-              "t": "Meu Amor, Meu Amor",
-              "song": "meu-amor-meu-amor",
-              "note": "de Amália Rodrigues"
-            }
-          ]
-        },
-        {
-          "id": "dando-voltas-2015",
-          "type": "digital",
-          "title": "Dando Voltas no Mundo",
-          "year": 2015,
-          "format": "Single (fora de álbum)",
-          "src": ["wp-metro", "uai-2015"],
-          "tracks": [{ "n": "1", "t": "Dando Voltas no Mundo", "song": "dando-voltas-no-mundo" }]
-        },
-        {
           "id": "olhar-30-anos-2016",
           "type": "cd",
           "title": "Olhar — edição de 30 anos",
@@ -685,14 +221,16 @@ window.AMB_DATA = {
               "t": "Beat Acelerado (versão original de 1984)",
               "song": "beat-acelerado",
               "ver": "1984",
-              "len": "3:46"
+              "len": "3:46",
+              "year": 1984
             },
             {
               "n": "14",
               "t": "Ti Ti Ti (Dance Mix)",
               "song": "ti-ti-ti",
               "ver": "dance-mix",
-              "len": "4:27"
+              "len": "4:27",
+              "year": 1985
             },
             {
               "n": "15",
@@ -700,101 +238,26 @@ window.AMB_DATA = {
               "feat": "Léo Jaime",
               "song": "johnny-love",
               "ver": "alternativa",
-              "len": "4:39"
-            },
-            {
-              "n": "16",
-              "t": "Beat Acelerado (remix de DJ Zé Pedro)",
-              "song": "beat-acelerado",
-              "ver": "remix-2016",
-              "len": "3:53"
-            },
-            {
-              "n": "17",
-              "t": "Tudo Pode Mudar (ao vivo em Cruzeiro, 14/09/1985)",
-              "song": "tudo-pode-mudar",
-              "ver": "ao-vivo-cruzeiro-1985",
-              "len": "5:05"
-            },
-            {
-              "n": "18",
-              "t": "Beat Acelerado (ao vivo em Jaú, 19/10/1985)",
-              "song": "beat-acelerado",
-              "ver": "ao-vivo-jau-1985",
-              "len": "6:44"
+              "len": "4:39",
+              "year": 1985
             },
             {
               "n": "19",
               "t": "Sândalo de Dândi (ao vivo em Jaú, 19/10/1985)",
               "song": "sandalo-de-dandi",
               "ver": "ao-vivo-jau-1985",
-              "len": "8:42"
-            },
-            {
-              "n": "20",
-              "t": "Olhar (ao vivo em Cornélio Procópio, 13/10/1985)",
-              "song": "olhar",
-              "ver": "ao-vivo-cornelio-procopio-1985",
-              "len": "6:47"
-            },
-            {
-              "n": "21",
-              "t": "Johnny Love (ao vivo em Recife, 26/10/1985)",
-              "song": "johnny-love",
-              "ver": "ao-vivo-recife-1985",
-              "len": "7:26"
-            },
-            {
-              "n": "22",
-              "t": "Cenas Obscenas (ao vivo em Tupã, 18/10/1985)",
-              "song": "cenas-obscenas",
-              "ver": "ao-vivo-tupa-1985",
-              "len": "4:32"
+              "len": "8:42",
+              "year": 1984
             },
             {
               "n": "23",
               "t": "Stabilo (ao vivo em Tupã, 18/10/1985)",
               "song": "stabilo",
               "ver": "ao-vivo-tupa-1985",
-              "len": "3:18"
-            },
-            {
-              "n": "24",
-              "t": "Melodix (ao vivo em Recife, 26/10/1985)",
-              "song": "melodix",
-              "ver": "ao-vivo-recife-1985",
-              "len": "4:55"
-            },
-            {
-              "n": "25",
-              "t": "Tudo Pode Mudar (demo)",
-              "song": "tudo-pode-mudar",
-              "ver": "demo",
-              "len": "3:37"
-            },
-            {
-              "n": "26",
-              "t": "Sândalo de Dândi (demo)",
-              "song": "sandalo-de-dandi",
-              "ver": "demo",
-              "len": "3:00"
-            },
-            {
-              "n": "27",
-              "t": "Eu Digo Stop (inédita, gravada em 1984)",
-              "song": "eu-digo-stop",
-              "len": "3:52"
+              "len": "3:18",
+              "year": 1985
             }
           ]
-        },
-        {
-          "id": "a-vida-e-bela-2016",
-          "type": "digital",
-          "title": "A Vida É Bela (Lalaiá)",
-          "year": 2016,
-          "format": "Single digital",
-          "src": ["wp-metro"],
-          "tracks": [{ "n": "1", "t": "A Vida É Bela (Lalaiá)", "song": "a-vida-e-bela" }]
         }
       ]
     },
@@ -809,19 +272,6 @@ window.AMB_DATA = {
       "src": ["scribd-rock-gaucho", "ddb-joe-1985", "letras-joe", "wp-tudo", "wp-virginie"],
       "releases": [
         {
-          "id": "mujer-ingrata-1983",
-          "type": "compacto",
-          "title": "Mujer Ingrata",
-          "year": 1983,
-          "format": "Compacto simples",
-          "note": "Primeiro compacto. Gravadora ainda não confirmada.",
-          "src": ["scribd-rock-gaucho", "letras-joe"],
-          "tracks": [
-            { "n": "A", "t": "Mujer Ingrata", "song": "mujer-ingrata" },
-            { "n": "B", "t": "Tensão no Rio", "song": "tensao-no-rio" }
-          ]
-        },
-        {
           "id": "me-leva-pra-casa-1984",
           "type": "compacto",
           "title": "Me Leva pra Casa",
@@ -829,10 +279,8 @@ window.AMB_DATA = {
           "format": "Compacto simples",
           "note": "Gravadora ainda não confirmada.",
           "src": ["scribd-rock-gaucho", "letras-joe"],
-          "tracks": [
-            { "n": "A", "t": "Me Leva pra Casa", "song": "me-leva-pra-casa" },
-            { "n": "B", "t": "Um Cara Assim", "song": "um-cara-assim" }
-          ]
+          "tracks": [{ "n": "A", "t": "Me Leva pra Casa", "song": "me-leva-pra-casa" }],
+          "partial": true
         },
         {
           "id": "tudo-pode-mudar-1985",
@@ -845,100 +293,15 @@ window.AMB_DATA = {
           "src": ["ddb-joe-1985", "scribd-rock-gaucho", "letras-joe"],
           "tracks": [
             {
-              "n": "1",
-              "t": "Já Fui",
-              "song": "ja-fui",
-              "len": "4:03",
-              "w": "Gastão Lamounier, Orlando Vianna"
-            },
-            {
-              "n": "2",
-              "t": "Pagando e Andando",
-              "song": "pagando-e-andando",
-              "len": "3:42",
-              "w": "Nelson Motta, Orlando Vianna"
-            },
-            {
               "n": "3",
               "t": "Febre Tropical",
               "song": "febre-tropical",
               "len": "2:44",
               "w": "Tavinho Paes, Gastão Lamounier, Orlando Vianna"
             },
-            {
-              "n": "4",
-              "t": "No Avião",
-              "song": "no-aviao",
-              "len": "3:04",
-              "w": "Gastão Lamounier, Orlando Vianna"
-            },
-            {
-              "n": "5",
-              "t": "Tudo Pode Mudar",
-              "song": "tudo-pode-mudar",
-              "len": "3:30",
-              "w": "Orlando Vianna, Ronaldo Santos, Joe Euthanazia",
-              "note": "o Metrô gravou no mesmo ano, no LP Olhar"
-            },
-            {
-              "n": "6",
-              "t": "Sonhador",
-              "song": "sonhador",
-              "len": "3:53",
-              "w": "Tavinho Paes, Gastão Lamounier, Orlando Vianna"
-            },
-            {
-              "n": "7",
-              "t": "Álbum de Retratos",
-              "song": "album-de-retratos",
-              "len": "3:52",
-              "w": "Gastão Lamounier, Orlando Vianna"
-            },
-            { "n": "8", "t": "Bianca", "song": "bianca", "w": "Gastão Lamounier, Orlando Vianna" },
-            { "n": "9", "t": "Brigitte", "song": "brigitte", "w": "Tavinho Paes, Orlando Vianna" },
-            {
-              "n": "10",
-              "t": "107 Interurbano a Cobrar",
-              "song": "107-interurbano-a-cobrar",
-              "w": "Neusinha Brizola, Joe Euthanazia"
-            }
-          ]
-        },
-        {
-          "id": "joe-1989",
-          "type": "lp",
-          "title": "Joe",
-          "year": 1989,
-          "note": "A Wikipédia chama o álbum de Joe; o Letras lista as mesmas faixas com o título Cem Mil Dólares. Ordem das faixas conforme o Letras.",
-          "src": ["wp-virginie", "letras-joe"],
-          "tracks": [
-            { "n": "1", "t": "Cem Mil Dólares", "song": "cem-mil-dolares" },
-            {
-              "n": "2",
-              "t": "Ligação Direta",
-              "song": "ligacao-direta",
-              "feat": "vocal: Virginie Boutaud"
-            },
-            { "n": "3", "t": "Anjo da Guarda", "song": "anjo-da-guarda" },
-            {
-              "n": "4",
-              "t": "Me Leva pra Casa (1989)",
-              "song": "me-leva-pra-casa",
-              "ver": "1989",
-              "note": "não sabemos se é a mesma gravação do compacto de 1984"
-            },
-            { "n": "5", "t": "Beijo no Ar", "song": "beijo-no-ar" },
-            {
-              "n": "6",
-              "t": "Uma Rajada de Balas",
-              "song": "uma-rajada-de-balas",
-              "feat": "vocal: Virginie Boutaud"
-            },
-            { "n": "7", "t": "Tudo Pode Mudar (1989)", "song": "tudo-pode-mudar", "ver": "1989" },
-            { "n": "8", "t": "Imagine o Brasil", "song": "imagine-o-brasil" },
-            { "n": "9", "t": "Tem o Sol", "song": "tem-o-sol" },
-            { "n": "10", "t": "Rotina", "song": "rotina" }
-          ]
+            { "n": "9", "t": "Brigitte", "song": "brigitte", "w": "Tavinho Paes, Orlando Vianna" }
+          ],
+          "partial": true
         }
       ]
     },
@@ -968,17 +331,9 @@ window.AMB_DATA = {
           "src": ["wp-legiao-album", "cm-legiao-2025", "bj-legiao"],
           "tracks": [
             { "n": "1", "t": "Será", "song": "sera", "len": "2:30" },
-            { "n": "2", "t": "A Dança", "song": "a-danca", "len": "4:01" },
-            { "n": "3", "t": "Petróleo do Futuro", "song": "petroleo-do-futuro", "len": "3:02" },
-            { "n": "4", "t": "Ainda É Cedo", "song": "ainda-e-cedo", "len": "3:57" },
-            { "n": "5", "t": "Perdidos no Espaço", "song": "perdidos-no-espaco", "len": "2:57" },
-            { "n": "6", "t": "Geração Coca-Cola", "song": "geracao-coca-cola", "len": "2:22" },
-            { "n": "7", "t": "O Reggae", "song": "o-reggae", "len": "3:33" },
-            { "n": "8", "t": "Baader-Meinhof Blues", "song": "baader-meinhof-blues", "len": "3:27" },
-            { "n": "9", "t": "Soldados", "song": "soldados", "len": "4:50" },
-            { "n": "10", "t": "Teorema", "song": "teorema", "len": "3:06" },
-            { "n": "11", "t": "Por Enquanto", "song": "por-enquanto", "len": "3:16" }
-          ]
+            { "n": "6", "t": "Geração Coca-Cola", "song": "geracao-coca-cola", "len": "2:22" }
+          ],
+          "partial": true
         }
       ]
     },
@@ -1000,15 +355,8 @@ window.AMB_DATA = {
           "format": "Mini-LP",
           "note": "Produção de Herbert Vianna. As fontes divergem sobre a data: nos últimos dias de 1985 (Estado de Minas) ou em fevereiro de 1986 (Correio da Manhã). A divisão dos lados segue a reedição em vinil de 2026.",
           "src": ["em-plebe-2025", "cm-plebe-2026", "nb-plebe-2026", "bb-plebe-2026"],
-          "tracks": [
-            { "n": "A1", "t": "Até Quando Esperar", "song": "ate-quando-esperar" },
-            { "n": "A2", "t": "Proteção", "song": "protecao" },
-            { "n": "A3", "t": "Johnny Vai à Guerra (Outra Vez)", "song": "johnny-vai-a-guerra" },
-            { "n": "B1", "t": "Minha Renda", "song": "minha-renda" },
-            { "n": "B2", "t": "Sexo e Karatê", "song": "sexo-e-karate" },
-            { "n": "B3", "t": "Seu Jogo", "song": "seu-jogo" },
-            { "n": "B4", "t": "Brasília", "song": "brasilia" }
-          ]
+          "tracks": [{ "n": "A1", "t": "Até Quando Esperar", "song": "ate-quando-esperar" }],
+          "partial": true
         }
       ]
     },
@@ -1028,52 +376,6 @@ window.AMB_DATA = {
       "src": ["gs-rpm", "wp-rpm", "agora-rpm-2026", "bb-rpm-2026"],
       "releases": [
         {
-          "id": "rpm-1984",
-          "type": "compacto",
-          "title": "RPM",
-          "year": 1984,
-          "format": "Compacto",
-          "note": "Gravado com bateria eletrônica, antes da formação definitiva.",
-          "src": ["gs-rpm", "wp-rpm"],
-          "tracks": [
-            { "n": "A", "t": "Louras Geladas", "song": "louras-geladas", "ver": "compacto-1984" },
-            {
-              "n": "B",
-              "t": "Revoluções por Minuto",
-              "song": "revolucoes-por-minuto",
-              "ver": "compacto-1984"
-            }
-          ]
-        },
-        {
-          "id": "revolucoes-por-minuto-1985",
-          "type": "lp",
-          "title": "Revoluções por Minuto",
-          "year": 1985,
-          "label": "Epic (CBS)",
-          "format": "LP",
-          "note": "Ordem das faixas e durações conforme a reedição em CD (Discogs).",
-          "src": ["gs-rpm", "discogs-rpm-lp", "cif-rpm"],
-          "tracks": [
-            { "n": "1", "t": "Rádio Pirata", "song": "radio-pirata", "len": "3:29" },
-            { "n": "2", "t": "Olhar 43", "song": "olhar-43", "len": "3:03" },
-            { "n": "3", "t": "A Cruz e a Espada", "song": "a-cruz-e-a-espada", "len": "3:14" },
-            { "n": "4", "t": "Estação no Inferno", "song": "estacao-no-inferno", "len": "3:09" },
-            {
-              "n": "5",
-              "t": "A Fúria do Sexo Frágil Contra o Dragão da Maldade",
-              "song": "a-furia-do-sexo-fragil",
-              "len": "2:41"
-            },
-            { "n": "6", "t": "Louras Geladas", "song": "louras-geladas", "len": "2:57" },
-            { "n": "7", "t": "Liberdade / Guerra Fria", "song": "liberdade-guerra-fria" },
-            { "n": "8", "t": "Sob a Luz do Sol", "song": "sob-a-luz-do-sol" },
-            { "n": "9", "t": "Juvenília", "song": "juvenilia" },
-            { "n": "10", "t": "Pr’esse Vício", "song": "presse-vicio" },
-            { "n": "11", "t": "Revoluções por Minuto", "song": "revolucoes-por-minuto" }
-          ]
-        },
-        {
           "id": "radio-pirata-ao-vivo-1986",
           "type": "lp",
           "title": "Rádio Pirata ao Vivo",
@@ -1082,42 +384,8 @@ window.AMB_DATA = {
           "format": "LP",
           "note": "Gravado ao vivo em 26 e 27 de maio de 1986 no Palácio das Convenções do Anhembi, em São Paulo; chegou às lojas cerca de dois meses depois.",
           "src": ["agora-rpm-2026", "bb-rpm-2026", "cif-rpm"],
-          "tracks": [
-            {
-              "n": "1",
-              "t": "Revoluções por Minuto (ao vivo)",
-              "song": "revolucoes-por-minuto",
-              "ver": "ao-vivo-1986"
-            },
-            { "n": "2", "t": "Alvorada Voraz", "song": "alvorada-voraz", "note": "inédita" },
-            {
-              "n": "3",
-              "t": "A Cruz e a Espada (ao vivo)",
-              "song": "a-cruz-e-a-espada",
-              "ver": "ao-vivo-1986"
-            },
-            { "n": "4", "t": "Naja", "song": "naja", "note": "inédita" },
-            { "n": "5", "t": "Olhar 43 (ao vivo)", "song": "olhar-43", "ver": "ao-vivo-1986" },
-            {
-              "n": "6",
-              "t": "Estação no Inferno (ao vivo)",
-              "song": "estacao-no-inferno",
-              "ver": "ao-vivo-1986"
-            },
-            { "n": "7", "t": "London, London", "song": "london-london", "w": "Caetano Veloso" },
-            {
-              "n": "8",
-              "t": "Flores Astrais",
-              "song": "flores-astrais",
-              "note": "dos Secos & Molhados"
-            },
-            {
-              "n": "9",
-              "t": "Rádio Pirata (ao vivo)",
-              "song": "radio-pirata",
-              "ver": "ao-vivo-1986"
-            }
-          ]
+          "tracks": [{ "n": "2", "t": "Alvorada Voraz", "song": "alvorada-voraz", "note": "inédita" }],
+          "partial": true
         }
       ]
     },
@@ -1153,13 +421,6 @@ window.AMB_DATA = {
               "t": "You You",
               "song": "you-you",
               "note": "gravada em Nova York, ago/1983"
-            },
-            {
-              "n": "B1",
-              "t": "You You (Hansa)",
-              "song": "you-you",
-              "ver": "hansa",
-              "note": "gravada no Hansa Studio, em Berlim"
             }
           ]
         }
@@ -1173,25 +434,6 @@ window.AMB_DATA = {
       "origin": "Salvador",
       "releases": [
         {
-          "id": "simca-chambord-1986",
-          "type": "compacto",
-          "title": "Simca Chambord",
-          "year": 1986,
-          "label": "WEA (PRO-1.043)",
-          "format": "Vinyl, 12\", 33 ⅓ RPM, 45 RPM, Single, Promo",
-          "src": [
-            {
-              "t": "Discogs — Camisa De Vênus – Simca Chambord",
-              "u": "https://www.discogs.com/release/6755600"
-            }
-          ],
-          "tracks": [
-            { "n": "A", "t": "Simca Chambord", "song": "simca-chambord", "len": "4:05" },
-            { "n": "B", "t": "Simca Chambord", "song": "simca-chambord", "len": "4:05" }
-          ],
-          "discogs": 6755600
-        },
-        {
           "id": "tijolo-na-vidraca-2001",
           "type": "coletanea",
           "title": "Tijolo Na Vidraça",
@@ -1204,66 +446,9 @@ window.AMB_DATA = {
               "u": "https://www.discogs.com/release/8821064"
             }
           ],
-          "tracks": [
-            { "n": "1-1", "t": "Controle Total", "song": "controle-total" },
-            { "n": "1-2", "t": "Beth Morreu", "song": "beth-morreu" },
-            { "n": "1-3", "t": "Eu Não Matei Joana D' Arc", "song": "eu-nao-matei-joana-d-arc" },
-            { "n": "1-4", "t": "Rosto E Aeroportos", "song": "rosto-e-aeroportos" },
-            { "n": "1-5", "t": "O Adventista", "song": "o-adventista" },
-            { "n": "1-6", "t": "A Ferro E Fogo", "song": "a-ferro-e-fogo" },
-            {
-              "n": "1-7",
-              "t": "Muita Estrela, Pouca Constelação",
-              "song": "muita-estrela-pouca-constelacao"
-            },
-            { "n": "1-8", "t": "Algum Lugar", "song": "algum-lugar" },
-            { "n": "1-9", "t": "Quando Eu Morri", "song": "quando-eu-morri" },
-            { "n": "1-10", "t": "Muito Além Do Jardim", "song": "muito-alem-do-jardim" },
-            { "n": "1-11", "t": "Estranho No Ninho", "song": "estranho-no-ninho" },
-            { "n": "1-12", "t": "Correndo Sem Parar (Ao Vivo)", "song": "correndo-sem-parar" },
-            { "n": "1-13", "t": "O Ponteiro Tá Subindo", "song": "o-ponteiro-ta-subindo" },
-            { "n": "1-14", "t": "Check Up", "song": "check-up" },
-            { "n": "1-15", "t": "When The Leave Breaks", "song": "when-the-leave-breaks" },
-            { "n": "1-16", "t": "Ainda Não Está Escuro", "song": "ainda-nao-esta-escuro" },
-            { "n": "1-17", "t": "Love Me Two Times", "song": "love-me-two-times" },
-            { "n": "2-1", "t": "Meu Primo Zé", "song": "meu-primo-ze" },
-            { "n": "2-2", "t": "Gotham City", "song": "gotham-city" },
-            { "n": "2-3", "t": "Silvia", "song": "silvia" },
-            { "n": "2-4", "t": "Simca Chambord", "song": "simca-chambord" },
-            { "n": "2-5", "t": "Só O Fim", "song": "so-o-fim" },
-            { "n": "2-6", "t": "Enigma", "song": "enigma" },
-            { "n": "2-7", "t": "Ela Saiu Um Dia", "song": "ela-saiu-um-dia" },
-            { "n": "2-8", "t": "Carpinteiro Do Universo", "song": "carpinteiro-do-universo" },
-            { "n": "2-9", "t": "Fogo Do Inferno", "song": "fogo-do-inferno" },
-            { "n": "2-10", "t": "Coração Satânico", "song": "coracao-satanico" },
-            { "n": "2-11", "t": "Eu Vi O Futuro", "song": "eu-vi-o-futuro" },
-            {
-              "n": "2-12",
-              "t": "Don't Let Me Be Misunderstood",
-              "song": "don-t-let-me-be-misunderstood"
-            },
-            { "n": "2-13", "t": "Noite", "song": "noite" },
-            { "n": "2-14", "t": "Não Sei O Que Fazer", "song": "nao-sei-o-que-fazer" },
-            { "n": "2-15", "t": "Noite E Dia", "song": "noite-e-dia" },
-            { "n": "2-16", "t": "Passatempo", "song": "passatempo" },
-            { "n": "2-17", "t": "Bomba Relógio Ambulante", "song": "bomba-relogio-ambulante" },
-            { "n": "3-1", "t": "My Way", "song": "my-way" },
-            { "n": "3-2", "t": "Deus Me Dê Grana", "song": "deus-me-de-grana" },
-            { "n": "3-3", "t": "Rock'n Roll", "song": "rock-n-roll" },
-            { "n": "3-4", "t": "Robocop", "song": "robocop" },
-            { "n": "3-5", "t": "O Mal Que Habita Em Mim", "song": "o-mal-que-habita-em-mim" },
-            { "n": "3-6", "t": "A Garota Da Motocicleta", "song": "a-garota-da-motocicleta" },
-            { "n": "3-7", "t": "Faça A Coisa Certa", "song": "faca-a-coisa-certa" },
-            { "n": "3-8", "t": "Cocaína", "song": "cocaina" },
-            { "n": "3-9", "t": "One More Cup Of Coffee", "song": "one-more-cup-of-coffee" },
-            { "n": "3-10", "t": "Eu Não Matei Joana D'Arc", "song": "eu-nao-matei-joana-d-arc" },
-            { "n": "3-11", "t": "O Que Você Quer", "song": "o-que-voce-quer" },
-            { "n": "3-12", "t": "Não Fosse O Cabral", "song": "nao-fosse-o-cabral" },
-            { "n": "3-13", "t": "I Fought The Law", "song": "i-fought-the-law" },
-            { "n": "3-14", "t": "Um Lugar Para Deus", "song": "um-lugar-para-deus" },
-            { "n": "3-15", "t": "Quando Eu Morri", "song": "quando-eu-morri" }
-          ],
-          "discogs": 8821064
+          "tracks": [{ "n": "2-4", "t": "Simca Chambord", "song": "simca-chambord", "year": 1986 }],
+          "discogs": 8821064,
+          "partial": true
         }
       ]
     }

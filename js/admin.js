@@ -425,7 +425,7 @@
         (novo ? '' : '<span class="box-h-dir"><a href="#v-' + esc(v.id) + '">ver no site</a></span>') + '</div><div class="box-c">' +
 
       '<fieldset class="adm-discogs"><legend>Puxar do Discogs</legend>' +
-        '<p class="mini">Cole o link do disco de onde vem a música (release ou master). O disco entra na discografia do artista e o vídeo já fica ligado à faixa.</p>' +
+        '<p class="mini">Cole o link do disco de onde vem a música (release ou master). Escolha a faixa: ela fica no artista com o ano original e este disco citado como fonte do áudio.</p>' +
         '<div class="adm-ia"><label>Link do Discogs <input type="text" name="discogs" placeholder="https://www.discogs.com/release/…"></label>' +
           '<button type="button" class="btn btn-b" data-adm="discogs">Buscar disco</button></div>' +
         '<p class="mini adm-discogs-msg" role="status"></p><div class="adm-discogs-res"></div>' +
@@ -614,10 +614,11 @@
         atualizarArtista();
         const disco = discoDoDiscogs(r, rawArtista(artId));
         const jaTem = artId && (rawArtista(artId).releases || []).find((x) => (x.discogs && String(x.discogs) === String(r.id)) || x.id === disco.id);
-        if (jaTem) { // o disco já está na discografia: usa o que já existe (com os ids de música dele)
-          jaTem.tracks = jaTem.tracks || [];
-          E.discogs = { disco: Object.assign({}, jaTem, { tracks: jaTem.tracks.map((t) => Object.assign({}, t)) }), existente: true };
-        } else E.discogs = { disco, existente: false };
+        if (jaTem) { // o disco já está cadastrado: mantém o id dele e as faixas que já tem (ids de música e ano)
+          disco.id = jaTem.id;
+          disco.tracks = disco.tracks.map((t) => Object.assign({}, t, (jaTem.tracks || []).find((x) => x.n === t.n) || {}));
+        }
+        E.discogs = { disco, existente: !!jaTem };
         const d = E.discogs.disco;
         E.discogs.ano = d.year || null;
         // faixa sugerida: a que bate com o título já escrito; senão a primeira (lado A do compacto)
@@ -627,7 +628,7 @@
         dRes.innerHTML = '<div class="adm-dg">' +
           '<p><b>' + esc(nomeArt) + ' — ' + esc(d.title) + '</b> <span class="mini">' + esc([AMB.RELTYPES[d.type] || d.type, d.year, d.label, d.format, r.country].filter(Boolean).join(' · ')) + '</span>' +
             ' <a class="mini" href="https://www.discogs.com/release/' + esc(r.id) + '" target="_blank" rel="noopener">abrir no Discogs ↗</a></p>' +
-          '<p class="mini">' + (E.discogs.existente ? 'Este disco <b>já está</b> na discografia do artista: nada muda nela.' : 'Este disco <b>entra na discografia</b> do artista quando você salvar o vídeo.') + ' Qual faixa é a do vídeo?</p>' +
+          '<p class="mini">' + (E.discogs.existente ? 'Este disco <b>já está</b> cadastrado; ao salvar, a faixa escolhida é ligada a ele.' : 'Ao salvar, entra no artista só a faixa escolhida, citando este disco como fonte do áudio.') + ' Qual faixa é a do vídeo?</p>' +
           '<label class="adm-dg-ano">Ano original da música <input type="text" name="dg_ano" inputmode="numeric" maxlength="4" value="' + esc(d.year || '') + '"> <small>(ex.: coletânea de 2001 com uma música de 1986)</small></label>' +
           '<ul class="adm-dg-faixas">' + d.tracks.map((t, i) => '<li><label><input type="radio" name="dg_faixa" value="' + i + '"> <b>' + esc(t.n) + '</b> ' + esc(t.t) +
             (t.len ? ' <span class="mini">' + esc(t.len) + '</span>' : '') + '</label></li>').join('') + '</ul>' +
@@ -758,10 +759,17 @@
       if (base) {
         base.releases = base.releases || [];
         let mudou = false;
+        const escolhida = E.discogs.faixa != null ? d.tracks[E.discogs.faixa] : null;
+        // do disco só entra a faixa do vídeo (o site mostra só as músicas que têm vídeo)
         let rel = base.releases.find((x) => (x.discogs && String(x.discogs) === String(d.discogs)) || x.id === d.id);
-        if (!rel) { rel = ordenar(clone(d), ORDEM_DISCO.concat(['discogs'])); base.releases.push(rel); mudou = true; }
+        if (!rel) {
+          rel = ordenar(Object.assign(clone(d), { partial: true, tracks: escolhida ? [clone(escolhida)] : [] }), ORDEM_DISCO.concat(['discogs']));
+          base.releases.push(rel); mudou = true;
+        } else if (escolhida && !(rel.tracks || []).some((t) => t.n === escolhida.n)) {
+          rel.tracks = (rel.tracks || []).concat([clone(escolhida)]); rel.partial = true; mudou = true;
+        }
         // ano original da música (quando é diferente do ano do disco, ex.: coletânea)
-        const faixa = E.discogs.faixa != null ? (rel.tracks || []).find((t) => t.n === (d.tracks[E.discogs.faixa] || {}).n) : null;
+        const faixa = escolhida ? (rel.tracks || []).find((t) => t.n === escolhida.n) : null;
         if (faixa) {
           const ano = E.discogs.ano && String(E.discogs.ano) !== String(rel.year) ? E.discogs.ano : undefined;
           if (String(faixa.year || '') !== String(ano || '')) { if (ano) faixa.year = ano; else delete faixa.year; mudou = true; }

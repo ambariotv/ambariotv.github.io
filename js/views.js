@@ -346,22 +346,22 @@
         return '<a class="art-card" href="#a-' + esc(a.id) + '">' + V.discoIcone(a, 'm') +
           '<span class="art-nome">' + esc(a.name) + '</span>' +
           '<span class="mini">' + esc([AMB.country(a.country), a.years].filter(Boolean).join(' · ')) + '</span>' +
-          '<span class="mini">' + pl(c.videos, T('registro', 'recording'), T('registros', 'recordings')) + (a.releases.length ? ' · ' + pl(a.releases.length, T('disco', 'record'), T('discos', 'records')) : '') + '</span></a>';
+          '<span class="mini">' + pl(c.videos, T('registro', 'recording'), T('registros', 'recordings')) + '</span></a>';
       }).join('') + '</div></div></section>';
   };
 
   V.artista = (a, aba) => {
     const cob = AMB.coverage(a);
-    const temDisco = a.releases.length > 0;
+    const temDisco = a.videos.length > 0;
     aba = aba || (temDisco ? 'discografia' : 'videos');
-    const abas = [['discografia', T('Discografia × videografia', 'Discography × videography')], ['videos', T('Vídeos', 'Videos') + ' (' + a.videos.length + ')'], ['sobre', T('Sobre', 'About')]];
+    const abas = [['discografia', T('Videografia', 'Videography')], ['videos', T('Vídeos', 'Videos') + ' (' + a.videos.length + ')'], ['sobre', T('Sobre', 'About')]];
     const info = [];
     if (a.origin) info.push([T('Origem', 'Origin'), esc(a.origin)]);
     if (a.country) info.push([T('País', 'Country'), esc(AMB.country(a.country))]);
     if (a.years) info.push([T('Em atividade', 'Years active'), esc(a.years)]);
     if (a.alt && a.alt.length) info.push([T('Também conhecido como', 'Also known as'), esc(a.alt.join(', '))]);
     let corpo = '';
-    if (aba === 'discografia') corpo = V.discografia(a, cob);
+    if (aba === 'discografia') corpo = V.videografia(a);
     else if (aba === 'videos') corpo = a.videos.length ? '<div class="grade">' + a.videos.map(V.card).join('') + '</div>' : V.vazio(T('Nenhum vídeo deste artista ainda.', 'No videos by this artist yet.'));
     else corpo = V.sobreArtista(a);
     return '<div class="pg-artista">' +
@@ -370,8 +370,7 @@
           (info.length ? '<dl class="art-info">' + info.map(([k, x]) => '<dt>' + k + '</dt><dd>' + x + '</dd>').join('') + '</dl>' : '') +
         '</div>' +
         '<div class="art-nums">' +
-          '<span><b>' + cob.videos + '</b> ' + T('registros em vídeo', 'video recordings') + '</span>' +
-          (temDisco ? '<span><b>' + cob.musicasComVideo + '</b> ' + T('de', 'of') + ' <b>' + cob.musicas + '</b> ' + T('músicas dos discos com vídeo', 'released songs with video') + '</span>' : '') +
+          '<span><b>' + cob.videos + '</b> ' + (cob.videos === 1 ? T('registro em vídeo', 'video recording') : T('registros em vídeo', 'video recordings')) + '</span>' +
           '<span><b>' + (cob.cont['no-acervo'] || 0) + '</b> ' + T('no acervo', 'in the archive') + '</span>' +
         '</div>' +
       '</div>' +
@@ -388,58 +387,47 @@
       '<i>' + ico + '</i>' + esc(v.kindShort) + (v.year ? ' ' + esc(v.year) : '') + (x.rel === 'outra' ? '<small>' + T('outra versão', 'other version') + '</small>' : '') + '</a>';
   };
 
-  V.discografia = (a, cob) => {
-    if (!a.releases.length) {
-      return V.vazio(T('A discografia de ' + esc(a.name) + ' ainda não foi cadastrada. ', esc(a.name) + '’s discography has not been added yet. ') +
-        '<a href="#" data-acao="corrigir" data-artista="' + esc(a.id) + '">' + T('Quer ajudar? Envie os discos com as fontes.', 'Want to help? Send the records with sources.') + '</a>') +
-        (a.videos.length ? '<h3 class="sub">' + T('Registros em vídeo', 'Video recordings') + '</h3><div class="grade">' + a.videos.map(V.card).join('') + '</div>' : '');
-    }
-    const tot = cob.videos || 1;
-    const larg = (k) => ((cob.cont[k] || 0) / tot * 100).toFixed(1) + '%';
-    const resumo = '<div class="cob">' +
-      '<p class="cob-txt">' + T('<b>' + cob.musicasComVideo + '</b> das <b>' + cob.musicas + '</b> músicas lançadas em disco têm algum registro em vídeo conhecido. ' +
-        'Ao todo são <b>' + cob.videos + '</b> registros de ' + esc(a.name) + '.',
-        '<b>' + cob.musicasComVideo + '</b> of the <b>' + cob.musicas + '</b> songs released on record have a known video recording. ' +
-        'There are <b>' + cob.videos + '</b> recordings of ' + esc(a.name) + ' in total.') + '</p>' +
-      '<div class="cob-barra" role="img" aria-label="' + esc(['no-acervo', 'na-fila', 'procura-se'].map((k) => (cob.cont[k] || 0) + ' ' + AMB.STATUS[k].t.toLowerCase()).join(', ')) + '">' +
-        ['no-acervo', 'na-fila', 'procura-se'].map((k) => '<span class="cb-' + k + '" style="width:' + larg(k) + '"></span>').join('') + '</div>' +
-      '<div class="cob-leg">' + ['no-acervo', 'na-fila', 'procura-se'].map((k) => '<span class="leg leg-' + k + '">' + esc(AMB.STATUS[k].t) + ' (' + (cob.cont[k] || 0) + ')</span>').join('') +
-        '<span class="leg leg-outra">' + T('outra versão da música', 'different version of the song') + '</span></div>' +
-    '</div>';
-    const discos = cob.discos.map((d) => {
-      const r = d.r;
-      const pct = d.total ? Math.round(d.comVideo / d.total * 100) : 0;
-      return '<section class="disco" id="disco-' + esc(r.id) + '">' +
-        '<div class="disco-cab">' +
-          '<span class="disco-ico disco-' + esc(r.type) + '" style="--h:' + hue(r.id) + '" aria-hidden="true"></span>' +
-          '<div class="disco-tit"><h3>' + esc(r.title) + '</h3>' +
-            '<div class="disco-meta"><b>' + esc(AMB.RELTYPES[r.type] || r.type) + '</b> · ' + esc(r.date ? AMB.fmtDate(r.date) : (r.year || '')) +
-              (r.label ? ' · ' + esc(r.label) : '') + (r.format && AMB.norm(r.format) !== AMB.norm(AMB.RELTYPES[r.type] || '') ? ' · ' + esc(r.format) : '') + (r.credit ? ' · ' + esc(r.credit) : '') + '</div></div>' +
-          '<div class="disco-cob" title="' + d.comVideo + T(' de ', ' of ') + d.total + T(' faixas têm registro em vídeo', ' tracks have a video recording') + '"><b>' + d.comVideo + '</b>/' + d.total + T(' com vídeo', ' with video') +
-            '<span class="mini-barra"><span style="width:' + pct + '%"></span></span></div>' +
-        '</div>' +
-        (r.note ? '<p class="disco-nota">' + esc(r.note) + '</p>' : '') +
-        (d.comVideo ? '<table class="faixas"><thead><tr><th scope="col">' + T('Faixa', 'Track') + '</th><th scope="col">' + T('Música', 'Song') + '</th><th scope="col">' + T('Duração', 'Length') + '</th><th scope="col">' + T('Registros em vídeo', 'Video recordings') + '</th></tr></thead><tbody>' +
-        d.linhas.filter((l) => l.regs.length).map((l) => '<tr class="tem">' +
-          '<td class="f-n">' + esc(l.t.n) + '</td>' +
-          '<td class="f-t">' + esc(l.t.t) + (l.t.year && String(l.t.year) !== String(r.year) ? ' <span class="f-ano" title="' + T('Ano original da música', 'Original year of the song') + '">(' + esc(l.t.year) + ')</span>' : '') + (l.t.feat ? ' <span class="f-feat">(' + esc(/^(com |coro|vocal)/.test(l.t.feat) ? l.t.feat : T('part. ', 'feat. ') + l.t.feat) + ')</span>' : '') +
-            (l.t.w || l.t.note ? '<span class="f-w">' + esc([l.t.w, l.t.note].filter(Boolean).join(' · ')) + '</span>' : '') + '</td>' +
-          '<td class="f-d">' + esc(l.t.len || '') + '</td>' +
-          '<td class="f-v">' + (l.regs.length ? l.regs.map(V.vchip).join('') : '<span class="f-sem">—</span>') + '</td></tr>').join('') +
-        '</tbody></table>' : '<p class="mini disco-semvid">' + T('Nenhuma faixa deste disco tem registro em vídeo ainda.', 'No track from this record has a video recording yet.') + '</p>') +
-        (r.partial ? '<p class="mini">' + T('Lista parcial: só as faixas que conhecemos.', 'Partial list: only the tracks we know.') + '</p>' : '') +
-        V.fontes(r.src) +
-      '</section>';
-    }).join('');
-    const soltos = cob.soltos.length ? '<section class="disco disco-soltos"><div class="disco-cab"><span class="disco-ico disco-fita" aria-hidden="true"></span>' +
-      '<div class="disco-tit"><h3>' + T('Registros sem disco correspondente', 'Recordings without a matching record') + '</h3><div class="disco-meta">' + T('Músicas que não estão nos discos acima, ou registros sem uma música só', 'Songs not on the records above, or recordings without a single song') + '</div></div></div>' +
-      '<ul class="soltos">' + cob.soltos.map((v) => '<li>' + V.vchip({ v, rel: 'mesma' }) + ' <a href="#v-' + esc(v.id) + '">' + esc(v.title) + '</a>' +
-        (v.program ? ' <span class="mini">' + esc(v.program) + '</span>' : '') + '</li>').join('') + '</ul></section>' : '';
-    return resumo + discos + soltos +
-      '<p class="mini">' + T('Discos em ordem de lançamento. Uma música que aparece em mais de um disco mostra os mesmos registros em cada um. ' +
-      '“Outra versão” quer dizer que o vídeo usa outra gravação da música (ao vivo, demo, regravação). Faltou algo?',
-      'Records in release order. A song that appears on more than one record shows the same recordings on each. ' +
-      '“Other version” means the video uses a different recording of the song (live, demo, re-recording). Something missing?') + ' <a href="#" data-acao="corrigir" data-artista="' + esc(a.id) + '">' + T('Sugira', 'Suggest it') + '</a>.</p>';
+  // Videografia: uma linha por música com vídeo — ano original da música, o disco de onde veio o áudio e os registros.
+  V.videografia = (a) => {
+    if (!a.videos.length) return V.vazio(T('Nenhum vídeo deste artista ainda.', 'No videos by this artist yet.'));
+    const rels = {};
+    a.releases.forEach((r) => { rels[r.id] = r; });
+    const grupos = {};
+    const ordem = [];
+    a.videos.forEach((v) => {
+      const k = v.song ? 's:' + v.song : 'v:' + v.id;
+      if (!grupos[k]) { grupos[k] = { song: v.song ? a.songs[v.song] : null, videos: [] }; ordem.push(k); }
+      grupos[k].videos.push(v);
+    });
+    const linhas = ordem.map((k) => {
+      const g = grupos[k];
+      const vs = g.videos.slice().sort((x, y) => x.sortKey.localeCompare(y.sortKey));
+      // disco do áudio: o que o vídeo diz que usou; senão, o primeiro disco em que a música saiu
+      let disco = null, faixa = null;
+      vs.some((v) => { const id = ((v.audio || [])[0] || {}).release; if (id && rels[id]) { disco = rels[id]; return true; } return false; });
+      const aps = (g.song && g.song.appears) || [];
+      if (disco) { const ap = aps.find((x) => x.release === disco); faixa = ap ? ap.track : null; }
+      // ano original: o que foi marcado na faixa; senão o mais antigo entre os discos e os vídeos da música
+      const anos = (faixa && faixa.year ? [faixa.year] : aps.map((x) => x.track.year || x.release.year).concat(vs.map((v) => v.year)))
+        .map((x) => String(x || '').slice(0, 4)).filter((x) => /^\d{4}$/.test(x)).sort();
+      const ano = anos[0] || '';
+      const titulo = g.song ? g.song.t : vs[0].title;
+      const dg = disco ? (disco.src || []).map(AMB.src).filter(Boolean).find((s) => /discogs\.com/.test(s.u || '')) : null;
+      const discoTxt = disco ? '<span class="vg-disco">' + esc(AMB.RELTYPES[disco.type] || disco.type) + ' <b>' + esc(disco.title) + '</b>' +
+        esc([disco.label, disco.year].filter(Boolean).length ? ' (' + [disco.label, disco.year].filter(Boolean).join(', ') + ')' : '') +
+        (faixa ? ' · ' + T('faixa ', 'track ') + esc(faixa.n) : '') +
+        (dg ? ' · <a href="' + esc(dg.u) + '" target="_blank" rel="noopener">Discogs ↗</a>' : '') + '</span>' : '<span class="f-sem" title="' + T('Ainda não informado', 'Not set yet') + '">—</span>';
+      return { ano, html: '<tr>' +
+        '<td class="vg-ano">' + esc(ano) + '</td>' +
+        '<td class="vg-mus"><b>' + esc(titulo) + '</b>' + (g.song && g.song.w ? '<span class="f-w">' + esc(g.song.w) + '</span>' : '') + '</td>' +
+        '<td class="vg-aud">' + discoTxt + '</td>' +
+        '<td class="f-v">' + vs.map((v) => V.vchip({ v, rel: 'mesma' })).join('') + '</td></tr>' };
+    }).sort((x, y) => String(x.ano || '9999').localeCompare(String(y.ano || '9999')));
+    return '<table class="faixas videografia"><thead><tr><th scope="col">' + T('Ano', 'Year') + '</th><th scope="col">' + T('Música', 'Song') + '</th>' +
+        '<th scope="col">' + T('Áudio de', 'Audio from') + '</th><th scope="col">' + T('Registros em vídeo', 'Video recordings') + '</th></tr></thead><tbody>' +
+        linhas.map((l) => l.html).join('') + '</tbody></table>' +
+      '<p class="mini">' + T('Ano: lançamento original da música. “Áudio de”: o disco usado como fonte do som do vídeo. Faltou algo?', 'Year: original release of the song. “Audio from”: the record used as the video’s audio source. Something missing?') +
+        ' <a href="#" data-acao="corrigir" data-artista="' + esc(a.id) + '">' + T('Sugira', 'Suggest it') + '</a>.</p>';
   };
 
   V.sobreArtista = (a) => {

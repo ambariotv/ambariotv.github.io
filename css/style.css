@@ -704,3 +704,9 @@ html.vr-trava { overflow: hidden; }
 .adm-dg-faixas input:checked + b { color: #1d66c9; }
 .adm-form .adm-dg-ano { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 0 0 6px; font-weight: 700; }
 .adm-form .adm-dg-ano input { width: 70px; }
+/* videografia do artista */
+.videografia td { vertical-align: top; }
+.videografia .vg-ano { width: 52px; font-weight: 700; color: #33475e; white-space: nowrap; }
+.videografia .vg-aud { color: #555; font-size: .92em; }
+.videografia .vg-aud b { color: #222; font-weight: 600; }
+.videografia .vg-mus { min-width: 140px; }
