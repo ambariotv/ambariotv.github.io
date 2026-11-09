@@ -691,3 +691,12 @@ html.vr-trava { overflow: hidden; }
   .pisca { animation: none; }
 }
 @media (hover: none) { .atalhos { display: none; } }
+/* área do curador: puxar disco do Discogs */
+.adm-discogs { background: #f6f9fd; }
+.adm-dg { margin-top: 6px; padding: 8px 10px; background: #fff; border: 1px solid #c9d6e6; border-radius: 4px; }
+.adm-dg p { margin: 0 0 6px; }
+.adm-dg-faixas { list-style: none; margin: 0; padding: 0; columns: 2 260px; }
+.adm-dg-faixas li { padding: 2px 0; break-inside: avoid; }
+.adm-form .adm-dg-faixas label { display: flex; align-items: baseline; gap: 6px; margin: 0; font-weight: normal; cursor: pointer; }
+.adm-form .adm-dg-faixas input[type="radio"] { flex: none; width: auto; height: auto; margin: 0; padding: 0; border: 0; box-shadow: none; }
+.adm-dg-faixas input:checked + b { color: #1d66c9; }

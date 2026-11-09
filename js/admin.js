@@ -304,6 +304,109 @@
     if (await salvarOps(ops, { msgEl, ok: '“' + nomeVideo(v) + '” foi apagado.', depois: '#admin/videos' }) && location.hash === antes) AMB.render();
   }
 
+  /* =================== Discogs: puxar o disco de um link ===================
+   * Usa a API pública do Discogs (sem token, ~25 pedidos por minuto). Aceita link de release ou de master
+   * (no master, usa o lançamento principal). Devolve o disco já no formato da discografia do Ambário.
+   */
+  const DISCOGS_API = 'https://api.discogs.com/';
+  function discogsAlvo(txt) {
+    const s = String(txt || '').trim();
+    let m = s.match(/discogs\.com\/(?:[a-z]{2}\/)?(?:[^/]+\/)?(release|master)\/(\d+)/i);
+    if (m) return { tipo: m[1].toLowerCase(), id: m[2] };
+    m = s.match(/^\[?([rm])(\d+)\]?$/i); // [r123456] ou m12345
+    if (m) return { tipo: m[1].toLowerCase() === 'm' ? 'master' : 'release', id: m[2] };
+    if (/^\d+$/.test(s)) return { tipo: 'release', id: s };
+    return null;
+  }
+  async function discogsGet(caminho) {
+    const r = await fetch(DISCOGS_API + caminho, { headers: { Accept: 'application/vnd.discogs.v2.discogs+json' } });
+    if (r.status === 404) throw new Error('Esse disco não foi encontrado no Discogs. Confira o link.');
+    if (r.status === 429) throw new Error('O Discogs pediu para esperar um pouco (muitos pedidos). Tente de novo em 1 minuto.');
+    if (!r.ok) throw new Error('O Discogs não respondeu agora (erro ' + r.status + '). Tente de novo.');
+    return r.json();
+  }
+  const semNumeroDiscogs = (n) => String(n || '').replace(/\s*\(\d+\)$/, '').replace(/\*$/, '').trim();
+  let codigosPais = null;
+  function paisDoDiscogs(nome) { // "Brazil" → "BR"
+    if (!nome) return '';
+    if (!codigosPais) {
+      codigosPais = {};
+      try {
+        const dn = new Intl.DisplayNames(['en'], { type: 'region' });
+        for (let i = 65; i < 91; i++) for (let j = 65; j < 91; j++) {
+          const c = String.fromCharCode(i, j);
+          const n = dn.of(c);
+          if (n && n !== c) codigosPais[AMB.norm(n)] = c;
+        }
+      } catch (e) { /* sem Intl */ }
+      Object.assign(codigosPais, { uk: 'GB', usa: 'US', us: 'US', 'west germany': 'DE', germany: 'DE', 'east germany': 'DE', ussr: 'RU' });
+    }
+    return codigosPais[AMB.norm(nome)] || '';
+  }
+  function tipoDoDiscogs(formats) {
+    const f = (formats || [])[0] || {};
+    const d = (f.descriptions || []).map((x) => AMB.norm(x));
+    const nome = AMB.norm(f.name);
+    const tem = (x) => d.indexOf(x) >= 0;
+    if (tem('compilation')) return 'coletanea';
+    if (nome === 'file') return 'digital';
+    if (nome === 'cd' || nome === 'cdr') return tem('single') || tem('maxi-single') ? 'single' : tem('ep') ? 'ep' : 'cd';
+    if (nome === 'vinyl' || nome === 'shellac') {
+      if (tem('lp') || tem('album')) return 'lp';
+      if (tem('ep')) return 'ep';
+      if (tem('7"') || tem('single') || tem('45 rpm')) return 'compacto';
+      if (tem('12"') || tem('maxi-single')) return 'single';
+      return 'lp';
+    }
+    if (tem('single')) return 'single';
+    if (tem('ep')) return 'ep';
+    return 'lp';
+  }
+  // r = resposta da API (release); artista = registro do Ambário (para reaproveitar os ids das músicas)
+  function discoDoDiscogs(r, artista) {
+    const tipo = tipoDoDiscogs(r.formats);
+    const ano = r.year || Number(String(r.released || '').slice(0, 4)) || '';
+    const data = String(r.released || '').replace(/-00/g, '');
+    const musicas = {};
+    (artista && artista.releases ? artista.releases : []).forEach((d) => (d.tracks || []).forEach((t) => { if (t.song) musicas[AMB.norm(AMB.cleanTitle(t.t))] = t.song; }));
+    const tracks = (r.tracklist || []).filter((t) => (t.type_ || 'track') === 'track' && t.title).map((t, i) => {
+      const titulo = String(t.title).trim();
+      const chave = AMB.norm(AMB.cleanTitle(titulo));
+      const faixa = { n: String(t.position || i + 1).trim() || String(i + 1), t: titulo, song: musicas[chave] || AMB.slug(AMB.cleanTitle(titulo)) };
+      if (t.duration) faixa.len = t.duration;
+      const outros = (t.extraartists || []).filter((x) => /written|lyrics|music|composed/i.test(x.role || '')).map((x) => semNumeroDiscogs(x.anv || x.name));
+      if (outros.length) faixa.w = Array.from(new Set(outros)).join(', ');
+      return faixa;
+    });
+    const f = (r.formats || [])[0] || {};
+    const formato = [f.qty && Number(f.qty) > 1 ? f.qty + '×' + f.name : f.name].concat(f.descriptions || []).filter(Boolean).join(', ');
+    const label = (r.labels || [])[0];
+    const disco = {
+      id: AMB.slug(r.title) + (ano ? '-' + ano : ''),
+      type: tipo,
+      title: String(r.title || '').trim(),
+      year: ano || undefined,
+      date: /^\d{4}-\d{2}/.test(data) ? data : undefined,
+      label: label ? semNumeroDiscogs(label.name) + (label.catno && label.catno !== 'none' ? ' (' + label.catno + ')' : '') : undefined,
+      format: formato || undefined,
+      src: [{ t: 'Discogs — ' + semNumeroDiscogs(((r.artists || [])[0] || {}).name) + ' – ' + r.title, u: 'https://www.discogs.com/release/' + r.id }],
+      discogs: r.id,
+      tracks
+    };
+    Object.keys(disco).forEach((k) => { if (disco[k] === undefined) delete disco[k]; });
+    return disco;
+  }
+  async function buscarDiscogs(txt) {
+    const alvo = discogsAlvo(txt);
+    if (!alvo) throw new Error('Cole um link do Discogs, como https://www.discogs.com/release/1234567-Artista-Disco');
+    let r;
+    if (alvo.tipo === 'master') {
+      const m = await discogsGet('masters/' + alvo.id);
+      r = await discogsGet('releases/' + m.main_release);
+    } else r = await discogsGet('releases/' + alvo.id);
+    return r;
+  }
+
   /* =================== vídeos: formulário =================== */
   function telaVideo(id) {
     const novo = id === 'novo';
@@ -321,6 +424,12 @@
       '<div class="box-h"><h2>' + (novo ? 'Novo vídeo' : 'Editar: ' + esc(nomeVideo(v))) + '</h2>' +
         (novo ? '' : '<span class="box-h-dir"><a href="#v-' + esc(v.id) + '">ver no site</a></span>') + '</div><div class="box-c">' +
 
+      '<fieldset class="adm-discogs"><legend>Puxar do Discogs</legend>' +
+        '<p class="mini">Cole o link do disco de onde vem a música (release ou master). O disco entra na discografia do artista e o vídeo já fica ligado à faixa.</p>' +
+        '<div class="adm-ia"><label>Link do Discogs <input type="text" name="discogs" placeholder="https://www.discogs.com/release/…"></label>' +
+          '<button type="button" class="btn btn-b" data-adm="discogs">Buscar disco</button></div>' +
+        '<p class="mini adm-discogs-msg" role="status"></p><div class="adm-discogs-res"></div>' +
+      '</fieldset>' +
       '<fieldset><legend>O registro</legend><div class="adm-grade">' +
         campo('artist', 'Artista', '', { tipo: 'select', ops: opcoes(artistas.concat([['__novo', '+ artista novo…']]), v.artist || '', 'escolha') }) +
         '<div class="adm-novo-art larga" hidden><div class="adm-grade">' +
@@ -450,6 +559,86 @@
     }
 
     el('artist').addEventListener('change', () => { atualizarArtista(); idPrevisto(); });
+
+    // ---- Discogs ----
+    const dMsg = f.querySelector('.adm-discogs-msg');
+    const dRes = f.querySelector('.adm-discogs-res');
+    function preencherSeVazio(nome, valor) {
+      if (valor && el(nome) && !String(el(nome).value || '').trim()) el(nome).value = valor;
+    }
+    function escolherFaixa(i) {
+      const d = E.discogs && E.discogs.disco;
+      const t = d && d.tracks[i];
+      if (!t) return;
+      E.discogs.faixa = i;
+      el('song').value = t.song;
+      el('title').value = AMB.cleanTitle(t.t);
+      if (!el('date').value.trim() && d.year) el('date').value = String(d.year);
+      // áudio principal = o disco
+      const sel = el('a1_release');
+      if (!Array.from(sel.options).some((o) => o.value === d.id)) {
+        sel.insertAdjacentHTML('beforeend', '<option value="' + esc(d.id) + '">' + esc(d.title + ' (' + (AMB.RELTYPES[d.type] || d.type) + (d.year ? ', ' + d.year : '') + ') — novo') + '</option>');
+      }
+      sel.value = d.id;
+      const kindAudio = { lp: 'lp', compacto: 'compacto', single: 'compacto', ep: 'compacto', cd: 'cd', coletanea: 'lp', digital: 'digital' }[d.type] || '';
+      if (kindAudio) el('a1_kind').value = kindAudio;
+      el('a1_label').value = (AMB.RELTYPES[d.type] || d.type) + ' ' + d.title + ' (' + [d.label ? d.label.replace(/\s*\(.*\)$/, '') : '', d.year].filter(Boolean).join(', ') + ')';
+      el('a1_note').value = 'faixa ' + t.n;
+      E.sujo = true;
+      dRes.querySelectorAll('input[name="dg_faixa"]').forEach((r) => { r.checked = Number(r.value) === i; });
+      idPrevisto();
+    }
+    async function puxarDiscogs(botao) {
+      const txt = el('discogs').value;
+      dMsg.className = 'mini adm-discogs-msg';
+      dMsg.textContent = 'Buscando no Discogs…';
+      botao.disabled = true;
+      try {
+        const r = await buscarDiscogs(txt);
+        const nomeArt = semNumeroDiscogs(((r.artists || [])[0] || {}).anv || ((r.artists || [])[0] || {}).name);
+        // artista: o escolhido no formulário; senão procura pelo nome; senão prepara um artista novo
+        let artId = el('artist').value && el('artist').value !== '__novo' ? el('artist').value : '';
+        if (!artId) {
+          const achado = AMB.artistList.find((x) => AMB.norm(x.name) === AMB.norm(nomeArt) || (x.alt || []).some((n) => AMB.norm(n) === AMB.norm(nomeArt)));
+          if (achado) artId = achado.id;
+        }
+        if (artId) el('artist').value = artId;
+        else {
+          el('artist').value = '__novo';
+          preencherSeVazio('artist_name', nomeArt);
+          preencherSeVazio('artist_country', paisDoDiscogs(r.country));
+        }
+        atualizarArtista();
+        const disco = discoDoDiscogs(r, rawArtista(artId));
+        const jaTem = artId && (rawArtista(artId).releases || []).find((x) => (x.discogs && String(x.discogs) === String(r.id)) || x.id === disco.id);
+        if (jaTem) { // o disco já está na discografia: usa o que já existe (com os ids de música dele)
+          jaTem.tracks = jaTem.tracks || [];
+          E.discogs = { disco: Object.assign({}, jaTem, { tracks: jaTem.tracks.map((t) => Object.assign({}, t)) }), existente: true };
+        } else E.discogs = { disco, existente: false };
+        const d = E.discogs.disco;
+        // faixa sugerida: a que bate com o título já escrito; senão a primeira (lado A do compacto)
+        const tit = AMB.norm(AMB.cleanTitle(el('title').value || el('song').value || ''));
+        let sug = tit ? d.tracks.findIndex((t) => AMB.norm(AMB.cleanTitle(t.t)) === tit || t.song === el('song').value) : -1;
+        if (sug < 0) sug = 0;
+        dRes.innerHTML = '<div class="adm-dg">' +
+          '<p><b>' + esc(nomeArt) + ' — ' + esc(d.title) + '</b> <span class="mini">' + esc([AMB.RELTYPES[d.type] || d.type, d.year, d.label, d.format, r.country].filter(Boolean).join(' · ')) + '</span>' +
+            ' <a class="mini" href="https://www.discogs.com/release/' + esc(r.id) + '" target="_blank" rel="noopener">abrir no Discogs ↗</a></p>' +
+          '<p class="mini">' + (E.discogs.existente ? 'Este disco <b>já está</b> na discografia do artista: nada muda nela.' : 'Este disco <b>entra na discografia</b> do artista quando você salvar o vídeo.') + ' Qual faixa é a do vídeo?</p>' +
+          '<ul class="adm-dg-faixas">' + d.tracks.map((t, i) => '<li><label><input type="radio" name="dg_faixa" value="' + i + '"> <b>' + esc(t.n) + '</b> ' + esc(t.t) +
+            (t.len ? ' <span class="mini">' + esc(t.len) + '</span>' : '') + '</label></li>').join('') + '</ul>' +
+          (d.tracks.length ? '' : '<p class="erro">O Discogs não trouxe a lista de faixas deste disco.</p>') +
+        '</div>';
+        dRes.querySelectorAll('input[name="dg_faixa"]').forEach((rd) => rd.addEventListener('change', () => escolherFaixa(Number(rd.value))));
+        if (d.tracks.length) escolherFaixa(sug);
+        dMsg.textContent = 'Pronto: confira a faixa marcada e os campos preenchidos abaixo.';
+      } catch (er) {
+        E.discogs = null;
+        dRes.innerHTML = '';
+        dMsg.className = 'mini adm-discogs-msg erro';
+        dMsg.textContent = /failed to fetch|networkerror|load failed/i.test(String(er && er.message)) ? 'Não deu para falar com o Discogs agora. Confira a conexão e tente de novo.' : (er && er.message) || 'Não deu para buscar o disco.';
+      } finally { botao.disabled = false; }
+    }
+    el('discogs').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); puxarDiscogs(f.querySelector('[data-adm="discogs"]')); } });
     el('song').addEventListener('change', () => {
       const a = AMB.artists[el('artist').value];
       const s = a && a.songs[el('song').value];
@@ -475,6 +664,8 @@
         const atual = acao === 'capa-ajustar' ? (E.capaNova || AMB.local.arquivo(el('capa').value) || el('capa').value.trim()) : '';
         const r = await AMB.Capa.escolher({ titulo: acao === 'capa-ajustar' ? 'Reenquadrar a capa' : 'Capa do vídeo', proporcao: 4 / 3, largura: 640, modo: acao === 'capa-vid' ? 'video' : 'imagem', atual });
         if (r) { E.capaNova = r.dataUrl; E.capaRemovida = false; E.sujo = true; mostrarCapa(); }
+      } else if (acao === 'discogs') {
+        puxarDiscogs(b);
       } else if (acao === 'capa-remover') {
         E.capaNova = null; E.capaRemovida = true; el('capa').value = ''; E.sujo = true; mostrarCapa();
       } else if (acao === 'importar') {
@@ -546,6 +737,20 @@
     }
     v.artist = artista;
     delete v.artist_name;
+    // disco puxado do Discogs: entra na discografia do artista (se ainda não estiver lá)
+    let artistaDisco = null;
+    if (E.discogs && E.discogs.disco) {
+      const d = E.discogs.disco;
+      const base = artistaNovo || (rawArtista(artista) ? clone(rawArtista(artista)) : null);
+      if (base) {
+        base.releases = base.releases || [];
+        const ja = base.releases.find((x) => (x.discogs && String(x.discogs) === String(d.discogs)) || x.id === d.id);
+        if (!ja) {
+          base.releases.push(ordenar(clone(d), ORDEM_DISCO.concat(['discogs'])));
+          if (artistaNovo) artistaNovo = base; else artistaDisco = ordenar(base, ORDEM_ARTISTA);
+        }
+      }
+    }
     const a = AMB.artists[artista];
     let song = val('song');
     if (song && !/^[a-z0-9-]+$/.test(song)) {
@@ -646,7 +851,7 @@
     put(v, 'src', src);
     put(v, 'refs', refs);
     if (!original) { v.added = GH.hoje(); put(v, 'added_by', AMB.cfg('CURADOR', '')); }
-    return { v: ordenar(v, ORDEM_VIDEO), artistaNovo, caminhoCapa };
+    return { v: ordenar(v, ORDEM_VIDEO), artistaNovo, artistaDisco, caminhoCapa };
   }
 
   function salvarVideo(f, original, botao) {
@@ -668,6 +873,7 @@
       if (!outro) ops.push({ t: 'apagar-arquivo', caminho: velha });
     }
     if (r.artistaNovo) ops.push({ t: 'artista', id: r.artistaNovo.id, dados: r.artistaNovo });
+    if (r.artistaDisco) ops.push({ t: 'artista', id: r.artistaDisco.id, dados: r.artistaDisco });
     const op = { t: 'video', id: v.id, dados: v };
     if (original && original.id !== v.id) op.antes = original.id;
     ops.push(op);
@@ -1227,7 +1433,7 @@
     const partes = String(rota || 'admin').split('/');
     const sec = partes[1] || 'videos';
     const id = partes.slice(2).join('/');
-    E.sujo = false; E.capaNova = null; E.capaRemovida = false; E.fotoNova = null;
+    E.sujo = false; E.capaNova = null; E.capaRemovida = false; E.fotoNova = null; E.discogs = null;
     let corpo = '', aba = sec;
     if (sec === 'videos') corpo = telaVideos();
     else if (sec === 'video') { corpo = telaVideo(id || 'novo'); aba = 'videos'; }
