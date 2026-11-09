@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-09",
-  "rev": 6,
+  "rev": 7,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -801,7 +801,7 @@ window.AMB_DATA = {
     {
       "id": "joe-euthanazia",
       "name": "Joe Euthanazia",
-      "photo": "media/artistas/joe-euthanazia.jpg?v=mw8rxggc",
+      "photo": "media/artistas/joe-euthanazia.jpg?v=mw8ry0zm",
       "alt": ["Joe Euthanázia", "Joe"],
       "country": "BR",
       "origin": "Rio Grande do Sul",
