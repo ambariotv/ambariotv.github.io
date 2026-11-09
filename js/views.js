@@ -67,7 +67,9 @@
       (c && c.avatar ? '<img src="' + esc(c.avatar) + '" alt="">' : '') + '<b>' + ini + '</b></span>';
   };
 
-  V.discoIcone = (a, tam) => '<span class="vinil vinil-' + (tam || 'm') + '" style="--h:' + hue(a.id) + '" aria-hidden="true"><b>' + esc((a.name || '?').charAt(0).toUpperCase()) + '</b></span>';
+  V.discoIcone = (a, tam) => a.photo
+    ? '<span class="art-foto art-foto-' + (tam || 'm') + '" aria-hidden="true"><img src="' + esc(AMB.local.arquivo(a.photo) || a.photo) + '" alt="" loading="lazy"></span>'
+    : '<span class="vinil vinil-' + (tam || 'm') + '" style="--h:' + hue(a.id) + '" aria-hidden="true"><b>' + esc((a.name || '?').charAt(0).toUpperCase()) + '</b></span>';
 
   V.fontes = (lista, rot) => {
     const itens = (lista || []).map(AMB.src).filter(Boolean);
