@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-09",
-  "rev": 13,
+  "rev": 14,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -299,7 +299,8 @@ window.AMB_DATA = {
               "len": "2:44",
               "w": "Tavinho Paes, Gastão Lamounier, Orlando Vianna"
             },
-            { "n": "9", "t": "Brigitte", "song": "brigitte", "w": "Tavinho Paes, Orlando Vianna" }
+            { "n": "9", "t": "Brigitte", "song": "brigitte", "w": "Tavinho Paes, Orlando Vianna" },
+            { "n": "B4", "t": "Brigitte", "song": "brigitte", "w": "Joe, Tavinho Paes" }
           ],
           "partial": true
         }
@@ -822,10 +823,10 @@ window.AMB_DATA = {
         {
           "id": "principal",
           "short": "DISCO",
-          "label": "Áudio do disco (FLAC)",
-          "kind": "digital",
+          "label": "LP Tudo Pode Mudar (RCA Victor, 1985)",
+          "kind": "lp",
           "release": "tudo-pode-mudar-1985",
-          "note": "faixa 9",
+          "note": "faixa B4",
           "embedded": true
         },
         {
