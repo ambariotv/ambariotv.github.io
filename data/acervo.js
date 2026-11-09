@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-09",
-  "rev": 19,
+  "rev": 20,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -326,6 +326,31 @@ window.AMB_DATA = {
           ],
           "partial": true,
           "discogs": 7502690
+        },
+        {
+          "id": "um-sonho-a-mais-nacional-1985",
+          "type": "coletanea",
+          "title": "Um Sonho A Mais (Nacional)",
+          "year": 1985,
+          "label": "Som Livre (403.6319)",
+          "format": "Vinyl, LP, Compilation",
+          "partial": true,
+          "src": [
+            {
+              "t": "Discogs — Various – Um Sonho A Mais (Nacional)",
+              "u": "https://www.discogs.com/release/2226122"
+            }
+          ],
+          "tracks": [
+            {
+              "n": "A5",
+              "t": "Me Leva Pra Casa",
+              "song": "me-leva-pra-casa",
+              "len": "3:43",
+              "w": "Gastão Lamounier, Joe"
+            }
+          ],
+          "discogs": 2226122
         }
       ]
     },
@@ -549,12 +574,12 @@ window.AMB_DATA = {
       "id": "joe-euthanazia-me-leva-pra-casa-1985",
       "artist": "joe-euthanazia",
       "song": "me-leva-pra-casa",
-      "title": "Me Leva pra Casa",
+      "title": "Me Leva Pra Casa",
       "kind": "tv",
-      "date": "1985",
+      "date": "1984",
       "program": "Programa Vamos Nessa",
       "channel": "SBT",
-      "status": "na-fila",
+      "status": "no-acervo",
       "capa": "media/capas/joe-euthanazia-me-leva-pra-casa-1985.jpg",
       "fit": "cover",
       "duration": 213,
@@ -566,11 +591,11 @@ window.AMB_DATA = {
         {
           "id": "principal",
           "short": "DISCO",
-          "label": "Compacto Me Leva Pra Casa (Epic, 1984)",
-          "kind": "compacto",
-          "release": "me-leva-pra-casa-1984",
+          "label": "Coletânea Um Sonho A Mais (Nacional) (Som Livre, 1985)",
+          "kind": "lp",
+          "release": "um-sonho-a-mais-nacional-1985",
           "by": "Luiz Alberto Gomes (bugrim)",
-          "note": "faixa A",
+          "note": "faixa A5",
           "embedded": true
         },
         {
