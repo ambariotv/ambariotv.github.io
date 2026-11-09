@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-09",
-  "rev": 18,
+  "rev": 19,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -278,9 +278,17 @@ window.AMB_DATA = {
           "year": 1984,
           "format": "Compacto simples",
           "note": "Gravadora ainda não confirmada.",
-          "src": ["scribd-rock-gaucho", "letras-joe"],
+          "src": [
+            "scribd-rock-gaucho",
+            "letras-joe",
+            {
+              "t": "Discogs — Joe – Me Leva Pra Casa",
+              "u": "https://www.discogs.com/release/9069789"
+            }
+          ],
           "tracks": [{ "n": "A", "t": "Me Leva pra Casa", "song": "me-leva-pra-casa" }],
-          "partial": true
+          "partial": true,
+          "discogs": 9069789
         },
         {
           "id": "tudo-pode-mudar-1985",
@@ -558,10 +566,11 @@ window.AMB_DATA = {
         {
           "id": "principal",
           "short": "DISCO",
-          "label": "Áudio do disco (FLAC)",
-          "kind": "lp",
-          "release": "tudo-pode-mudar-1985",
+          "label": "Compacto Me Leva Pra Casa (Epic, 1984)",
+          "kind": "compacto",
+          "release": "me-leva-pra-casa-1984",
           "by": "Luiz Alberto Gomes (bugrim)",
+          "note": "faixa A",
           "embedded": true
         },
         {
