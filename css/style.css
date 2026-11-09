@@ -582,10 +582,14 @@ table.adm-faixas { width: 100%; min-width: 860px; border-collapse: collapse; fon
 .vr-audio button[aria-pressed="true"] { color: #fff; text-shadow: 0 -1px rgba(0,0,0,.35); background: linear-gradient(#6fb8ff, #2a7be0 50%, #1d66c9 51%, #3a87e0); box-shadow: inset 0 1px rgba(255,255,255,.35); }
  
 /* botões da TV (os mesmos cinco do original) */
-.vr-controles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #2c3038; }
+.vr-controles { display: grid; grid-template-columns: repeat(4, 1fr) 1.6fr; align-items: stretch; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #2c3038; }
 .vr-btn { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 7px 4px; font: 700 10.5px Arial; letter-spacing: .04em; text-transform: uppercase; color: #cfd7e2; text-shadow: 0 1px 0 #000;
   background: linear-gradient(180deg, #363a44, #16181c); border: 1px solid #4b515c; border-radius: 4px; cursor: pointer; transition: .15s; }
 .vr-btn b { font-size: 15px; line-height: 1; color: #fff; }
+.vr-controles .vr-btn:not(.vr-btn-tela) { gap: 2px; padding: 4px 3px; font-size: 8.5px; align-self: center; }
+.vr-controles .vr-btn:not(.vr-btn-tela) b { font-size: 11px; }
+.vr-btn-tela { padding: 9px 4px; font-size: 12px; }
+.vr-btn-tela b { font-size: 17px; }
 .vr-btn:hover:not(:disabled) { color: #fff; border-color: var(--vr-acento); background: linear-gradient(180deg, #424855, #1d2026); box-shadow: 0 0 10px rgba(143,211,255,.45); }
 .vr-btn:active:not(:disabled) { transform: translateY(1px); }
 .vr-btn:disabled { opacity: .4; cursor: default; }
@@ -653,7 +657,7 @@ html.vr-trava { overflow: hidden; }
   .art-topo h1 { font-size: 21px; }
   .vinil-g, .avatar-g { width: 70px; height: 70px; font-size: 26px; }
   .vr-tv { padding: 8px; border-width: 3px; border-radius: 12px; }
-  .vr-controles { grid-template-columns: repeat(2, 1fr); }
+  .vr-controles { grid-template-columns: repeat(4, 1fr); }
   .vr-btn-tela { grid-column: 1 / -1; }
   .vr-vol { display: none; }
   .vr-tempo { min-width: 0; font-size: 1rem; }
@@ -677,4 +681,3 @@ html.vr-trava { overflow: hidden; }
   .pisca { animation: none; }
 }
 @media (hover: none) { .atalhos { display: none; } }
- 
