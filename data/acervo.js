@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-09",
-  "rev": 17,
+  "rev": 18,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -290,18 +290,34 @@ window.AMB_DATA = {
           "label": "RCA",
           "format": "LP",
           "note": "Produção de Gutti; arranjos de Joe Euthanazia. Lado A: faixas 1 a 5; lado B: 6 a 10.",
-          "src": ["ddb-joe-1985", "scribd-rock-gaucho", "letras-joe"],
+          "src": [
+            "ddb-joe-1985",
+            "scribd-rock-gaucho",
+            "letras-joe",
+            {
+              "t": "Discogs — Joe – Tudo Pode Mudar",
+              "u": "https://www.discogs.com/release/7502690"
+            }
+          ],
           "tracks": [
+            {
+              "n": "3",
+              "t": "Febre Tropical",
+              "song": "febre-tropical",
+              "len": "2:44",
+              "w": "Tavinho Paes, Gastão Lamounier, Orlando Vianna"
+            },
+            { "n": "9", "t": "Brigitte", "song": "brigitte", "w": "Tavinho Paes, Orlando Vianna" },
+            { "n": "B4", "t": "Brigitte", "song": "brigitte", "w": "Joe, Tavinho Paes" },
             {
               "n": "A3",
               "t": "Febre Tropical",
               "song": "febre-tropical",
-              "w": "Tavinho Paes, Gastão Lamounier, Orlando Vianna",
-              "len": "2:44"
-            },
-            { "n": "B4", "t": "Brigitte", "song": "brigitte", "w": "Tavinho Paes, Orlando Vianna" }
+              "w": "Gastão Lamounier, Joe, Tavinho Paes"
+            }
           ],
-          "partial": true
+          "partial": true,
+          "discogs": 7502690
         }
       ]
     },
