@@ -69,7 +69,7 @@
  
   /* ---------- clique sintetizado dos botões (o mesmo do player original) ---------- */
   let ctxAudio = null;
-  AMB.somBotoes = () => AMB.store.get('amb.somBotoes', true) !== false;
+  AMB.somBotoes = () => true; // som dos botões sempre ligado
   AMB.clique = function () {
     if (!AMB.somBotoes()) return;
     try {
@@ -138,8 +138,7 @@
     this.root.innerHTML =
       '<div class="vr-tv' + (this.crt ? '' : ' vr-crt-off') + '">' +
         '<div class="vr-tv-top">' +
-          '<div class="vr-brand"><span class="vr-led"></span>' + esc(site.toUpperCase()) + '</div>' +
-          '<button type="button" class="vr-mini" data-a="som">SOM BOTÕES: <span class="' + (AMB.somBotoes() ? 'vr-on">ON' : 'vr-off">OFF') + '</span></button>' +
+          '<div class="vr-brand"><span class="vr-led" aria-hidden="true"></span></div>' +
         '</div>' +
         '<div class="vr-screen">' +
           '<div class="vr-picture" style="aspect-ratio:' + esc(ar) + '">' +
@@ -190,7 +189,7 @@
     this.osdCanal = this.$('.vr-osd-canal');
     this.osdModoEl = this.$('.vr-osd-modo');
     this.seekIn = this.$('.vr-seek-in');
-    this.osdCanal.textContent = this.osdPadrao();
+    this.osdCanal.textContent = '';
   };
  
   Player.prototype.osdPadrao = function () {
@@ -198,7 +197,7 @@
   };
   Player.prototype.osd = function (msg) {
     this.osdCanal.textContent = msg;
-    this.timer('osd', () => { this.osdCanal.textContent = this.osdPadrao(); }, 2500);
+    this.timer('osd', () => { this.osdCanal.textContent = ''; }, 2500);
   };
   Player.prototype.osdModo = function (msg, ms) {
     this.osdModoEl.textContent = msg || '';
@@ -795,5 +794,3 @@
  
   AMB.Player = { create: (root, opts) => new Player(root, opts), ICONE };
 })();
- 
- 
