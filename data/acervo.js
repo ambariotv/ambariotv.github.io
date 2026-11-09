@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-09",
-  "rev": 9,
+  "rev": 10,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1170,7 +1170,27 @@ window.AMB_DATA = {
       "name": "Camisa de Vênus",
       "country": "BR",
       "origin": "Salvador",
-      "releases": []
+      "releases": [
+        {
+          "id": "simca-chambord-1986",
+          "type": "compacto",
+          "title": "Simca Chambord",
+          "year": 1986,
+          "label": "WEA (PRO-1.043)",
+          "format": "Vinyl, 12\", 33 ⅓ RPM, 45 RPM, Single, Promo",
+          "src": [
+            {
+              "t": "Discogs — Camisa De Vênus – Simca Chambord",
+              "u": "https://www.discogs.com/release/6755600"
+            }
+          ],
+          "tracks": [
+            { "n": "A", "t": "Simca Chambord", "song": "simca-chambord", "len": "4:05" },
+            { "n": "B", "t": "Simca Chambord", "song": "simca-chambord", "len": "4:05" }
+          ],
+          "discogs": 6755600
+        }
+      ]
     }
   ],
   "videos": [
@@ -1627,7 +1647,8 @@ window.AMB_DATA = {
     {
       "id": "camisa-de-venus-simca-chambord-1986-clipe-1986",
       "artist": "camisa-de-venus",
-      "title": "Simca Chambord (1986)",
+      "song": "simca-chambord",
+      "title": "Simca Chambord",
       "kind": "clipe",
       "date": "1986",
       "status": "no-acervo",
@@ -1641,9 +1662,11 @@ window.AMB_DATA = {
         {
           "id": "principal",
           "short": "DISCO",
-          "label": "Áudio do disco",
-          "kind": "cd",
+          "label": "7\" single Simca Chambord (WEA, 1986)",
+          "kind": "compacto",
+          "release": "simca-chambord-1986",
           "by": "Daniel Skiter",
+          "note": "faixa A",
           "embedded": true
         },
         {
