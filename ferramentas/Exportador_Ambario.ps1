@@ -1,5 +1,5 @@
 ﻿# ======================================================================
-#  Ambário — Exportador para o site (versão com janela)
+#  Ambário - Exportador para o site (versão com janela)
 #
 #  Faz o mesmo que o Exportar_para_o_site.bat, numa janela:
 #  arraste o MKV do EternalDub (faixa 1 = disco, faixa 2 = fita), confira
@@ -17,7 +17,13 @@ Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 [System.Windows.Forms.Application]::EnableVisualStyles()
 $ErrorActionPreference = 'Stop'
-$Pasta = Split-Path -Parent $MyInvocation.MyCommand.Path
+# pasta deste programa (o .bat passa em AMB_PASTA, porque carrega o script já como UTF-8)
+$Pasta = if ($env:AMB_PASTA) { $env:AMB_PASTA.TrimEnd('\') } elseif ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }
+# qualquer erro inesperado aparece numa janela (em vez de o programa sumir sem explicar)
+trap {
+  [System.Windows.Forms.MessageBox]::Show("O Exportador encontrou um erro:`n`n" + $_.Exception.Message + "`n`n(linha " + $_.InvocationInfo.ScriptLineNumber + ')', 'Ambário - Exportador', 'OK', 'Error') | Out-Null
+  break
+}
 
 # ---------------- FFmpeg ----------------
 function Achar-Exe([string]$nome) {
@@ -35,7 +41,7 @@ function Achar-Exe([string]$nome) {
 $FFMPEG = Achar-Exe 'ffmpeg'
 $FFPROBE = Achar-Exe 'ffprobe'
 if (-not $FFMPEG -or -not $FFPROBE) {
-  [System.Windows.Forms.MessageBox]::Show("Não encontrei o FFmpeg.`n`nInstale com:  winget install Gyan.FFmpeg`nou coloque ffmpeg.exe e ffprobe.exe na mesma pasta deste programa.", 'Ambário — Exportador', 'OK', 'Error') | Out-Null
+  [System.Windows.Forms.MessageBox]::Show("Não encontrei o FFmpeg.`n`nInstale com:  winget install Gyan.FFmpeg`nou coloque ffmpeg.exe e ffprobe.exe na mesma pasta deste programa.", 'Ambário - Exportador', 'OK', 'Error') | Out-Null
   exit
 }
 
@@ -73,7 +79,7 @@ function Slug([string]$s) {
 $fonte = New-Object System.Drawing.Font('Segoe UI', 9.5)
 $fonteB = New-Object System.Drawing.Font('Segoe UI', 9.5, [System.Drawing.FontStyle]::Bold)
 $form = New-Object System.Windows.Forms.Form
-$form.Text = 'Ambário — Exportar para o site'
+$form.Text = 'Ambário - Exportar para o site'
 $form.Size = New-Object System.Drawing.Size(780, 690)
 $form.MinimumSize = $form.Size
 $form.StartPosition = 'CenterScreen'
@@ -259,7 +265,7 @@ function Carregar([string]$arq) {
     elseif ($S.alt -in @(480, 486, 576) -and $S.larg -ge 640) { $entr = $true; $motivo = "tamanho de captura de fita ($($S.larg)x$($S.alt))" }
     else { $motivo = "parece cópia digital ($($S.larg)x$($S.alt))" }
     $chEntr.Checked = $entr
-    $lEntr.Text = 'Sugestão: ' + $(if ($entr) { 'tirar' } else { 'não tirar' }) + " — $motivo"
+    $lEntr.Text = 'Sugestão: ' + $(if ($entr) { 'tirar' } else { 'não tirar' }) + " - $motivo"
 
     # faixas de áudio
     $cDisco.Items.Clear(); $cFita.Items.Clear()
@@ -269,8 +275,8 @@ function Carregar([string]$arq) {
     foreach ($st in @((ConvertFrom-Json $r.out).streams)) {
       if (-not $st) { continue }
       $i++
-      $desc = "$i — $($st.codec_name), $($st.channels) canais"
-      if ($st.tags -and $st.tags.title) { $desc += ' — ' + $st.tags.title }
+      $desc = "$i - $($st.codec_name), $($st.channels) canais"
+      if ($st.tags -and $st.tags.title) { $desc += ' - ' + $st.tags.title }
       if ($st.tags -and $st.tags.language) { $desc += " ($($st.tags.language))" }
       [void]$cDisco.Items.Add($desc); [void]$cFita.Items.Add($desc)
     }
@@ -443,7 +449,7 @@ function Concluir() {
   )
   [System.IO.File]::WriteAllLines((Join-Path $saida "$nome-info.txt"), $info, (New-Object System.Text.UTF8Encoding($false)))
   $seg2 = ((Get-Date) - $S.inicio).TotalSeconds
-  $lEtapa.Text = ('Pronto em {0}min {1}s!  {2} — {3} MB (~{4} kbps). Identificador: ambario-{5}' -f [int]($seg2 / 60), [int]($seg2 % 60), $tam, $mb, $kbps, $nome)
+  $lEtapa.Text = ('Pronto em {0}min {1}s!  {2} - {3} MB (~{4} kbps). Identificador: ambario-{5}' -f [int]($seg2 / 60), [int]($seg2 % 60), $tam, $mb, $kbps, $nome)
   Log ("Pronto! " + $info[1])
   Log ("Pasta: " + $saida)
   $bAbrir.Enabled = $true
@@ -459,7 +465,7 @@ $form.Add_FormClosing({
 })
 
 # arquivo arrastado para cima do .bat
-$arg0 = if ($args.Count -gt 0) { $args[0] } else { $null }
+$arg0 = if ($args.Count -gt 0 -and $args[0]) { [string]$args[0] } else { $null }
 if ($arg0) { $form.Add_Shown({ Carregar $arg0 }) }
 
 [void]$form.ShowDialog()
