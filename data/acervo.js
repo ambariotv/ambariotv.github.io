@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-12",
-  "rev": 26,
+  "rev": 27,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1045,8 +1045,8 @@ window.AMB_DATA = {
       ],
       "credits": { "sync": "moguell" },
       "source": { "aired": "1985" },
-      "description": "Videoclipe de \"Até Quando Esperar\", de Plebe Rude (1985). Gravado da TV em fita VHS. ARQUIVOS • .mkv — arquivo de preservação: vídeo + 2 faixas de áudio 1. Áudio do disco (FLAC, fonte: CD) 2. Som original da gravação da TV (Opus) • .mp4 — vídeo + áudio do disco (para assistir) • -fita.m4a — som original da gravação da TV CRÉDITOS Fonte da fita: Plebe Rude Fonte de áudio melhor: Miguel Lins Sincronização do áudio (EternalDub): Miguel Lins Parte do Ambário — acervo de videoclipes brasileiros. Assista em: https://ambariotv.github.io",
-      "description_en": "Music video for \"Até Quando Esperar\", by Plebe Rude (1985). Recorded from TV on VHS tape. FILES • .mkv — preservation file: video + 2 audio tracks 1. Audio from the disc (FLAC, source: CD) 2. Original sound from the TV recording (Opus) • .mp4 — video + audio from the disc (to watch) • -tape.m4a — original sound from the TV recording CREDITS Tape source: Plebe Rude Better audio source: Miguel Lins Audio synchronization (EternalDub): Miguel Lins Part of Ambário — collection of Brazilian music videos. Watch at: https://ambariotv.github.io",
+      "description": "Videoclipe da faixa que abre O Concreto Já Rachou: a banda toca num cenário pequeno que imita um lugar abandonado.",
+      "description_en": "Video clip for the opening track O Concreto Já Rachou: the band plays in a small setting that imitates an abandoned place.",
       "src": [{ "t": "youtu.be", "u": "https://youtu.be/4FqhorPvSEQ?si=iM0r-qBf8QMLLk9z" }],
       "added": "2026-11-12",
       "added_by": "moguell"
