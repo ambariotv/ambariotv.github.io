@@ -15,8 +15,8 @@
  *   sources   : { id: { t: título, u: link } } (usadas por id nos campos src)
  */
 window.AMB_DATA = {
-  "updated": "2026-11-09",
-  "rev": 21,
+  "updated": "2026-11-12",
+  "rev": 22,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -844,7 +844,7 @@ window.AMB_DATA = {
       "date": "1985",
       "program": "Rock Estrela (filme de Lael Rodrigues)",
       "status": "na-fila",
-      "capa": "media/capas/metro-johnny-love-rock-estrela-1985.jpg",
+      "capa": "media/capas/metro-johnny-love-rock-estrela-1985.jpg?v=mweal2bf",
       "fit": "cover",
       "duration": 217,
       "audio": [
@@ -853,9 +853,9 @@ window.AMB_DATA = {
           "short": "DISCO",
           "label": "Áudio do disco (FLAC)",
           "kind": "digital",
-          "embedded": true,
           "release": "olhar-30-anos-2016",
-          "note": "faixa 15"
+          "note": "faixa 15",
+          "embedded": true
         },
         { "id": "original", "short": "ORIGINAL", "label": "Som original da gravação", "kind": "tv" }
       ],
