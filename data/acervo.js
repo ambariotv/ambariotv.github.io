@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-12",
-  "rev": 23,
+  "rev": 24,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -411,6 +411,32 @@ window.AMB_DATA = {
           "src": ["em-plebe-2025", "cm-plebe-2026", "nb-plebe-2026", "bb-plebe-2026"],
           "tracks": [{ "n": "A1", "t": "Até Quando Esperar", "song": "ate-quando-esperar" }],
           "partial": true
+        },
+        {
+          "id": "brasilia-2012",
+          "type": "coletanea",
+          "title": "Brasília",
+          "year": 2012,
+          "label": "EMI (327518 2)",
+          "format": "CD, Compilation",
+          "partial": true,
+          "src": [
+            {
+              "t": "Discogs — Plebe Rude – Brasília",
+              "u": "https://www.discogs.com/release/4357073"
+            }
+          ],
+          "tracks": [
+            {
+              "n": "1",
+              "t": "Até Quando Esperar",
+              "song": "ate-quando-esperar",
+              "len": "4:28",
+              "w": "André X, Gutje, Philippe",
+              "year": 1985
+            }
+          ],
+          "discogs": 4357073
         }
       ]
     },
@@ -1011,6 +1037,46 @@ window.AMB_DATA = {
       "description": "Videoclipe de \"Simca Chambord\", de Camisa de Vênus (1986)",
       "description_en": "Music video for “Simca Chambord” by Camisa de Vênus (1986).",
       "added": "2026-11-09",
+      "added_by": "moguell"
+    },
+    {
+      "id": "plebe-rude-ate-quando-esperar-clipe-1985",
+      "artist": "plebe-rude",
+      "song": "ate-quando-esperar",
+      "title": "Até Quando Esperar",
+      "kind": "clipe",
+      "date": "1985",
+      "status": "no-acervo",
+      "capa": "media/capas/plebe-rude-ate-quando-esperar-clipe-1985.jpg?v=mweclho2",
+      "duration": 268,
+      "file": {
+        "video": "https://archive.org/download/ambario-plebe-rude-ate-quando-esperar-1985/plebe-rude-ate-quando-esperar-1985.mp4",
+        "ia": "ambario-plebe-rude-ate-quando-esperar-1985"
+      },
+      "audio": [
+        {
+          "id": "principal",
+          "short": "DISCO",
+          "label": "Coletânea Brasília (EMI, 2012)",
+          "kind": "cd",
+          "release": "brasilia-2012",
+          "note": "faixa 1",
+          "embedded": true
+        },
+        {
+          "id": "original",
+          "short": "ORIGINAL",
+          "label": "Som original da gravação",
+          "kind": "vhs",
+          "url": "https://archive.org/download/ambario-plebe-rude-ate-quando-esperar-1985/plebe-rude-ate-quando-esperar-1985-fita.m4a"
+        }
+      ],
+      "credits": { "sync": "moguell" },
+      "source": { "aired": "1985" },
+      "description": "Videoclipe de \"Até Quando Esperar\", de Plebe Rude (1985). Gravado da TV em fita VHS. ARQUIVOS • .mkv — arquivo de preservação: vídeo + 2 faixas de áudio 1. Áudio do disco (FLAC, fonte: CD) 2. Som original da gravação da TV (Opus) • .mp4 — vídeo + áudio do disco (para assistir) • -fita.m4a — som original da gravação da TV CRÉDITOS Fonte da fita: Plebe Rude Fonte de áudio melhor: Miguel Lins Sincronização do áudio (EternalDub): Miguel Lins Parte do Ambário — acervo de videoclipes brasileiros. Assista em: https://ambariotv.github.io",
+      "description_en": "Music video for \"Até Quando Esperar\", by Plebe Rude (1985). Recorded from TV on VHS tape. FILES • .mkv — preservation file: video + 2 audio tracks 1. Audio from the disc (FLAC, source: CD) 2. Original sound from the TV recording (Opus) • .mp4 — video + audio from the disc (to watch) • -tape.m4a — original sound from the TV recording CREDITS Tape source: Plebe Rude Better audio source: Miguel Lins Audio synchronization (EternalDub): Miguel Lins Part of Ambário — collection of Brazilian music videos. Watch at: https://ambariotv.github.io",
+      "src": [{ "t": "youtu.be", "u": "https://youtu.be/4FqhorPvSEQ?si=iM0r-qBf8QMLLk9z" }],
+      "added": "2026-11-12",
       "added_by": "moguell"
     }
   ]
