@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-12",
-  "rev": 25,
+  "rev": 26,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -652,34 +652,6 @@ window.AMB_DATA = {
           "u": "https://youtu.be/ra8My-11KOo?si=UV9DIntkO8efEpaY"
         }
       ],
-      "added": "2026-11-07",
-      "added_by": "moguell"
-    },
-    {
-      "id": "plebe-rude-ate-quando-esperar-1986",
-      "artist": "plebe-rude",
-      "song": "ate-quando-esperar",
-      "title": "Até Quando Esperar",
-      "kind": "clipe",
-      "date": "1986",
-      "status": "na-fila",
-      "capa": "media/capas/plebe-rude-ate-quando-esperar-1986.jpg",
-      "duration": 268,
-      "audio": [
-        {
-          "id": "principal",
-          "short": "DISCO",
-          "label": "Áudio do disco (FLAC)",
-          "kind": "digital",
-          "embedded": true
-        },
-        { "id": "original", "short": "ORIGINAL", "label": "Som original da gravação", "kind": "tv" }
-      ],
-      "credits": { "sync": "moguell" },
-      "source": { "medium": "Cópia digital" },
-      "description": "Videoclipe da faixa que abre O Concreto Já Rachou: a banda toca num cenário pequeno que imita um lugar abandonado. O IMDb registra o clipe como de 1985.",
-      "description_en": "Music video for the opening track of O Concreto Já Rachou: the band plays on a small set made to look like an abandoned place. IMDb lists the video as from 1985.",
-      "src": ["imdb-ate-quando", "em-plebe-2025"],
       "added": "2026-11-07",
       "added_by": "moguell"
     },
