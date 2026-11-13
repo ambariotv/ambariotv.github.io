@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-13",
-  "rev": 29,
+  "rev": 30,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1081,7 +1081,7 @@ window.AMB_DATA = {
       "date": "1985",
       "channel": "TV Manchete",
       "status": "no-acervo",
-      "capa": "media/capas/eletrodomesticos-choveu-no-meu-chip-clipe-1985.jpg?v=mwejfj3z",
+      "capa": "media/capas/eletrodomesticos-choveu-no-meu-chip-clipe-1985.jpg?v=mwejxdqu",
       "duration": 201,
       "file": {
         "video": "https://archive.org/download/ambario-eletrodomesticos-choveu-no-meu-chip-1985/eletrodomesticos-choveu-no-meu-chip-1985.mp4",
