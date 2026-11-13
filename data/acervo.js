@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-13",
-  "rev": 31,
+  "rev": 32,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1064,7 +1064,7 @@ window.AMB_DATA = {
           "url": "https://archive.org/download/ambario-plebe-rude-ate-quando-esperar-1985/plebe-rude-ate-quando-esperar-1985-fita.m4a"
         }
       ],
-      "credits": { "sync": "moguell" },
+      "credits": { "sync": "Miguel Lins", "tape": "Plebe Rude" },
       "source": { "aired": "1985" },
       "description": "Videoclipe da faixa que abre O Concreto Já Rachou: a banda toca num cenário pequeno que imita um lugar abandonado.",
       "description_en": "Video clip for the opening track O Concreto Já Rachou: the band plays in a small setting that imitates an abandoned place.",
