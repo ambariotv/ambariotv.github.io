@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-12",
-  "rev": 24,
+  "rev": 25,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -393,6 +393,7 @@ window.AMB_DATA = {
     {
       "id": "plebe-rude",
       "name": "Plebe Rude",
+      "photo": "media/artistas/plebe-rude.jpg?v=mwecpqzy",
       "country": "BR",
       "origin": "Brasília, DF",
       "years": "1981–",
@@ -407,10 +408,10 @@ window.AMB_DATA = {
           "year": 1985,
           "label": "EMI",
           "format": "Mini-LP",
+          "partial": true,
           "note": "Produção de Herbert Vianna. As fontes divergem sobre a data: nos últimos dias de 1985 (Estado de Minas) ou em fevereiro de 1986 (Correio da Manhã). A divisão dos lados segue a reedição em vinil de 2026.",
           "src": ["em-plebe-2025", "cm-plebe-2026", "nb-plebe-2026", "bb-plebe-2026"],
-          "tracks": [{ "n": "A1", "t": "Até Quando Esperar", "song": "ate-quando-esperar" }],
-          "partial": true
+          "tracks": [{ "n": "A1", "t": "Até Quando Esperar", "song": "ate-quando-esperar" }]
         },
         {
           "id": "brasilia-2012",
@@ -432,8 +433,7 @@ window.AMB_DATA = {
               "t": "Até Quando Esperar",
               "song": "ate-quando-esperar",
               "len": "4:28",
-              "w": "André X, Gutje, Philippe",
-              "year": 1985
+              "w": "André X, Gutje, Philippe"
             }
           ],
           "discogs": 4357073
