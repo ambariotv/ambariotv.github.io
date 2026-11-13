@@ -15,8 +15,8 @@
  *   sources   : { id: { t: título, u: link } } (usadas por id nos campos src)
  */
 window.AMB_DATA = {
-  "updated": "2026-11-12",
-  "rev": 27,
+  "updated": "2026-11-13",
+  "rev": 28,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -531,6 +531,26 @@ window.AMB_DATA = {
           "tracks": [{ "n": "2-4", "t": "Simca Chambord", "song": "simca-chambord", "year": 1986 }],
           "discogs": 8821064,
           "partial": true
+        }
+      ]
+    },
+    {
+      "id": "eletrodomesticos",
+      "name": "Eletrodomésticos",
+      "country": "BR",
+      "origin": "Rio de Janeiro",
+      "releases": [
+        {
+          "id": "overdoze-1986",
+          "type": "coletanea",
+          "title": "Overdoze",
+          "year": 1986,
+          "label": "Som Livre (530.023)",
+          "format": "Vinyl, LP, Compilation",
+          "partial": true,
+          "src": [{ "t": "Discogs — Various – Overdoze", "u": "https://www.discogs.com/release/1348063" }],
+          "tracks": [{ "n": "A4", "t": "Choveu No Meu Chip", "song": "choveu-no-meu-chip" }],
+          "discogs": 1348063
         }
       ]
     }
@@ -1049,6 +1069,51 @@ window.AMB_DATA = {
       "description_en": "Video clip for the opening track O Concreto Já Rachou: the band plays in a small setting that imitates an abandoned place.",
       "src": [{ "t": "youtu.be", "u": "https://youtu.be/4FqhorPvSEQ?si=iM0r-qBf8QMLLk9z" }],
       "added": "2026-11-12",
+      "added_by": "moguell"
+    },
+    {
+      "id": "eletrodomesticos-choveu-no-meu-chip-clipe-1985",
+      "artist": "eletrodomesticos",
+      "song": "choveu-no-meu-chip",
+      "title": "Choveu No Meu Chip",
+      "kind": "clipe",
+      "date": "1985",
+      "channel": "TV Manchete",
+      "status": "no-acervo",
+      "capa": "media/capas/eletrodomesticos-choveu-no-meu-chip-clipe-1985.jpg?v=mwejfj3z",
+      "duration": 201,
+      "file": {
+        "video": "https://archive.org/download/ambario-eletrodomesticos-choveu-no-meu-chip-1985/eletrodomesticos-choveu-no-meu-chip-1985.mp4",
+        "ia": "ambario-eletrodomesticos-choveu-no-meu-chip-1985"
+      },
+      "audio": [
+        {
+          "id": "principal",
+          "short": "DISCO",
+          "label": "Coletânea Overdoze (Som Livre, 1986)",
+          "kind": "lp",
+          "release": "overdoze-1986",
+          "by": "boanoite",
+          "note": "faixa A4",
+          "embedded": true
+        },
+        {
+          "id": "original",
+          "short": "ORIGINAL",
+          "label": "Som original da gravação",
+          "kind": "vhs",
+          "url": "https://archive.org/download/ambario-eletrodomesticos-choveu-no-meu-chip-1985/eletrodomesticos-choveu-no-meu-chip-1985-fita.m4a"
+        }
+      ],
+      "credits": { "tape": "XREYNATO", "sync": "moguell" },
+      "source": { "from": "TV Aberta", "aired": "1985" },
+      "description": "Música que envelheceu muito bem",
+      "description_en": "Music that has aged very well",
+      "src": [
+        { "t": "youtu.be", "u": "https://youtu.be/S9TvxWoGGEc?si=f_22XohakyrKUt1o" },
+        { "t": "lumyx.net", "u": "https://lumyx.net/musica/2015/12/17/choveu-no-meu-chip/" }
+      ],
+      "added": "2026-11-13",
       "added_by": "moguell"
     }
   ]
