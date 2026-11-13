@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-13",
-  "rev": 30,
+  "rev": 31,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1108,8 +1108,8 @@ window.AMB_DATA = {
       ],
       "credits": { "tape": "XREYNATO", "sync": "moguell" },
       "source": { "from": "TV Aberta", "aired": "1985" },
-      "description": "Música que envelheceu muito bem",
-      "description_en": "Music that has aged very well",
+      "description": "Esse clipe é um registro tão bom. Pena que foi poluido visualmente pela pessoa que o compartilhou :(",
+      "description_en": "This clip is such a good record. Too bad it was visually polluted by the person who shared it :(",
       "src": [
         { "t": "youtu.be", "u": "https://youtu.be/S9TvxWoGGEc?si=f_22XohakyrKUt1o" },
         { "t": "lumyx.net", "u": "https://lumyx.net/musica/2015/12/17/choveu-no-meu-chip/" }
