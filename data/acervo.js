@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-13",
-  "rev": 28,
+  "rev": 29,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -537,6 +537,7 @@ window.AMB_DATA = {
     {
       "id": "eletrodomesticos",
       "name": "Eletrodomésticos",
+      "photo": "media/artistas/eletrodomesticos.jpg?v=mwejtpit",
       "country": "BR",
       "origin": "Rio de Janeiro",
       "releases": [
