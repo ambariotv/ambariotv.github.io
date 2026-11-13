@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-12",
-  "rev": 22,
+  "rev": 23,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -920,7 +920,7 @@ window.AMB_DATA = {
       "date": "1985",
       "program": "Programa Raul Gil",
       "status": "na-fila",
-      "capa": "media/capas/metro-sandalo-de-dandi-raul-gil.jpg",
+      "capa": "media/capas/metro-sandalo-de-dandi-raul-gil.jpg?v=mweapzl2",
       "duration": 259,
       "audio": [
         {
