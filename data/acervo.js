@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 34,
+  "rev": 35,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -473,6 +473,7 @@ window.AMB_DATA = {
     {
       "id": "malaria",
       "name": "Malaria!",
+      "photo": "media/artistas/malaria.jpg?v=mwhspwnm",
       "country": "DE",
       "origin": "Berlim Ocidental",
       "years": "1981–1993",
@@ -516,7 +517,7 @@ window.AMB_DATA = {
           "format": "CD, Compilation",
           "partial": true,
           "src": [{ "t": "Discogs — Malaria! – Compiled", "u": "https://www.discogs.com/release/350875" }],
-          "tracks": [{ "n": "7", "t": "You You", "song": "you-you", "len": "4:25", "year": 1983 }],
+          "tracks": [{ "n": "7", "t": "You You", "song": "you-you", "len": "4:25" }],
           "discogs": 350875
         }
       ]
