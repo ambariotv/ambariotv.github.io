@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 44,
+  "rev": 45,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1193,7 +1193,7 @@ window.AMB_DATA = {
       "audio": [
         {
           "id": "principal",
-          "short": "DISCO",
+          "short": "CD",
           "label": "Coletânea Compiled (Moabit Musik, 1991)",
           "kind": "cd",
           "release": "compiled-1991",
@@ -1203,7 +1203,7 @@ window.AMB_DATA = {
         },
         {
           "id": "original",
-          "short": "ORIGINAL",
+          "short": "GRAVAÇÂO",
           "label": "Som original da gravação",
           "kind": "vhs",
           "url": "https://archive.org/download/ambario-malaria-you-you-1983/malaria-you-you-1983-fita.m4a"
