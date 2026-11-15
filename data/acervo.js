@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 33,
+  "rev": 34,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -505,6 +505,19 @@ window.AMB_DATA = {
               "note": "gravada em Nova York, ago/1983"
             }
           ]
+        },
+        {
+          "id": "compiled-1991",
+          "type": "coletanea",
+          "title": "Compiled",
+          "year": 1991,
+          "date": "1991-09-13",
+          "label": "Moabit Musik (MOABIT 006)",
+          "format": "CD, Compilation",
+          "partial": true,
+          "src": [{ "t": "Discogs — Malaria! – Compiled", "u": "https://www.discogs.com/release/350875" }],
+          "tracks": [{ "n": "7", "t": "You You", "song": "you-you", "len": "4:25", "year": 1983 }],
+          "discogs": 350875
         }
       ]
     },
@@ -1085,6 +1098,47 @@ window.AMB_DATA = {
         { "t": "lumyx.net", "u": "https://lumyx.net/musica/2015/12/17/choveu-no-meu-chip/" }
       ],
       "added": "2026-11-13",
+      "added_by": "moguell"
+    },
+    {
+      "id": "malaria-you-you-clipe-1983",
+      "artist": "malaria",
+      "song": "you-you",
+      "title": "You, You",
+      "kind": "clipe",
+      "date": "1983",
+      "status": "no-acervo",
+      "capa": "media/capas/malaria-you-you-clipe-1983.jpg?v=mwh9wdco",
+      "duration": 274,
+      "file": {
+        "video": "https://archive.org/download/ambario-malaria-you-you-1983/malaria-you-you-1983.mp4",
+        "ia": "ambario-malaria-you-you-1983"
+      },
+      "audio": [
+        {
+          "id": "principal",
+          "short": "DISCO",
+          "label": "Coletânea Compiled (Moabit Musik, 1991)",
+          "kind": "cd",
+          "release": "compiled-1991",
+          "by": "Miguel Lins",
+          "note": "faixa 7",
+          "embedded": true
+        },
+        {
+          "id": "original",
+          "short": "ORIGINAL",
+          "label": "Som original da gravação",
+          "kind": "vhs",
+          "url": "https://archive.org/download/ambario-malaria-you-you-1983/malaria-you-you-1983-fita.m4a"
+        }
+      ],
+      "credits": { "tape": "Videowave Music Videos", "sync": "Miguel Lins" },
+      "source": { "medium": "VHS", "aired": "1983" },
+      "description": "Música Post-Punk",
+      "description_en": "Post-Punk Music",
+      "src": [{ "t": "youtu.be", "u": "https://youtu.be/QhWwub58ucE?si=O-Xg5TmEQFnYWxH0" }],
+      "added": "2026-11-15",
       "added_by": "moguell"
     }
   ]
