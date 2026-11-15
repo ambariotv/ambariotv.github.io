@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 38,
+  "rev": 39,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -599,6 +599,7 @@ window.AMB_DATA = {
     {
       "id": "fanzine",
       "name": "Fanzine",
+      "photo": "media/artistas/fanzine.jpg?v=mwhvpvh4",
       "country": "BR",
       "origin": "Porto Alegre",
       "releases": [
@@ -616,7 +617,7 @@ window.AMB_DATA = {
               "u": "https://www.discogs.com/release/9073250"
             }
           ],
-          "tracks": [{ "n": "A1", "t": "Boy Do Subterrâneo", "song": "boy-do-subterraneo", "year": 1985 }],
+          "tracks": [{ "n": "A1", "t": "Boy Do Subterrâneo", "song": "boy-do-subterraneo" }],
           "discogs": 9073250
         }
       ]
