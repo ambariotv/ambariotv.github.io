@@ -116,6 +116,14 @@
     localStorage.removeItem('tdt.rascunhos');
   } catch (e) { /* sem armazenamento */ }
 
+  // Filtro CRT de cada vídeo: o que o curador marcou no vídeo; senão a regra geral ("CRT automático"):
+  // ligado = CRT em tudo, menos cenas de filme; desligado = sem CRT, a não ser nos vídeos marcados com CRT.
+  AMB.crtAuto = () => !AMB.settings || AMB.settings.crt_auto !== false;
+  AMB.crtPadrao = (v) => {
+    if (v && v.crt === true) return true;
+    if (v && v.crt === false) return false;
+    return AMB.crtAuto() && !(v && v.kind === 'filme');
+  };
   AMB.fmtNum = (n) => Number(n || 0).toLocaleString(AMB.en ? 'en-US' : 'pt-BR');
   AMB.fmtDur = (s) => {
     s = Math.max(0, Math.round(Number(s) || 0));
@@ -240,6 +248,7 @@
   //   { t: 'video' | 'artista' | 'acervo', id, antes?, dados }  inclui ou substitui (antes = id antigo, se mudou)
   //   { t: 'apagar-video' | 'apagar-artista' | 'apagar-acervo', id }
   //   { t: 'fonte', id, dados: { t, u } }
+  //   { t: 'ajuste', id, valor }   configuração geral do site (ex.: crt_auto)
   //   { t: 'arquivo', caminho, dataUrl } e { t: 'apagar-arquivo', caminho } só valem na hora de publicar
   const LISTAS = { video: 'videos', artista: 'artists', acervo: 'acervos' };
   AMB.aplicarOps = function (dados, ops) {
@@ -249,6 +258,11 @@
     (ops || []).forEach((op) => {
       if (!op || !op.t) return;
       if (op.t === 'fonte') { if (op.id && op.dados) d.sources[op.id] = op.dados; return; }
+      if (op.t === 'ajuste') {
+        if (!d.settings || typeof d.settings !== 'object' || Array.isArray(d.settings)) d.settings = {};
+        if (op.id) d.settings[op.id] = op.valor;
+        return;
+      }
       const m = /^(apagar-)?(video|artista|acervo)$/.exec(op.t);
       if (!m) return;
       const lista = d[LISTAS[m[2]]];
@@ -371,6 +385,7 @@
     const atual = dadosAtuais();
     AMB.dados = atual.dados; // objeto "cru", no formato de data/acervo.js (a área do curador parte dele)
     AMB.sources = atual.dados.sources || {};
+    AMB.settings = atual.dados.settings || {};
     AMB.updated = atual.dados.updated || '';
     const D = AMB.clone(atual.dados);
     const artists = {};

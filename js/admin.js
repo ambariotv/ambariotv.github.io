@@ -50,7 +50,7 @@
     return n;
   }
   const ORDEM_VIDEO = ['id', 'artist', 'artist_name', 'song', 'song_title', 'ver', 'title', 'kind', 'date', 'program', 'channel', 'director', 'status',
-    'capa', 'fit', 'aspect', 'duration', 'file', 'audio', 'credits', 'source', 'description', 'description_en', 'note', 'note_en', 'src', 'refs', 'tags', 'test', 'added', 'added_by'];
+    'capa', 'fit', 'aspect', 'crt', 'duration', 'file', 'audio', 'credits', 'source', 'description', 'description_en', 'note', 'note_en', 'src', 'refs', 'tags', 'test', 'added', 'added_by'];
   const ORDEM_ARTISTA = ['id', 'name', 'photo', 'alt', 'country', 'origin', 'years', 'members', 'intro', 'intro_en', 'src', 'releases'];
   const ORDEM_DISCO = ['id', 'type', 'title', 'credit', 'year', 'date', 'label', 'format', 'partial', 'note', 'src', 'tracks'];
   const ORDEM_ACERVO = ['id', 'name', 'roles', 'since', 'city', 'bio', 'bio_en', 'links', 'avatar'];
@@ -175,6 +175,7 @@
       case 'acervo': return (servido('acervos', op.antes || op.id) ? 'Editar' : 'Incluir') + ' acervo: ' + ((op.dados && op.dados.name) || op.id);
       case 'apagar-acervo': return 'Apagar acervo: ' + (op.nome || op.id);
       case 'fonte': return 'Fonte: ' + ((op.dados && op.dados.t) || op.id);
+      case 'ajuste': return op.id === 'crt_auto' ? 'Configuração: CRT automático ' + (op.valor === false ? 'desligado' : 'ligado') : 'Configuração: ' + op.id;
       case 'arquivo': return 'Imagem: ' + GH.semQuery(op.caminho);
       case 'apagar-arquivo': return 'Apagar arquivo: ' + GH.semQuery(op.caminho);
       default: return op.t;
@@ -487,6 +488,7 @@
           campo('duration', 'Duração', v.duration ? AMB.fmtDur(v.duration) : '', { ph: '3:41' }) +
           campo('fit', 'Enquadramento', '', { tipo: 'select', ops: opcoes([['', 'Normal (imagem inteira)'], ['cover', 'Cortar bordas pretas das laterais'], ['fill', 'Desesticar (4:3 esticado em 16:9)']], v.fit || '') }) +
           campo('aspect', 'Tela', '', { tipo: 'select', ops: opcoes([['', '4:3 (TV)'], ['16:9', '16:9 (widescreen)']], v.aspect || '') }) +
+          campo('crt', 'Filtro CRT', '', { tipo: 'select', ops: opcoes([['', 'Automático (' + (AMB.crtAuto() ? 'liga, menos em cena de filme' : 'desligado') + ')'], ['sim', 'Sempre com CRT'], ['nao', 'Sem CRT']], v.crt === true ? 'sim' : v.crt === false ? 'nao' : '') }) +
           campo('mirrors', 'Espelhos', (f.mirrors || []).join('\n'), { tipo: 'textarea', rows: 2, ajuda: '(outros links do mesmo MP4, um por linha)' }) +
         '</div></fieldset>' +
 
@@ -858,6 +860,7 @@
     put(v, 'capa', capa);
     put(v, 'fit', val('fit'));
     put(v, 'aspect', val('aspect'));
+    if (val('crt') === 'sim') v.crt = true; else if (val('crt') === 'nao') v.crt = false; else delete v.crt;
     const dur = durDeTexto(val('duration'));
     put(v, 'duration', dur || '');
 
@@ -1422,7 +1425,13 @@
       : '<p>Nenhuma alteração pendente. Tudo que você salvou já está no GitHub.</p>';
 
     const pub = est.publicado ? '<p>Você publicou ' + esc(AMB.ago(est.publicado.em)) + ' (revisão ' + esc(est.publicado.rev) + '). Este navegador já mostra a versão nova; o site público pode levar 1 ou 2 minutos.</p>' : '';
-    return V.box('Conexão com o GitHub', conexao, 'box-azul adm-sec-con') +
+    const crtOn = AMB.crtAuto();
+    const ajustes = '<form class="adm adm-ajustes" novalidate><div class="adm-grade">' +
+        campo('crt_auto', 'CRT automático', '', { tipo: 'select', ops: opcoes([['sim', 'Ligado: filtro CRT em todos os vídeos, menos cenas de filme'], ['nao', 'Desligado: sem filtro CRT (só nos vídeos marcados “Sempre com CRT”)']], crtOn ? 'sim' : 'nao'), larga: true }) +
+      '</div><p class="mini">Vale para os vídeos com “Filtro CRT: Automático”. Cada vídeo pode ter a sua escolha no formulário do vídeo (Sempre com CRT / Sem CRT). O visitante ainda pode ligar ou desligar no botão CRT do player.</p>' +
+      '<div class="form-pe"><button type="button" class="btn btn-y" data-adm="salvar-ajustes">Salvar configuração</button></div><p class="form-msg adm-msg-aj" role="status"></p></form>';
+    return V.box('Configurações do site', ajustes, 'box-azul adm-sec-ajustes') +
+      V.box('Conexão com o GitHub', conexao, 'box-azul adm-sec-con') +
       V.box('Alterações neste navegador', pendHtml, 'adm-sec-pend') +
       V.box('Versão do site', pub + '<p class="mini">O site público está na revisão ' + esc(AMB.servido.rev || 0) + (AMB.servido.updated ? ', de ' + esc(AMB.fmtDate(AMB.servido.updated)) : '') + '. ' +
         'Os dados ficam em <code>' + esc(GH.ARQ_DADOS) + '</code> e as capas em <code>media/capas/</code>.</p>', 'adm-sec-versao');
@@ -1448,6 +1457,11 @@
           msg.className = 'form-msg adm-msg-con erro';
           msg.textContent = er.message || String(er);
         } finally { b.disabled = false; }
+      } else if (acao === 'salvar-ajustes') {
+        const f = b.closest('form');
+        const valor = f.elements.crt_auto.value !== 'nao';
+        await salvarOps([{ t: 'ajuste', id: 'crt_auto', valor }], { msgEl: f.querySelector('.adm-msg-aj'), botoes: [b], ok: 'CRT automático ' + (valor ? 'ligado.' : 'desligado.'), depois: '#admin/publicar' });
+        AMB.render();
       } else if (acao === 'desconectar') {
         GH.esquecerConexao();
         E.flash = { tipo: 'aviso', html: 'Desconectado. O token foi apagado deste navegador.' };

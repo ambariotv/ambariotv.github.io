@@ -123,7 +123,7 @@
     this.root = root;
     this.opts = opts || {};
     this.v = this.opts.video;
-    this.crt = AMB.store.get('amb.crt', true) !== false;
+    this.crt = AMB.crtPadrao(this.v); // o curador decide por vídeo (ou a regra geral); o botão CRT troca só neste vídeo
     this.volume = clamp(Number(AMB.store.get('amb.volume', 0.9)) || 0.9, 0, 1);
     this.mudo = false;
     this.tracks = (this.v.audio || []).filter((t) => t.embedded || t.url);
@@ -495,7 +495,6 @@
     const st = this.$('.vr-crt-status');
     st.textContent = this.crt ? T('SIM', 'ON') : T('NÃO', 'OFF');
     st.className = 'vr-crt-status ' + (this.crt ? 'vr-on' : 'vr-off');
-    AMB.store.set('amb.crt', this.crt);
     this.osd(this.crt ? T('FILTRO CRT LIGADO', 'CRT FILTER ON') : T('FILTRO CRT DESLIGADO', 'CRT FILTER OFF'));
   };
   Player.prototype.reiniciar = function () {
