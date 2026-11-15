@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 35,
+  "rev": 36,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -566,6 +566,32 @@ window.AMB_DATA = {
           "src": [{ "t": "Discogs — Various – Overdoze", "u": "https://www.discogs.com/release/1348063" }],
           "tracks": [{ "n": "A4", "t": "Choveu No Meu Chip", "song": "choveu-no-meu-chip" }],
           "discogs": 1348063
+        }
+      ]
+    },
+    {
+      "id": "kid-abelha",
+      "name": "Kid Abelha",
+      "country": "BR",
+      "origin": "Rio de Janeiro",
+      "releases": [
+        {
+          "id": "amor-com-amor-se-paga-nacional-1984",
+          "type": "coletanea",
+          "title": "Amor Com Amor Se Paga - Nacional",
+          "year": 1984,
+          "date": "1984-03",
+          "label": "Opus/Columbia (412.070)",
+          "format": "Vinyl, LP, Compilation",
+          "partial": true,
+          "src": [
+            {
+              "t": "Discogs — Various – Amor Com Amor Se Paga - Nacional",
+              "u": "https://www.discogs.com/release/1382976"
+            }
+          ],
+          "tracks": [{ "n": "A2", "t": "Por Que Não Eu?", "song": "por-que-nao-eu" }],
+          "discogs": 1382976
         }
       ]
     }
@@ -1139,6 +1165,47 @@ window.AMB_DATA = {
       "description": "Música Post-Punk",
       "description_en": "Post-Punk Music",
       "src": [{ "t": "youtu.be", "u": "https://youtu.be/QhWwub58ucE?si=O-Xg5TmEQFnYWxH0" }],
+      "added": "2026-11-15",
+      "added_by": "moguell"
+    },
+    {
+      "id": "kid-abelha-por-que-nao-eu-clipe-1984",
+      "artist": "kid-abelha",
+      "song": "por-que-nao-eu",
+      "title": "Por Que Não Eu?",
+      "kind": "clipe",
+      "date": "1984",
+      "status": "no-acervo",
+      "capa": "media/capas/kid-abelha-por-que-nao-eu-clipe-1984.jpg?v=mwhulbkf",
+      "duration": 151,
+      "file": {
+        "video": "https://archive.org/download/ambario-kid-abelha-por-que-nao-eu-1984/kid-abelha-por-que-nao-eu-1984.mp4",
+        "ia": "ambario-kid-abelha-por-que-nao-eu-1984"
+      },
+      "audio": [
+        {
+          "id": "principal",
+          "short": "DISCO",
+          "label": "Por Que Não Eu",
+          "kind": "lp",
+          "release": "amor-com-amor-se-paga-nacional-1984",
+          "by": "boanoite",
+          "note": "faixa A2",
+          "embedded": true
+        },
+        {
+          "id": "original",
+          "short": "ORIGINAL",
+          "label": "Som original da gravação",
+          "kind": "vhs",
+          "url": "https://archive.org/download/ambario-kid-abelha-por-que-nao-eu-1984/kid-abelha-por-que-nao-eu-1984-fita.m4a"
+        }
+      ],
+      "credits": { "tape": "Musica Paixão", "sync": "Miguel Lins" },
+      "source": { "medium": "VHS", "aired": "1984" },
+      "description": "Por Que Não Eu? Nunca é comigo...",
+      "description_en": "Why Not Me? It's never with me...",
+      "src": [{ "t": "youtu.be", "u": "https://youtu.be/V9iOYiArnjE?si=HS555WW7oN4hpEd6" }],
       "added": "2026-11-15",
       "added_by": "moguell"
     }
