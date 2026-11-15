@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 46,
+  "rev": 47,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1108,7 +1108,7 @@ window.AMB_DATA = {
       "audio": [
         {
           "id": "principal",
-          "short": "DISCO",
+          "short": "CD",
           "label": "Coletânea Brasília (EMI, 2012)",
           "kind": "cd",
           "release": "brasilia-2012",
@@ -1117,7 +1117,7 @@ window.AMB_DATA = {
         },
         {
           "id": "original",
-          "short": "ORIGINAL",
+          "short": "GRAVAÇÂO",
           "label": "Som original da gravação",
           "kind": "vhs",
           "url": "https://archive.org/download/ambario-plebe-rude-ate-quando-esperar-1985/plebe-rude-ate-quando-esperar-1985-fita.m4a"
