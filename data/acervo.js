@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 51,
+  "rev": 52,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -275,6 +275,18 @@ window.AMB_DATA = {
             }
           ],
           "discogs": 8954714
+        },
+        {
+          "id": "olhar-1995",
+          "type": "cd",
+          "title": "Olhar",
+          "year": 1995,
+          "label": "Epic (866.091/2-479136)",
+          "format": "CD, Album, Reissue",
+          "partial": true,
+          "src": [{ "t": "Discogs — Metrô – Olhar", "u": "https://www.discogs.com/release/3869832" }],
+          "tracks": [{ "n": "10", "t": "Stabilo", "song": "stabilo", "year": 1985 }],
+          "discogs": 3869832
         }
       ]
     },
@@ -1019,35 +1031,48 @@ window.AMB_DATA = {
       "added_by": "moguell"
     },
     {
-      "id": "metro-stabilo-rock-estrela-1985",
+      "id": "metro-stabilo-rock-estrela-1986",
       "artist": "metro",
       "song": "stabilo",
-      "title": "Stabilo (no filme Rock Estrela)",
+      "title": "Stabilo",
       "kind": "filme",
       "date": "1985",
-      "program": "Rock Estrela (filme de Lael Rodrigues)",
-      "status": "na-fila",
-      "capa": "media/capas/metro-stabilo-rock-estrela-1985.jpg",
-      "fit": "cover",
+      "program": "Rock Estrela",
+      "status": "no-acervo",
+      "capa": "media/capas/metro-stabilo-rock-estrela-1986.jpg?v=mwi49ysq",
+      "aspect": "16:9",
       "duration": 54,
+      "file": {
+        "video": "https://archive.org/download/ambario-metro-stabilo-1986/metro-stabilo-1986.mp4",
+        "ia": "ambario-metro-stabilo-1986"
+      },
       "audio": [
         {
           "id": "principal",
-          "short": "DISCO",
-          "label": "Áudio do disco (FLAC)",
-          "kind": "digital",
+          "short": "CD",
+          "label": "CD Olhar (Epic, 1995)",
+          "kind": "cd",
+          "release": "olhar-1995",
+          "by": "Miguel Lins",
+          "note": "faixa 10",
           "embedded": true
         },
-        { "id": "original", "short": "ORIGINAL", "label": "Som original da gravação", "kind": "tv" }
+        {
+          "id": "original",
+          "short": "GRAVAÇÂO",
+          "label": "Som original da gravação",
+          "kind": "tv",
+          "url": "https://archive.org/download/ambario-metro-stabilo-1986/metro-stabilo-1986-fita.m4a"
+        }
       ],
-      "credits": { "sync": "moguell" },
+      "credits": { "sync": "Miguel Lins", "tape": "MDTV" },
       "source": {
         "medium": "Cópia digital",
         "from": "Cópia do filme (o arquivo traz o título “MEMORIADATV.COM”)",
-        "notes": "O arquivo é 16:9 com a imagem 4:3 no meio (bordas pretas nas laterais); o player corta as bordas."
+        "aired": "1986"
       },
-      "description": "Outra cena de Rock Estrela com o Metrô no palco, desta vez com “Stabilo”, do LP Olhar (1985).",
-      "description_en": "Another Rock Estrela scene with Metrô on stage, this time playing “Stabilo”, from the LP Olhar (1985).",
+      "description": "Outra cena de Rock Estrela com o Metrô no palco, desta vez com “Stabilo”, do Olhar (1985).",
+      "description_en": "Another scene from Rock Estrela with Metrô on stage, this time with “Stabilo”, from Olhar (1985).",
       "src": ["imdb-rock-estrela", "filmow-rock-estrela"],
       "added": "2026-11-07",
       "added_by": "moguell"
