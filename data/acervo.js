@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 49,
+  "rev": 50,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -853,7 +853,7 @@ window.AMB_DATA = {
         },
         {
           "id": "original",
-          "short": "ORIGINAL",
+          "short": "GRAVAÇÂO",
           "label": "Som original da gravação",
           "kind": "tv",
           "url": "https://archive.org/download/ambario-joe-euthanazia-febre-tropical-1985/joe-euthanazia-febre-tropical-1985-fita.m4a"
