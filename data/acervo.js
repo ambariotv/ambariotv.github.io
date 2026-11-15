@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 40,
+  "rev": 41,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -256,6 +256,25 @@ window.AMB_DATA = {
               "len": "3:18"
             }
           ]
+        },
+        {
+          "id": "olhar-2016",
+          "type": "cd",
+          "title": "Olhar",
+          "year": 2016,
+          "label": "Sony Music (88875181312)",
+          "format": "CD, Album, Reissue, Remastered",
+          "partial": true,
+          "src": [{ "t": "Discogs — Metrô – Olhar", "u": "https://www.discogs.com/release/8954714" }],
+          "tracks": [
+            {
+              "n": "1-15",
+              "t": "Johnny Love (Versão Trilha Sonora Do Filme Rock Estrela)",
+              "song": "johnny-love",
+              "year": 1986
+            }
+          ],
+          "discogs": 8954714
         }
       ]
     },
@@ -891,34 +910,41 @@ window.AMB_DATA = {
       "artist": "metro",
       "song": "johnny-love",
       "ver": "alternativa",
-      "title": "Johnny Love (no filme Rock Estrela)",
+      "title": "Johnny Love",
       "kind": "filme",
-      "date": "1985",
+      "date": "1986",
       "program": "Rock Estrela (filme de Lael Rodrigues)",
-      "status": "na-fila",
+      "status": "no-acervo",
       "capa": "media/capas/metro-johnny-love-rock-estrela-1985.jpg?v=mweal2bf",
-      "fit": "cover",
+      "aspect": "16:9",
       "duration": 217,
+      "file": {
+        "video": "https://archive.org/download/ambario-metro-johnny-love-1986/metro-johnny-love-1986.mp4",
+        "ia": "ambario-metro-johnny-love-1986"
+      },
       "audio": [
         {
           "id": "principal",
-          "short": "DISCO",
-          "label": "Áudio do disco (FLAC)",
-          "kind": "digital",
-          "release": "olhar-30-anos-2016",
-          "note": "faixa 15",
+          "short": "CD",
+          "label": "CD Olhar (Sony Music, 2016)",
+          "kind": "cd",
+          "release": "olhar-2016",
+          "by": "Miguel Lins",
+          "note": "faixa 1-15",
           "embedded": true
         },
-        { "id": "original", "short": "ORIGINAL", "label": "Som original da gravação", "kind": "tv" }
+        {
+          "id": "original",
+          "short": "GRAVAÇÃO",
+          "label": "Som original da gravação",
+          "kind": "tv",
+          "url": "https://archive.org/download/ambario-metro-johnny-love-1986/metro-johnny-love-1986-fita.m4a"
+        }
       ],
-      "credits": { "sync": "moguell" },
-      "source": {
-        "medium": "Cópia digital",
-        "from": "Cópia do filme (o arquivo traz o título “MEMORIADATV.COM”)",
-        "notes": "O arquivo é 16:9 com a imagem 4:3 no meio (bordas pretas nas laterais); o player corta as bordas."
-      },
-      "description": "Cena do filme Rock Estrela, de Lael Rodrigues, com o Metrô no palco tocando “Johnny Love”. A versão da trilha do filme, com Léo Jaime, saiu como faixa-bônus da edição de 30 anos do LP Olhar (2016). Segundo o IMDb, o filme estreou em 17 de fevereiro de 1986.",
-      "description_en": "Scene from Lael Rodrigues' film Rock Estrela, with Metrô on stage playing “Johnny Love”. The soundtrack version, with Léo Jaime, came out as a bonus track on the 30th-anniversary edition of the LP Olhar (2016). According to IMDb, the film premiered on February 17, 1986.",
+      "credits": { "sync": "Miguel Lins", "tape": "MDTV" },
+      "source": { "medium": "Cópia digital", "from": "Cópia do filme" },
+      "description": "Cena do filme Rock Estrela, de Lael Rodrigues, com o Metrô no palco tocando “Johnny Love”. A versão da trilha do filme, com Léo Jaime, saiu como faixa-bônus da edição de 30 anos do LP Olhar (2016).",
+      "description_en": "Scene from the film Rock Estrela, by Lael Rodrigues, with Metrô on stage playing “Johnny Love”. The version of the film's soundtrack, with Léo Jaime, was released as a bonus track on the 30th anniversary edition of the LP Olhar (2016).",
       "src": ["wp-metro", "imdb-rock-estrela", "filmow-rock-estrela"],
       "added": "2026-11-07",
       "added_by": "moguell"
