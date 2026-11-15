@@ -15,8 +15,8 @@
  *   sources   : { id: { t: título, u: link } } (usadas por id nos campos src)
  */
 window.AMB_DATA = {
-  "updated": "2026-11-13",
-  "rev": 32,
+  "updated": "2026-11-15",
+  "rev": 33,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -673,36 +673,6 @@ window.AMB_DATA = {
           "u": "https://youtu.be/ra8My-11KOo?si=UV9DIntkO8efEpaY"
         }
       ],
-      "added": "2026-11-07",
-      "added_by": "moguell"
-    },
-    {
-      "id": "malaria-you-you-1983",
-      "artist": "malaria",
-      "song": "you-you",
-      "title": "You You",
-      "kind": "clipe",
-      "date": "1983",
-      "director": "Anne Carlisle",
-      "status": "na-fila",
-      "capa": "media/capas/malaria-you-you-1983.jpg",
-      "duration": 133,
-      "audio": [
-        {
-          "id": "principal",
-          "short": "DISCO",
-          "label": "Áudio do disco (FLAC)",
-          "kind": "digital",
-          "embedded": true
-        },
-        { "id": "original", "short": "ORIGINAL", "label": "Som original da gravação", "kind": "tv" }
-      ],
-      "credits": { "sync": "moguell" },
-      "source": { "medium": "Cópia digital" },
-      "description": "Clipe de “You You” dirigido por Anne Carlisle, atriz do filme Liquid Sky. A banda gravou a música duas vezes (em Nova York e em Berlim); ainda não confirmamos qual das duas está no clipe.",
-      "description_en": "Video for “You You” directed by Anne Carlisle, an actress in the film Liquid Sky. The band recorded the song twice (in New York and in Berlin); we have not yet confirmed which of the two is in the video.",
-      "src": ["wp-malaria", "dm-malaria", "curador"],
-      "refs": [{ "t": "Cópia de referência (YouTube)", "u": "https://www.youtube.com/watch?v=ssCzKzZSBN8" }],
       "added": "2026-11-07",
       "added_by": "moguell"
     },
