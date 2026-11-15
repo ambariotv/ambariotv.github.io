@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 43,
+  "rev": 44,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1244,7 +1244,7 @@ window.AMB_DATA = {
         },
         {
           "id": "original",
-          "short": "ORIGINAL",
+          "short": "GRAVAÇÂO",
           "label": "Som original da gravação",
           "kind": "vhs",
           "url": "https://archive.org/download/ambario-kid-abelha-por-que-nao-eu-1984/kid-abelha-por-que-nao-eu-1984-fita.m4a"
