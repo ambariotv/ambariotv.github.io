@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 41,
+  "rev": 42,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -906,7 +906,7 @@ window.AMB_DATA = {
       "added_by": "moguell"
     },
     {
-      "id": "metro-johnny-love-rock-estrela-1985",
+      "id": "metro-johnny-love-rock-estrela-1986",
       "artist": "metro",
       "song": "johnny-love",
       "ver": "alternativa",
