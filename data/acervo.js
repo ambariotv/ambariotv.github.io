@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 37,
+  "rev": 38,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -593,6 +593,31 @@ window.AMB_DATA = {
           ],
           "tracks": [{ "n": "A2", "t": "Por Que Não Eu?", "song": "por-que-nao-eu" }],
           "discogs": 1382976
+        }
+      ]
+    },
+    {
+      "id": "fanzine",
+      "name": "Fanzine",
+      "country": "BR",
+      "origin": "Porto Alegre",
+      "releases": [
+        {
+          "id": "zona-mortal-1986",
+          "type": "coletanea",
+          "title": "Zona Mortal",
+          "year": 1986,
+          "label": "Vortex",
+          "format": "Cassette, Album, Compilation",
+          "partial": true,
+          "src": [
+            {
+              "t": "Discogs — Various – Zona Mortal",
+              "u": "https://www.discogs.com/release/9073250"
+            }
+          ],
+          "tracks": [{ "n": "A1", "t": "Boy Do Subterrâneo", "song": "boy-do-subterraneo", "year": 1985 }],
+          "discogs": 9073250
         }
       ]
     }
@@ -1207,6 +1232,47 @@ window.AMB_DATA = {
       "description": "Por Que Não Eu? Nunca é comigo...",
       "description_en": "Why Not Me? It's never with me...",
       "src": [{ "t": "youtu.be", "u": "https://youtu.be/V9iOYiArnjE?si=HS555WW7oN4hpEd6" }],
+      "added": "2026-11-15",
+      "added_by": "moguell"
+    },
+    {
+      "id": "fanzine-boy-do-subterraneo-clipe-1985",
+      "artist": "fanzine",
+      "song": "boy-do-subterraneo",
+      "title": "Boy Do Subterrâneo",
+      "kind": "clipe",
+      "date": "1985",
+      "status": "no-acervo",
+      "capa": "media/capas/fanzine-boy-do-subterraneo-clipe-1985.jpg?v=mwhvntq5",
+      "duration": 197,
+      "file": {
+        "video": "https://archive.org/download/ambario-fanzine-boy-do-subterraneo-1985/fanzine-boy-do-subterraneo-1985.mp4",
+        "ia": "ambario-fanzine-boy-do-subterraneo-1985"
+      },
+      "audio": [
+        {
+          "id": "principal",
+          "short": "CASSETE",
+          "label": "Boy do Subterrâneo",
+          "kind": "fita",
+          "release": "zona-mortal-1986",
+          "by": "Relicário do Rock Gaúcho",
+          "note": "faixa A1",
+          "embedded": true
+        },
+        {
+          "id": "original",
+          "short": "ORIGINAL",
+          "label": "Som original da gravação",
+          "kind": "vhs",
+          "url": "https://archive.org/download/ambario-fanzine-boy-do-subterraneo-1985/fanzine-boy-do-subterraneo-1985-fita.m4a"
+        }
+      ],
+      "credits": { "tape": "Samarone Silveira", "sync": "Miguel Lins" },
+      "source": { "medium": "VHS", "aired": "1985" },
+      "description": "Essa é do \"subterrâneo\" mesmo.",
+      "description_en": "This is from the \"underground\".",
+      "src": [{ "t": "youtu.be", "u": "https://youtu.be/3PN56DLkiLg?si=CEXHMMX98kgAm1Pz" }],
       "added": "2026-11-15",
       "added_by": "moguell"
     }
