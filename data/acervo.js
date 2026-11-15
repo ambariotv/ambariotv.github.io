@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 52,
+  "rev": 53,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -285,7 +285,10 @@ window.AMB_DATA = {
           "format": "CD, Album, Reissue",
           "partial": true,
           "src": [{ "t": "Discogs — Metrô – Olhar", "u": "https://www.discogs.com/release/3869832" }],
-          "tracks": [{ "n": "10", "t": "Stabilo", "song": "stabilo", "year": 1985 }],
+          "tracks": [
+            { "n": "10", "t": "Stabilo", "song": "stabilo", "year": 1985 },
+            { "n": "4", "t": "Sândalo De Dândi", "song": "sandalo-de-dandi", "year": 1985 }
+          ],
           "discogs": 3869832
         }
       ]
@@ -1005,28 +1008,49 @@ window.AMB_DATA = {
       "id": "metro-sandalo-de-dandi-raul-gil",
       "artist": "metro",
       "song": "sandalo-de-dandi",
-      "title": "Sândalo de Dândi",
+      "title": "Sândalo De Dândi",
       "kind": "tv",
       "date": "1985",
       "program": "Programa Raul Gil",
-      "status": "na-fila",
+      "status": "no-acervo",
       "capa": "media/capas/metro-sandalo-de-dandi-raul-gil.jpg?v=mweapzl2",
-      "duration": 259,
+      "fit": "cover",
+      "duration": 224,
+      "file": {
+        "video": "https://archive.org/download/ambario-metro-sandalo-de-dandi-1985/metro-sandalo-de-dandi-1985.mp4",
+        "ia": "ambario-metro-sandalo-de-dandi-1985"
+      },
       "audio": [
         {
           "id": "principal",
-          "short": "DISCO",
-          "label": "Áudio do disco (FLAC)",
-          "kind": "digital",
+          "short": "CD",
+          "label": "CD Olhar (Epic, 1995)",
+          "kind": "cd",
+          "release": "olhar-1995",
+          "by": "Miguel Lins",
+          "note": "faixa 4",
           "embedded": true
         },
-        { "id": "original", "short": "ORIGINAL", "label": "Som original da gravação", "kind": "tv" }
+        {
+          "id": "original",
+          "short": "GRAVAÇÃO",
+          "label": "Som original da gravação",
+          "kind": "tv",
+          "url": "https://archive.org/download/ambario-metro-sandalo-de-dandi-1985/metro-sandalo-de-dandi-1985-fita.m4a"
+        }
       ],
-      "credits": { "sync": "moguell" },
-      "source": { "medium": "Cópia digital" },
+      "credits": { "sync": "Miguel Lins", "tape": "Virginie Boutaud" },
+      "source": { "medium": "Cópia digital", "aired": "1985" },
       "description": "O Metrô em “Sândalo de Dândi”, lado B do compacto Beat Acelerado, com cenas gravadas na praia, na exibição do Programa Raul Gil. A data exata ainda não foi confirmada (1984 ou 1985).",
       "description_en": "Metrô performing “Sândalo de Dândi”, the B-side of the Beat Acelerado single, with scenes shot on the beach, as aired on Programa Raul Gil. The exact date has not been confirmed (1984 or 1985).",
-      "src": ["vagalume-metro", "wp-beat"],
+      "src": [
+        {
+          "t": "youtube.com",
+          "u": "https://www.youtube.com/watch?v=X6X_voYZnrY&list=RDX6X_voYZnrY&start_radio=1"
+        },
+        "vagalume-metro",
+        "wp-beat"
+      ],
       "added": "2026-11-07",
       "added_by": "moguell"
     },
