@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 39,
+  "rev": 40,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -181,6 +181,7 @@ window.AMB_DATA = {
     {
       "id": "metro",
       "name": "Metrô",
+      "photo": "media/artistas/metro.jpg?v=mwi1f30j",
       "alt": ["A Gota Suspensa (1978–1984)"],
       "country": "BR",
       "origin": "São Paulo, SP",
@@ -223,41 +224,36 @@ window.AMB_DATA = {
               "t": "Beat Acelerado (versão original de 1984)",
               "song": "beat-acelerado",
               "ver": "1984",
-              "len": "3:46",
-              "year": 1984
+              "len": "3:46"
             },
             {
               "n": "14",
               "t": "Ti Ti Ti (Dance Mix)",
               "song": "ti-ti-ti",
               "ver": "dance-mix",
-              "len": "4:27",
-              "year": 1985
+              "len": "4:27"
             },
             {
               "n": "15",
               "t": "Johnny Love (versão alternativa)",
-              "feat": "Léo Jaime",
               "song": "johnny-love",
               "ver": "alternativa",
-              "len": "4:39",
-              "year": 1985
+              "feat": "Léo Jaime",
+              "len": "4:39"
             },
             {
               "n": "19",
               "t": "Sândalo de Dândi (ao vivo em Jaú, 19/10/1985)",
               "song": "sandalo-de-dandi",
               "ver": "ao-vivo-jau-1985",
-              "len": "8:42",
-              "year": 1984
+              "len": "8:42"
             },
             {
               "n": "23",
               "t": "Stabilo (ao vivo em Tupã, 18/10/1985)",
               "song": "stabilo",
               "ver": "ao-vivo-tupa-1985",
-              "len": "3:18",
-              "year": 1985
+              "len": "3:18"
             }
           ]
         }
