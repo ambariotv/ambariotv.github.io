@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 36,
+  "rev": 37,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -572,6 +572,7 @@ window.AMB_DATA = {
     {
       "id": "kid-abelha",
       "name": "Kid Abelha",
+      "photo": "media/artistas/kid-abelha.jpg?v=mwhuvyzu",
       "country": "BR",
       "origin": "Rio de Janeiro",
       "releases": [
