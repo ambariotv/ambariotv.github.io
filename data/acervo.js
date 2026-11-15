@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 47,
+  "rev": 48,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1079,7 +1079,7 @@ window.AMB_DATA = {
         },
         {
           "id": "original",
-          "short": "ORIGINAL",
+          "short": "GRAVAÇÂO",
           "label": "Som original da gravação",
           "kind": "vhs",
           "url": "https://archive.org/download/ambario-camisa-de-venus-simca-chambord-1986/camisa-de-venus-simca-chambord-1986-fita.m4a"
