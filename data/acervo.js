@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 50,
+  "rev": 51,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -738,7 +738,7 @@ window.AMB_DATA = {
         },
         {
           "id": "original",
-          "short": "ORIGINAL",
+          "short": "GRAVAÇÂO",
           "label": "Som original da gravação",
           "kind": "vhs",
           "url": "https://archive.org/download/ambario-joe-euthanazia-me-leva-pra-casa-1985/joe-euthanazia-me-leva-pra-casa-1985-fita.m4a"
