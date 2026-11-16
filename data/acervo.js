@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-16",
-  "rev": 61,
+  "rev": 62,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -293,7 +293,8 @@ window.AMB_DATA = {
           "src": [{ "t": "Discogs — Metrô – Olhar", "u": "https://www.discogs.com/release/3869832" }],
           "tracks": [
             { "n": "10", "t": "Stabilo", "song": "stabilo" },
-            { "n": "4", "t": "Sândalo De Dândi", "song": "sandalo-de-dandi" }
+            { "n": "4", "t": "Sândalo De Dândi", "song": "sandalo-de-dandi" },
+            { "n": "12", "t": "Ti Ti Ti", "song": "ti-ti-ti", "year": 1985 }
           ],
           "discogs": 3869832
         }
@@ -846,24 +847,39 @@ window.AMB_DATA = {
       "title": "Ti Ti Ti",
       "kind": "clipe",
       "date": "1985",
-      "status": "na-fila",
-      "capa": "media/capas/metro-ti-ti-ti-clipe-1985.jpg",
+      "status": "no-acervo",
+      "capa": "media/capas/metro-ti-ti-ti-clipe-1985.jpg?v=mwjlwdu4",
       "fit": "cover",
       "duration": 179,
+      "file": {
+        "video": "https://archive.org/download/ambario-metro-ti-ti-ti-1985/metro-ti-ti-ti-1985.mp4",
+        "ia": "ambario-metro-ti-ti-ti-1985"
+      },
       "audio": [
         {
           "id": "principal",
-          "short": "DISCO",
-          "label": "Áudio do disco (FLAC)",
-          "kind": "digital",
+          "short": "CD",
+          "label": "CD Olhar (Epic, 1995)",
+          "kind": "cd",
+          "release": "olhar-1995",
+          "by": "Miguel Lins",
+          "note": "faixa 12",
           "embedded": true
         },
-        { "id": "original", "short": "ORIGINAL", "label": "Som original da gravação", "kind": "tv" }
+        {
+          "id": "original",
+          "short": "GRAVAÇÃO",
+          "label": "Som original da gravação",
+          "kind": "tv",
+          "url": "https://archive.org/download/ambario-metro-ti-ti-ti-1985/metro-ti-ti-ti-1985-fita.m4a"
+        }
       ],
-      "credits": { "sync": "moguell" },
+      "music": { "status": "streaming", "qobuz": "https://open.qobuz.com/track/10136539" },
+      "credits": { "sync": "Miguel Lins", "tape": "ƉȐ. ȐѲȻҜ" },
       "source": {
         "medium": "Cópia digital",
-        "notes": "O arquivo é 16:9 com a imagem 4:3 no meio (bordas pretas nas laterais); o player corta as bordas."
+        "notes": "O arquivo é 16:9 com a imagem 4:3 no meio (bordas pretas nas laterais); o player corta as bordas.",
+        "url": "https://youtu.be/Kv-OIISUWGQ?si=X4EOWvECGQvilDnh"
       },
       "description": "Videoclipe de 1985 da música de Rita Lee e Roberto de Carvalho que abria a novela Ti Ti Ti, da Rede Globo.",
       "description_en": "1985 music video for the Rita Lee and Roberto de Carvalho song that opened the Rede Globo telenovela Ti Ti Ti.",
