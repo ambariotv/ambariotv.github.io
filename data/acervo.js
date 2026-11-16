@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-16",
-  "rev": 59,
+  "rev": 60,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -417,12 +417,21 @@ window.AMB_DATA = {
           "label": "EMI-Odeon",
           "format": "LP",
           "note": "Produção de José Emílio Rondeau; letras de Renato Russo. Saiu em janeiro de 1985 segundo a Wikipédia e o Correio da Manhã; o livro “Será!”, do produtor, fala em 15 de fevereiro.",
-          "src": ["wp-legiao-album", "cm-legiao-2025", "bj-legiao"],
+          "src": [
+            "wp-legiao-album",
+            "cm-legiao-2025",
+            "bj-legiao",
+            {
+              "t": "Discogs — Legião Urbana – Legião Urbana",
+              "u": "https://www.discogs.com/release/2240720"
+            }
+          ],
           "tracks": [
-            { "n": "1", "t": "Será", "song": "sera", "len": "2:30" },
+            { "n": "A1", "t": "Será", "song": "sera", "len": "2:30" },
             { "n": "6", "t": "Geração Coca-Cola", "song": "geracao-coca-cola", "len": "2:22" }
           ],
-          "partial": true
+          "partial": true,
+          "discogs": 2240720
         }
       ]
     },
@@ -705,24 +714,39 @@ window.AMB_DATA = {
       "title": "Será",
       "kind": "clipe",
       "date": "1985",
-      "director": "Toniko Melo",
-      "status": "na-fila",
+      "status": "no-acervo",
       "capa": "media/capas/legiao-urbana-sera-clipe-1985.jpg",
       "duration": 157,
+      "file": {
+        "video": "https://archive.org/download/ambario-legiao-urbana-sera-1985/legiao-urbana-sera-1985.mp4",
+        "ia": "ambario-legiao-urbana-sera-1985"
+      },
       "audio": [
         {
           "id": "principal",
-          "short": "DISCO",
-          "label": "Áudio do disco (FLAC)",
-          "kind": "digital",
-          "embedded": true,
+          "short": "CD",
+          "label": "LP Legião Urbana (EMI, 1985)",
+          "kind": "cd",
           "release": "legiao-urbana-1985",
-          "note": "faixa 1"
+          "by": "Miguel Lins",
+          "note": "faixa A1",
+          "embedded": true
         },
-        { "id": "original", "short": "ORIGINAL", "label": "Som original da gravação", "kind": "tv" }
+        {
+          "id": "original",
+          "short": "GRAVAÇÃO",
+          "label": "Som original da gravação",
+          "kind": "tv",
+          "url": "https://archive.org/download/ambario-legiao-urbana-sera-1985/legiao-urbana-sera-1985-fita.m4a"
+        }
       ],
-      "credits": { "sync": "moguell" },
-      "source": { "medium": "Cópia digital" },
+      "music": { "status": "streaming", "qobuz": "https://open.qobuz.com/track/4916917" },
+      "credits": { "sync": "moguell", "tape": "Legião Urbana" },
+      "source": {
+        "medium": "Cópia digital",
+        "aired": "1985",
+        "url": "https://youtu.be/hZg1r7BOXVA?si=5lVDCD1Gdlg8RO-R"
+      },
       "description": "Primeiro videoclipe da Legião Urbana. Foi gravado de 25 a 27 de maio de 1985 na boate Rose Bom Bom, em São Paulo, com direção de Toniko Melo: a banda toca num cenário pequeno e anda pela cidade à noite.",
       "description_en": "Legião Urbana's first music video. It was shot from May 25 to 27, 1985, at the Rose Bom Bom nightclub in São Paulo, directed by Toniko Melo: the band plays on a small set and walks around the city at night.",
       "src": ["wp-legiao-album", "imdb-sera"],
