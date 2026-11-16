@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-16",
-  "rev": 64,
+  "rev": 65,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -964,6 +964,7 @@ window.AMB_DATA = {
       "date": "1985",
       "status": "no-acervo",
       "capa": "media/capas/legiao-urbana-geracao-coca-cola-som-maior-1985.jpg?v=mwjrok2s",
+      "fit": "fill",
       "duration": 139,
       "file": {
         "video": "https://archive.org/download/ambario-legiao-urbana-geracao-coca-cola-1985/legiao-urbana-geracao-coca-cola-1985.mp4",
