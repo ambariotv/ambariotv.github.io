@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-16",
-  "rev": 62,
+  "rev": 63,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1328,7 +1328,7 @@ window.AMB_DATA = {
       "kind": "clipe",
       "date": "1984",
       "status": "no-acervo",
-      "capa": "media/capas/kid-abelha-por-que-nao-eu-clipe-1984.jpg?v=mwhulbkf",
+      "capa": "media/capas/kid-abelha-por-que-nao-eu-clipe-1984.jpg?v=mwjntrue",
       "duration": 151,
       "file": {
         "video": "https://archive.org/download/ambario-kid-abelha-por-que-nao-eu-1984/kid-abelha-por-que-nao-eu-1984.mp4",
