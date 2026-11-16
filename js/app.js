@@ -348,7 +348,7 @@
       lente.className = 'lupa-lente';
       lente.hidden = true;
       area.appendChild(lente);
-      const ZOOM = 2.5;
+      const ZOOM = 2;
       const mover = (e) => {
         if (e.pointerType && e.pointerType !== 'mouse') return;
         const r = img.getBoundingClientRect();
