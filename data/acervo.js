@@ -759,7 +759,7 @@ window.AMB_DATA = {
         },
         {
           "id": "original",
-          "short": "GRAVAÇÂO",
+          "short": "GRAVAÇÃO",
           "label": "Som original da gravação",
           "kind": "vhs",
           "url": "https://archive.org/download/ambario-joe-euthanazia-me-leva-pra-casa-1985/joe-euthanazia-me-leva-pra-casa-1985-fita.m4a"
@@ -874,7 +874,7 @@ window.AMB_DATA = {
         },
         {
           "id": "original",
-          "short": "GRAVAÇÂO",
+          "short": "GRAVAÇÃO",
           "label": "Som original da gravação",
           "kind": "tv",
           "url": "https://archive.org/download/ambario-joe-euthanazia-febre-tropical-1985/joe-euthanazia-febre-tropical-1985-fita.m4a"
@@ -996,7 +996,7 @@ window.AMB_DATA = {
         },
         {
           "id": "original",
-          "short": "GRAVAÇÂO",
+          "short": "GRAVAÇÃO",
           "label": "Som original da gravação",
           "kind": "tv",
           "url": "https://archive.org/download/ambario-joe-euthanazia-brigitte-1985/joe-euthanazia-brigitte-1985-fita.m4a"
@@ -1089,7 +1089,7 @@ window.AMB_DATA = {
         },
         {
           "id": "original",
-          "short": "GRAVAÇÂO",
+          "short": "GRAVAÇÃO",
           "label": "Som original da gravação",
           "kind": "tv",
           "url": "https://archive.org/download/ambario-metro-stabilo-1986/metro-stabilo-1986-fita.m4a"
@@ -1134,7 +1134,7 @@ window.AMB_DATA = {
         },
         {
           "id": "original",
-          "short": "GRAVAÇÂO",
+          "short": "GRAVAÇÃO",
           "label": "Som original da gravação",
           "kind": "vhs",
           "url": "https://archive.org/download/ambario-camisa-de-venus-simca-chambord-1986/camisa-de-venus-simca-chambord-1986-fita.m4a"
@@ -1172,7 +1172,7 @@ window.AMB_DATA = {
         },
         {
           "id": "original",
-          "short": "GRAVAÇÂO",
+          "short": "GRAVAÇÃO",
           "label": "Som original da gravação",
           "kind": "vhs",
           "url": "https://archive.org/download/ambario-plebe-rude-ate-quando-esperar-1985/plebe-rude-ate-quando-esperar-1985-fita.m4a"
@@ -1214,7 +1214,7 @@ window.AMB_DATA = {
         },
         {
           "id": "original",
-          "short": "GRAVAÇÂO",
+          "short": "GRAVAÇÃO",
           "label": "Som original da gravação",
           "kind": "vhs",
           "url": "https://archive.org/download/ambario-eletrodomesticos-choveu-no-meu-chip-1985/eletrodomesticos-choveu-no-meu-chip-1985-fita.m4a"
@@ -1258,7 +1258,7 @@ window.AMB_DATA = {
         },
         {
           "id": "original",
-          "short": "GRAVAÇÂO",
+          "short": "GRAVAÇÃO",
           "label": "Som original da gravação",
           "kind": "vhs",
           "url": "https://archive.org/download/ambario-malaria-you-you-1983/malaria-you-you-1983-fita.m4a"
@@ -1299,7 +1299,7 @@ window.AMB_DATA = {
         },
         {
           "id": "original",
-          "short": "GRAVAÇÂO",
+          "short": "GRAVAÇÃO",
           "label": "Som original da gravação",
           "kind": "vhs",
           "url": "https://archive.org/download/ambario-kid-abelha-por-que-nao-eu-1984/kid-abelha-por-que-nao-eu-1984-fita.m4a"

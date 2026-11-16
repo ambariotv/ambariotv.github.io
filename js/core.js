@@ -118,6 +118,22 @@
 
   // Filtro CRT de cada vídeo: o que o curador marcou no vídeo; senão a regra geral ("CRT automático"):
   // ligado = CRT em tudo, menos cenas de filme; desligado = sem CRT, a não ser nos vídeos marcados com CRT.
+  // Botões e nomes dos áudios no site em inglês (o curador escreve em português)
+  const SIGLAS_EN = { disco: 'RECORD', gravacao: 'ORIGINAL', original: 'ORIGINAL', fita: 'TAPE', cassete: 'CASSETTE', 'fita cassete': 'CASSETTE', compacto: 'SINGLE',
+    vinil: 'VINYL', tv: 'TV', vhs: 'VHS', lp: 'LP', cd: 'CD', digital: 'DIGITAL', 'ao vivo': 'LIVE', radio: 'RADIO' };
+  function audioEn(s) {
+    const k = AMB.norm(String(s || '')).trim();
+    if (!SIGLAS_EN[k]) return s;
+    const en = SIGLAS_EN[k];
+    return s === String(s).toUpperCase() ? en : en.charAt(0) + en.slice(1).toLowerCase();
+  }
+  function rotuloAudioEn(s) {
+    return String(s)
+      .replace(/^Som original da gravação/i, 'Original recording audio')
+      .replace(/^Som original da fita/i, 'Original tape audio')
+      .replace(/^Áudio do disco/i, 'Record audio')
+      .replace(/^Coletânea\b/, 'Compilation').replace(/^Compacto\b/, 'Single').replace(/^Fita cassete\b/, 'Cassette').replace(/^Fita\b/, 'Tape');
+  }
   AMB.crtAuto = () => !AMB.settings || AMB.settings.crt_auto !== false;
   AMB.crtPadrao = (v) => {
     if (v && v.crt === true) return true;
@@ -365,9 +381,13 @@
     if (!v.audio || !v.audio.length) {
       v.audio = v.hasFile ? [{ id: 'principal', short: 'Original', label: T('Som do arquivo', 'File audio'), embedded: true }] : [];
     }
-    v.audio = v.audio.map((t, i) => Object.assign({ id: 'faixa' + i, short: t.short || AMB.AUDIO_KINDS[t.kind] || (T('Áudio ', 'Audio ') + (i + 1)) }, t, {
-      embedded: t.embedded === true || (!t.url && i === 0)
-    }));
+    v.audio = v.audio.map((t, i) => {
+      const f = Object.assign({ id: 'faixa' + i, short: t.short || AMB.AUDIO_KINDS[t.kind] || (T('Áudio ', 'Audio ') + (i + 1)) }, t, {
+        embedded: t.embedded === true || (!t.url && i === 0)
+      });
+      if (AMB.en) { f.short = audioEn(f.short); if (f.label) f.label = rotuloAudioEn(f.label); }
+      return f;
+    });
     // capa: imagem escolhida pelo curador (media/capas/…); senão a do arquivo ou a do Internet Archive
     const capa = v.capa ? (AMB.local.arquivo(v.capa) || v.capa) : '';
     v.thumb = capa || v.file.poster || (v.file.ia ? 'https://archive.org/services/img/' + encodeURIComponent(v.file.ia) : '');
