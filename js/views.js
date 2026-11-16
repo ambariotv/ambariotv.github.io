@@ -100,8 +100,7 @@
     const decadas = Array.from(new Set(vs.map((v) => v.decade).filter(Boolean))).sort();
     const chips = [['tudo', T('Tudo', 'All')], ['no-acervo', AMB.STATUS['no-acervo'].t], ['nacionais', T('Nacionais', 'Brazilian')], ['internacionais', T('Internacionais', 'International')],
       ['clipe', T('Clipes', 'Music videos')], ['tv', T('Na TV', 'On TV')], ['ao-vivo', T('Ao vivo', 'Live')], ['filme', T('Filmes', 'Films')]]
-      .concat(decadas.map((d) => ['d' + d, AMB.en ? d + 's' : 'Anos ' + (d >= 2000 ? d : String(d).slice(2))]))
-      .concat([['procura-se', AMB.STATUS['procura-se'].t]]);
+      .concat(decadas.map((d) => ['d' + d, AMB.en ? d + 's' : 'Anos ' + (d >= 2000 ? d : String(d).slice(2))]));
     if (AMB.favs.list().length) chips.push(['favoritos', T('★ Favoritos', '★ Favorites')]);
     return chips;
   };
