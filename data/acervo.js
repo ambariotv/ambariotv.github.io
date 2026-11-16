@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-15",
-  "rev": 53,
+  "rev": 54,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -206,6 +206,13 @@ window.AMB_DATA = {
       "intro": "Banda paulistana formada em 1978 por amigos do Lycée Pasteur, primeiro com o nome A Gota Suspensa. Virou Metrô em 1984, estreou pela Epic com o compacto “Beat Acelerado” e estourou com o LP Olhar (1985), de “Tudo Pode Mudar”, “Ti Ti Ti” (abertura da novela da Globo) e “Johnny Love” (do filme Rock Estrela). Virginie Boutaud saiu em 1986; com Pedro Parq nos vocais veio A Mão de Mao (1987), e a banda parou em 1988. Voltou para gravar Déjà-Vu (2002) e se reuniu de novo a partir de 2014.",
       "intro_en": "São Paulo band formed in 1978 by friends from the Lycée Pasteur, first under the name A Gota Suspensa. It became Metrô in 1984, debuted on Epic with the single “Beat Acelerado” and broke through with the LP Olhar (1985), featuring “Tudo Pode Mudar”, “Ti Ti Ti” (theme of the Globo telenovela) and “Johnny Love” (from the film Rock Estrela). Virginie Boutaud left in 1986; with Pedro Parq on vocals came A Mão de Mao (1987), and the band split in 1988. It came back to record Déjà-Vu (2002) and reunited again from 2014 on.",
       "src": ["wp-metro", "vagalume-metro"],
+      "gallery": [
+        { "img": "media/artistas/galeria/metro-mwikf4rjqa6.jpg" },
+        { "img": "media/artistas/galeria/metro-mwikf4rjtvh.jpg" },
+        { "img": "media/artistas/galeria/metro-mwikf4rjafk.jpg" },
+        { "img": "media/artistas/galeria/metro-mwikf4rjf52.jpg" },
+        { "img": "media/artistas/galeria/metro-mwikf4rjyij.jpg" }
+      ],
       "releases": [
         {
           "id": "olhar-30-anos-2016",
@@ -270,8 +277,7 @@ window.AMB_DATA = {
             {
               "n": "1-15",
               "t": "Johnny Love (Versão Trilha Sonora Do Filme Rock Estrela)",
-              "song": "johnny-love",
-              "year": 1986
+              "song": "johnny-love"
             }
           ],
           "discogs": 8954714
@@ -286,8 +292,8 @@ window.AMB_DATA = {
           "partial": true,
           "src": [{ "t": "Discogs — Metrô – Olhar", "u": "https://www.discogs.com/release/3869832" }],
           "tracks": [
-            { "n": "10", "t": "Stabilo", "song": "stabilo", "year": 1985 },
-            { "n": "4", "t": "Sândalo De Dândi", "song": "sandalo-de-dandi", "year": 1985 }
+            { "n": "10", "t": "Stabilo", "song": "stabilo" },
+            { "n": "4", "t": "Sândalo De Dândi", "song": "sandalo-de-dandi" }
           ],
           "discogs": 3869832
         }
