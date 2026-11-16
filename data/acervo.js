@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-16",
-  "rev": 63,
+  "rev": 64,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -434,6 +434,23 @@ window.AMB_DATA = {
             { "n": "6", "t": "Geração Coca-Cola", "song": "geracao-coca-cola", "len": "2:22" }
           ],
           "discogs": 2240720
+        },
+        {
+          "id": "legiao-urbana-1988",
+          "type": "cd",
+          "title": "Legião Urbana",
+          "year": 1988,
+          "label": "EMI (364 748209 2)",
+          "format": "CD, Album, Reissue",
+          "partial": true,
+          "src": [
+            {
+              "t": "Discogs — Legião Urbana – Legião Urbana",
+              "u": "https://www.discogs.com/release/8763623"
+            }
+          ],
+          "tracks": [{ "n": "6", "t": "Geração Coca-Cola", "song": "geracao-coca-cola", "len": "2:20" }],
+          "discogs": 8763623
         }
       ]
     },
@@ -945,28 +962,34 @@ window.AMB_DATA = {
       "title": "Geração Coca-Cola",
       "kind": "tv",
       "date": "1985",
-      "program": "Som Maior",
-      "status": "na-fila",
-      "capa": "media/capas/legiao-urbana-geracao-coca-cola-som-maior-1985.jpg",
-      "fit": "fill",
+      "status": "no-acervo",
+      "capa": "media/capas/legiao-urbana-geracao-coca-cola-som-maior-1985.jpg?v=mwjrok2s",
       "duration": 139,
+      "file": {
+        "video": "https://archive.org/download/ambario-legiao-urbana-geracao-coca-cola-1985/legiao-urbana-geracao-coca-cola-1985.mp4",
+        "ia": "ambario-legiao-urbana-geracao-coca-cola-1985"
+      },
       "audio": [
         {
           "id": "principal",
-          "short": "DISCO",
-          "label": "Áudio do disco (FLAC)",
-          "kind": "digital",
-          "embedded": true,
-          "release": "legiao-urbana-1985",
-          "note": "faixa 6"
+          "short": "CD",
+          "label": "CD Legião Urbana (EMI, 1988)",
+          "kind": "cd",
+          "release": "legiao-urbana-1988",
+          "by": "Miguel Lins",
+          "note": "faixa 6",
+          "embedded": true
         },
-        { "id": "original", "short": "ORIGINAL", "label": "Som original da gravação", "kind": "tv" }
+        {
+          "id": "original",
+          "short": "GRAVAÇÃO",
+          "label": "Som original da gravação",
+          "kind": "tv",
+          "url": "https://archive.org/download/ambario-legiao-urbana-geracao-coca-cola-1985/legiao-urbana-geracao-coca-cola-1985-fita.m4a"
+        }
       ],
-      "credits": { "sync": "moguell" },
-      "source": {
-        "medium": "Cópia digital",
-        "notes": "O arquivo está esticado para 16:9; a imagem original é 4:3 (o player corrige)."
-      },
+      "credits": { "sync": "Miguel Lins", "tape": "Canal CMB" },
+      "source": { "medium": "Cópia digital", "url": "https://youtu.be/VbrbDJYXQLU?si=EyqG4O4cndr2u-pJ" },
       "description": "A Legião Urbana toca “Geração Coca-Cola”, do primeiro disco, num programa de TV com plateia. O nome do programa vem do título da cópia; a emissora ainda não foi confirmada.",
       "description_en": "Legião Urbana plays “Geração Coca-Cola”, from their first album, on a TV show with a studio audience. The show's name comes from the title of the copy; the channel has not been confirmed yet.",
       "src": ["wp-legiao-album"],
