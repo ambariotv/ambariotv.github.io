@@ -134,6 +134,8 @@
       .replace(/^Áudio do disco/i, 'Record audio')
       .replace(/^Coletânea\b/, 'Compilation').replace(/^Compacto\b/, 'Single').replace(/^Fita cassete\b/, 'Cassette').replace(/^Fita\b/, 'Tape');
   }
+  // "Fita de:" nas gravações de TV/fita; nas cenas de filme (que vêm de TV rip) um termo mais neutro
+  AMB.papelFita = (v) => (v && v.kind === 'filme' ? T('Cópia de', 'Copy from') : T('Fita de', 'Tape from'));
   AMB.crtAuto = () => !AMB.settings || AMB.settings.crt_auto !== false;
   AMB.crtPadrao = (v) => {
     if (v && v.crt === true) return true;
@@ -469,7 +471,7 @@
   // Quem aparece no quadro "Acervo" da página do vídeo (como o "From:" dos sites de vídeo antigos)
   AMB.mainCredit = (v) => {
     const cr = v.credits || {};
-    if (cr.tape) return { papel: T('Fita de', 'Tape from'), w: AMB.who(cr.tape) };
+    if (cr.tape) return { papel: AMB.papelFita(v), w: AMB.who(cr.tape) };
     if (cr.capture) return { papel: T('Digitalizado por', 'Digitized by'), w: AMB.who(cr.capture) };
     if (v.added_by) return { papel: T('Cadastrado por', 'Added by'), w: AMB.who(v.added_by) };
     const cur = AMB.cfg('CURADOR', '');
