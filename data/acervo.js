@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-16",
-  "rev": 56,
+  "rev": 57,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -934,7 +934,7 @@ window.AMB_DATA = {
       "title": "Johnny Love",
       "kind": "filme",
       "date": "1986",
-      "program": "Rock Estrela (filme de Lael Rodrigues)",
+      "program": "Rock Estrela",
       "status": "no-acervo",
       "capa": "media/capas/metro-johnny-love-rock-estrela-1985.jpg?v=mweal2bf",
       "aspect": "16:9",
