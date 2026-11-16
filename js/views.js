@@ -202,7 +202,6 @@
     const fav = AMB.favs.has(v.id);
     const rel = AMB.related(v, 12);
     const mais = a.videos.filter((x) => x !== v && !x.test);
-    const lanc = AMB.songReleases(v);
     const song = v.songObj;
     const titulo = '<a href="#a-' + esc(a.id) + '">' + esc(a.name) + '</a> — ' + esc(v.title);
 
@@ -210,12 +209,7 @@
     const fotoArt = a.photo ? '<a class="mus-foto" href="#a-' + esc(a.id) + '" title="' + esc(a.name) + '">' + V.discoIcone(a, 'm') + '</a>' : '';
     const sobre = song ? (
       '<div class="mus-cab">' + fotoArt + '<p class="mus-tit"><b>' + esc(song.t) + '</b>' + (song.w ? '<br><small>' + esc(song.w) + '</small>' : '') +
-        '<br><a class="mini" href="#a-' + esc(a.id) + '">' + esc(a.name) + '</a></p></div>' +
-      (lanc.length ? '<p class="mini">' + T('Saiu em:', 'Released on:') + '</p><ul class="mus-discos">' + lanc.map((x) =>
-        '<li><a href="#a-' + esc(a.id) + '" data-disco="' + esc(x.r.id) + '">' + esc(x.r.title) + '</a> <small>' + esc(AMB.RELTYPES[x.r.type] || x.r.type) +
-          (x.r.year ? ', ' + esc(x.r.year) : '') + (x.r.label ? ', ' + esc(x.r.label) : '') + T(' · faixa ', ' · track ') + esc(x.t.n) + '</small>' +
-          (x.mesma ? '' : ' <span class="tag-outra" title="' + T('O vídeo usa outra gravação desta música', 'The video uses a different recording of this song') + '">' + T('outra versão', 'different version') + '</span>') + '</li>').join('') + '</ul>' :
-        '<p class="mini">' + T('Ainda não cadastramos em que disco esta música saiu.', 'We have not yet listed which record this song came out on.') + ' <a href="#" data-acao="corrigir" data-video="' + esc(v.id) + '">' + T('Sabe? Conte pra gente.', 'Do you know? Tell us.') + '</a></p>')
+        '<br><a class="mus-art" href="#a-' + esc(a.id) + '">' + esc(a.name) + '</a></p></div>'
     ) : '<div class="mus-cab">' + fotoArt + '<p class="mini">' + (v.kind === 'tv' || v.kind === 'entrevista' ? T('Registro sem uma música só.', 'Recording without a single song.') : T('Música ainda não identificada.', 'Song not identified yet.')) + ' <a href="#" data-acao="corrigir" data-video="' + esc(v.id) + '">' + T('Sugerir', 'Suggest') + '</a></p></div>';
 
     return '<div class="pg-watch">' +

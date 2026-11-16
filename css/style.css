@@ -772,3 +772,5 @@ tr.adm-com-oculto .adm-com-txt { color: #888; text-decoration: line-through; }
 .mus-cab .mus-tit { margin: 0 0 6px; }
 .mus-foto { flex: none; line-height: 0; }
 .mus-foto .art-foto-m { width: 64px; height: 64px; }
+.mus-tit .mus-art { color: var(--link); font-weight: 700; }
+.w-musica .mus-tit { margin: 0; }
