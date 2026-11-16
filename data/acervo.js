@@ -15,8 +15,8 @@
  *   sources   : { id: { t: título, u: link } } (usadas por id nos campos src)
  */
 window.AMB_DATA = {
-  "updated": "2026-11-15",
-  "rev": 54,
+  "updated": "2026-11-16",
+  "rev": 55,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1191,7 +1191,7 @@ window.AMB_DATA = {
       "artist": "eletrodomesticos",
       "song": "choveu-no-meu-chip",
       "title": "Choveu No Meu Chip",
-      "kind": "clipe",
+      "kind": "tv",
       "date": "1985",
       "channel": "TV Manchete",
       "status": "no-acervo",
