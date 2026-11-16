@@ -941,3 +941,6 @@ html[data-tema="escuro"] .tema-bt { color: #ffd76a; background: linear-gradient(
 .lupa-lente { position: absolute; z-index: 2; width: 130px; height: 130px; border-radius: 50%; pointer-events: none; background-repeat: no-repeat; background-color: #000;
   border: 2px solid rgba(255,255,255,.95); box-shadow: 0 4px 16px rgba(0,0,0,.45), inset 0 0 0 1px rgba(0,0,0,.25), inset 0 10px 18px rgba(255,255,255,.18); }
 @media (hover: none) { .lupa-area img.com-lupa { cursor: auto; } }
+/* página do vídeo: caixinha só com "Fita de:" */
+.w-de-mini .box-c { padding: 8px 10px; font-size: 13px; }
+.w-de-mini .box-c a { font-weight: 700; }

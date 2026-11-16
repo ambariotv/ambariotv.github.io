@@ -192,8 +192,6 @@
   V.watch = (v) => {
     const a = v.artistObj;
     const cr = AMB.mainCredit(v);
-    const c = cr && cr.w && cr.w.acervo;
-    const qtd = c ? c.todos.length || c.trabalhos.cadastro.length : 0;
     const url = (AMB.cfg('SITE_URL', '') || location.href.split('#')[0].replace(/\/$/, '')) + '/#v-' + v.id;
     const fav = AMB.favs.has(v.id);
     const rel = AMB.related(v, 12);
@@ -247,20 +245,7 @@
         '<aside class="col-side">' +
           (v.test ? '' : V.box(T('Sobre a música', 'About the song'), sobre, 'w-musica')) +
           V.ouvir(v) +
-          '<section class="box w-de"><div class="box-c">' +
-            (cr && cr.w ? '<div class="de-topo de-sem-icone">' +
-              '<div class="de-txt"><span class="de-papel">' + esc(cr.papel) + ':</span> ' + V.quem(cr.w) +
-                (c && c.since ? '<br><span class="mini">' + T('Colabora desde ', 'Contributing since ') + esc(AMB.fmtMonth(c.since)) + '</span>' : '') +
-                (c ? '<br><span class="mini">' + T('Registros: ', 'Recordings: ') + qtd + '</span>' : '') + '</div>' +
-              (c ? '<a class="btn btn-y btn-p" href="#c-' + esc(c.id) + '">' + T('Ver acervo', 'See collection') + '</a>' : '') + '</div>' : '') +
-            '<div class="de-info"><span class="mini">' + (v.added ? T('Adicionado em ', 'Added ') + esc(AMB.fmtDate(v.added)) : '') + '</span> ' + V.selo(v.status) +
-              (v.description ? '<p>' + V.tx(v, 'description') + '</p>' : '') +
-              (v.note ? '<p class="nota-cur"><b>' + T('Nota do curador:', 'Curator’s note:') + '</b> “' + V.tx(v, 'note') + '”</p>' : '') +
-              '<p class="mini de-tipo">' + esc(v.kindLabel) + (v.date ? ' · ' + esc(AMB.fmtDate(v.date)) : '') +
-                (v.program || v.channel ? ' · ' + esc([v.program, v.channel].filter(Boolean).join(', ')) : '') + (v.director ? T(' · direção de ', ' · directed by ') + esc(v.director) : '') + '</p>' +
-            '</div>' +
-            '<div class="de-link"><label>' + T('Link', 'Link') + ' <input type="text" readonly value="' + esc(url) + '"></label></div>' +
-          '</div></section>' +
+          (cr && cr.w ? '<section class="box w-de w-de-mini"><div class="box-c"><span class="de-papel">' + esc(cr.papel) + ':</span> ' + V.quem(cr.w) + '</div></section>' : '') +
           (mais.length ? V.box(T('Mais de ', 'More from ') + esc(a.name), '<ul class="rel">' + mais.slice(0, 8).map(V.relItem).join('') + '</ul>' +
             (mais.length > 8 ? '<p class="mini"><a href="#a-' + esc(a.id) + '">' + T('Ver todos os ', 'See all ') + mais.length + '</a></p>' : ''), 'w-mais') : '') +
           V.box(T('Vídeos relacionados', 'Related videos'), '<ul class="rel">' + rel.filter((x) => x.artistObj !== a).slice(0, 10).map(V.relItem).join('') + '</ul>', 'w-rel') +
