@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-16",
-  "rev": 65,
+  "rev": 66,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -297,6 +297,23 @@ window.AMB_DATA = {
             { "n": "12", "t": "Ti Ti Ti", "song": "ti-ti-ti", "year": 1985 }
           ],
           "discogs": 3869832
+        },
+        {
+          "id": "beat-acelerado-1984",
+          "type": "single",
+          "title": "Beat Acelerado",
+          "year": 1984,
+          "label": "CBS (51052)",
+          "format": "Vinyl, 12\", 33 ⅓ RPM, Promo",
+          "partial": true,
+          "src": [
+            {
+              "t": "Discogs — Metrô – Beat Acelerado",
+              "u": "https://www.discogs.com/release/2078373"
+            }
+          ],
+          "tracks": [{ "n": "A", "t": "Beat Acelerado", "song": "beat-acelerado", "len": "3:50" }],
+          "discogs": 2078373
         }
       ]
     },
@@ -696,18 +713,30 @@ window.AMB_DATA = {
       "title": "Beat Acelerado",
       "kind": "clipe",
       "date": "1984",
-      "status": "na-fila",
-      "capa": "media/capas/metro-beat-acelerado-clipe-1984.jpg",
-      "duration": 153,
+      "status": "no-acervo",
+      "capa": "media/capas/metro-beat-acelerado-clipe-1984.jpg?v=mwjud687",
+      "duration": 229,
+      "file": {
+        "video": "https://archive.org/download/ambario-metro-beat-acelerado-1984/metro-beat-acelerado-1984.mp4",
+        "ia": "ambario-metro-beat-acelerado-1984"
+      },
       "audio": [
         {
           "id": "principal",
           "short": "DISCO",
-          "label": "Áudio do disco (FLAC)",
-          "kind": "digital",
+          "label": "Single Beat Acelerado (CBS, 1984)",
+          "kind": "compacto",
+          "release": "beat-acelerado-1984",
+          "note": "faixa A",
           "embedded": true
         },
-        { "id": "original", "short": "ORIGINAL", "label": "Som original da gravação", "kind": "tv" }
+        {
+          "id": "original",
+          "short": "ORIGINAL",
+          "label": "Som original da gravação",
+          "kind": "tv",
+          "url": "https://archive.org/download/ambario-metro-beat-acelerado-1984/metro-beat-acelerado-1984-fita.m4a"
+        }
       ],
       "credits": { "sync": "moguell" },
       "source": {
