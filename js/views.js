@@ -206,14 +206,17 @@
     const song = v.songObj;
     const titulo = '<a href="#a-' + esc(a.id) + '">' + esc(a.name) + '</a> — ' + esc(v.title);
 
+    // miniatura da foto da banda ao lado do título da música (leva à página do artista)
+    const fotoArt = a.photo ? '<a class="mus-foto" href="#a-' + esc(a.id) + '" title="' + esc(a.name) + '">' + V.discoIcone(a, 'm') + '</a>' : '';
     const sobre = song ? (
-      '<p class="mus-tit"><b>' + esc(song.t) + '</b>' + (song.w ? '<br><small>' + esc(song.w) + '</small>' : '') + '</p>' +
+      '<div class="mus-cab">' + fotoArt + '<p class="mus-tit"><b>' + esc(song.t) + '</b>' + (song.w ? '<br><small>' + esc(song.w) + '</small>' : '') +
+        '<br><a class="mini" href="#a-' + esc(a.id) + '">' + esc(a.name) + '</a></p></div>' +
       (lanc.length ? '<p class="mini">' + T('Saiu em:', 'Released on:') + '</p><ul class="mus-discos">' + lanc.map((x) =>
         '<li><a href="#a-' + esc(a.id) + '" data-disco="' + esc(x.r.id) + '">' + esc(x.r.title) + '</a> <small>' + esc(AMB.RELTYPES[x.r.type] || x.r.type) +
           (x.r.year ? ', ' + esc(x.r.year) : '') + (x.r.label ? ', ' + esc(x.r.label) : '') + T(' · faixa ', ' · track ') + esc(x.t.n) + '</small>' +
           (x.mesma ? '' : ' <span class="tag-outra" title="' + T('O vídeo usa outra gravação desta música', 'The video uses a different recording of this song') + '">' + T('outra versão', 'different version') + '</span>') + '</li>').join('') + '</ul>' :
         '<p class="mini">' + T('Ainda não cadastramos em que disco esta música saiu.', 'We have not yet listed which record this song came out on.') + ' <a href="#" data-acao="corrigir" data-video="' + esc(v.id) + '">' + T('Sabe? Conte pra gente.', 'Do you know? Tell us.') + '</a></p>')
-    ) : '<p class="mini">' + (v.kind === 'tv' || v.kind === 'entrevista' ? T('Registro sem uma música só.', 'Recording without a single song.') : T('Música ainda não identificada.', 'Song not identified yet.')) + ' <a href="#" data-acao="corrigir" data-video="' + esc(v.id) + '">' + T('Sugerir', 'Suggest') + '</a></p>';
+    ) : '<div class="mus-cab">' + fotoArt + '<p class="mini">' + (v.kind === 'tv' || v.kind === 'entrevista' ? T('Registro sem uma música só.', 'Recording without a single song.') : T('Música ainda não identificada.', 'Song not identified yet.')) + ' <a href="#" data-acao="corrigir" data-video="' + esc(v.id) + '">' + T('Sugerir', 'Suggest') + '</a></p></div>';
 
     return '<div class="pg-watch">' +
       '<h1 class="w-tit">' + titulo + '</h1>' +
@@ -252,6 +255,8 @@
           '<div class="aba-c" data-aba-c="fontes" hidden>' + V.fontesVideo(v) + '</div>' +
         '</div>' +
         '<aside class="col-side">' +
+          (v.test ? '' : V.box(T('Sobre a música', 'About the song'), sobre, 'w-musica')) +
+          V.ouvir(v) +
           '<section class="box w-de"><div class="box-c">' +
             (cr && cr.w ? '<div class="de-topo">' + V.avatar(c || { id: cr.w.name, name: cr.w.name }, 'm') +
               '<div class="de-txt"><span class="de-papel">' + esc(cr.papel) + ':</span> ' + V.quem(cr.w) +
@@ -266,8 +271,6 @@
             '</div>' +
             '<div class="de-link"><label>' + T('Link', 'Link') + ' <input type="text" readonly value="' + esc(url) + '"></label></div>' +
           '</div></section>' +
-          V.ouvir(v) +
-          (v.test ? '' : V.box(T('Sobre a música', 'About the song'), sobre, 'w-musica')) +
           (mais.length ? V.box(T('Mais de ', 'More from ') + esc(a.name), '<ul class="rel">' + mais.slice(0, 8).map(V.relItem).join('') + '</ul>' +
             (mais.length > 8 ? '<p class="mini"><a href="#a-' + esc(a.id) + '">' + T('Ver todos os ', 'See all ') + mais.length + '</a></p>' : ''), 'w-mais') : '') +
           V.box(T('Vídeos relacionados', 'Related videos'), '<ul class="rel">' + rel.filter((x) => x.artistObj !== a).slice(0, 10).map(V.relItem).join('') + '</ul>', 'w-rel') +

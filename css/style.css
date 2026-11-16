@@ -766,3 +766,8 @@ html.vr-trava { overflow: hidden; }
 .adm-com-st-pendente { background: #fff2cc; color: #7a5b00; }
 .adm-com-st-oculto { background: #f4cccc; color: #8a1f1f; }
 tr.adm-com-oculto .adm-com-txt { color: #888; text-decoration: line-through; }
+/* "Sobre a música": miniatura da foto da banda */
+.mus-cab { display: flex; gap: 10px; align-items: flex-start; }
+.mus-cab .mus-tit { margin: 0 0 6px; }
+.mus-foto { flex: none; line-height: 0; }
+.mus-foto .art-foto-m { width: 64px; height: 64px; }
