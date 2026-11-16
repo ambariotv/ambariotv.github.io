@@ -437,7 +437,7 @@
     else if (aba === 'videos') corpo = a.videos.length ? '<div class="grade">' + a.videos.map(V.card).join('') + '</div>' : V.vazio(T('Nenhum vídeo deste artista ainda.', 'No videos by this artist yet.'));
     else corpo = V.sobreArtista(a);
     return '<div class="pg-artista">' +
-      '<div class="art-topo">' + V.discoIcone(a, 'g') +
+      '<div class="art-topo">' + (a.photo ? '<button type="button" class="art-foto-bt" data-acao="art-foto" data-artista="' + esc(a.id) + '" title="' + T('Ver a foto maior', 'View larger photo') + '">' + V.discoIcone(a, 'g') + '</button>' : V.discoIcone(a, 'g')) +
         '<div class="art-topo-txt"><h1>' + esc(a.name) + '</h1>' +
           (info.length ? '<dl class="art-info">' + info.map(([k, x]) => '<dt>' + k + '</dt><dd>' + x + '</dd>').join('') + '</dl>' : '') +
         '</div>' +

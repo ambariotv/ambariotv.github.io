@@ -933,3 +933,11 @@ html[data-tema="escuro"] .tema-bt { color: #ffd76a; background: linear-gradient(
 /* filtros da página inicial: ocupam a linha toda, com balões do mesmo tamanho */
 .chips-cheio { display: flex; flex-wrap: wrap; }
 .chips-cheio .chip { flex: 1 1 0; min-width: max-content; text-align: center; white-space: nowrap; }
+/* foto do artista clicável + lupa nas fotos ampliadas */
+.art-foto-bt { padding: 0; border: 0; background: none; cursor: zoom-in; line-height: 0; border-radius: 6px; }
+.art-foto-bt:hover .art-foto { box-shadow: 0 0 0 2px var(--link), 0 2px 10px rgba(40,110,220,.35); }
+.lupa-area { position: relative; display: inline-block; max-width: 100%; line-height: 0; }
+.lupa-area img.com-lupa { cursor: none; }
+.lupa-lente { position: absolute; z-index: 2; width: 180px; height: 180px; border-radius: 50%; pointer-events: none; background-repeat: no-repeat; background-color: #000;
+  border: 3px solid rgba(255,255,255,.95); box-shadow: 0 6px 22px rgba(0,0,0,.45), inset 0 0 0 1px rgba(0,0,0,.25), inset 0 10px 18px rgba(255,255,255,.18); }
+@media (hover: none) { .lupa-area img.com-lupa { cursor: auto; } }

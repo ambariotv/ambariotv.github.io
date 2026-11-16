@@ -339,6 +339,33 @@
 
   /* ---------------- janelas (formulários) ---------------- */
   let ultimoFoco = null;
+  // Lupa: com o mouse em cima da foto aparece um círculo com a parte de baixo dele ampliada (2,5×).
+  // No celular (sem mouse) não aparece: dá para usar o zoom normal da tela.
+  function ativarLupa(raiz) {
+    raiz.querySelectorAll('img.com-lupa').forEach((img) => {
+      const area = img.parentElement;
+      const lente = document.createElement('div');
+      lente.className = 'lupa-lente';
+      lente.hidden = true;
+      area.appendChild(lente);
+      const ZOOM = 2.5;
+      const mover = (e) => {
+        if (e.pointerType && e.pointerType !== 'mouse') return;
+        const r = img.getBoundingClientRect();
+        const x = e.clientX - r.left, y = e.clientY - r.top;
+        if (x < 0 || y < 0 || x > r.width || y > r.height) { lente.hidden = true; return; }
+        lente.hidden = false;
+        const t = lente.offsetWidth / 2;
+        lente.style.left = (img.offsetLeft + x - t) + 'px';
+        lente.style.top = (img.offsetTop + y - t) + 'px';
+        lente.style.backgroundImage = 'url("' + img.currentSrc.replace(/"/g, '%22') + '")';
+        lente.style.backgroundSize = (r.width * ZOOM) + 'px ' + (r.height * ZOOM) + 'px';
+        lente.style.backgroundPosition = (-(x * ZOOM - t)) + 'px ' + (-(y * ZOOM - t)) + 'px';
+      };
+      area.addEventListener('pointermove', mover);
+      area.addEventListener('pointerleave', () => { lente.hidden = true; });
+    });
+  }
   function abrirModal(html, rotulo) {
     fecharModal();
     ultimoFoco = document.activeElement;
@@ -522,13 +549,22 @@
         if (!gal.length) break;
         const i = (Number(el.dataset.i) + gal.length) % gal.length;
         const g = gal[i];
-        abrirModal('<figure class="gal-grande"><img src="' + esc(V.galeriaSrc(g)) + '" alt="' + esc(g.caption || a.name) + '">' +
+        abrirModal('<figure class="gal-grande"><div class="lupa-area"><img class="com-lupa" src="' + esc(V.galeriaSrc(g)) + '" alt="' + esc(g.caption || a.name) + '"></div>' +
           '<figcaption>' + (V.galeriaLegenda(g) || esc(a.name)) + '</figcaption></figure>' +
           (gal.length > 1 ? '<div class="gal-nav"><button type="button" class="btn" data-acao="gal-ir" data-artista="' + esc(a.id) + '" data-i="' + (i - 1) + '">◀ ' + T('Anterior', 'Previous') + '</button>' +
             '<span class="mini">' + (i + 1) + ' / ' + gal.length + '</span>' +
             '<button type="button" class="btn" data-acao="gal-ir" data-artista="' + esc(a.id) + '" data-i="' + (i + 1) + '">' + T('Próxima', 'Next') + ' ▶</button></div>' : ''), a.name);
         const m = document.querySelector('.modal');
-        if (m) m.classList.add('modal-gal');
+        if (m) { m.classList.add('modal-gal'); ativarLupa(m); }
+        break;
+      }
+      case 'art-foto': { // foto do artista em tamanho grande
+        const a = AMB.artists[el.dataset.artista];
+        if (!a || !a.photo) break;
+        abrirModal('<figure class="gal-grande"><div class="lupa-area"><img class="com-lupa" src="' + esc(AMB.local.arquivo(a.photo) || a.photo) + '" alt="' + esc(a.name) + '"></div>' +
+          '<figcaption>' + esc(a.name) + '</figcaption></figure>', a.name);
+        const m = document.querySelector('.modal');
+        if (m) { m.classList.add('modal-gal'); ativarLupa(m); }
         break;
       }
       case 'cancelar-resposta': { const l = el.closest('.com-resp-form'); if (l) l.innerHTML = ''; break; }

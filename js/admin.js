@@ -1093,7 +1093,7 @@
       const nome = f.elements.name.value || '?';
       f.querySelector('.adm-foto-prev').innerHTML = V.discoIcone({ id: f.elements.id.value || nome, name: nome, photo: url }, 'g');
       f.querySelector('[data-adm="foto-ajustar"]').hidden = !url;
-      f.querySelector('.adm-foto-info').innerHTML = E.fotoNova ? 'Imagem nova (500×500). Vai para <code>media/artistas/…</code> ao salvar.'
+      f.querySelector('.adm-foto-info').innerHTML = E.fotoNova ? 'Imagem nova (1000×1000). Vai para <code>media/artistas/…</code> ao salvar.'
         : caminho ? 'Atual: <code>' + esc(caminho) + '</code>' : 'Sem foto: aparece o disco com a inicial do nome.';
     }
     f.elements.name.addEventListener('input', mostrarFoto);
@@ -1155,7 +1155,7 @@
       const acao = b.dataset.adm;
       if (acao === 'foto-img' || acao === 'foto-ajustar') {
         const atual = acao === 'foto-ajustar' ? (E.fotoNova || AMB.local.arquivo(f.elements.photo.value) || f.elements.photo.value) : '';
-        const r = await AMB.Capa.escolher({ titulo: acao === 'foto-ajustar' ? 'Reenquadrar a foto' : 'Foto do artista', proporcao: 1, largura: 500, atual });
+        const r = await AMB.Capa.escolher({ titulo: acao === 'foto-ajustar' ? 'Reenquadrar a foto' : 'Foto do artista', proporcao: 1, largura: 1000, atual });
         if (r) { E.fotoNova = r.dataUrl; E.sujo = true; mostrarFoto(); }
         return;
       }
