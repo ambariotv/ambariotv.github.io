@@ -191,7 +191,7 @@
   };
 
   /* ---------------- rótulos ---------------- */
-  AMB.KINDS = { clipe: T('Videoclipe', 'Music video'), tv: T('Apresentação na TV', 'TV performance'), 'ao-vivo': T('Show ao vivo', 'Live concert'), filme: T('Cena de filme', 'Film scene'), entrevista: T('Entrevista', 'Interview'), comercial: T('Comercial', 'Commercial'), outro: T('Registro', 'Recording') };
+  AMB.KINDS = { clipe: T('Videoclipe', 'Music video'), tv: T('Apresentação na TV', 'TV performance'), 'ao-vivo': T('Show ao vivo', 'Live concert'), filme: T('Trecho de filme', 'Film excerpt'), entrevista: T('Entrevista', 'Interview'), comercial: T('Comercial', 'Commercial'), outro: T('Registro', 'Recording') };
   AMB.KINDS_SHORT = { clipe: T('Clipe', 'Video'), tv: T('Na TV', 'On TV'), 'ao-vivo': T('Ao vivo', 'Live'), filme: T('Filme', 'Film'), entrevista: T('Entrevista', 'Interview'), comercial: T('Comercial', 'Commercial'), outro: T('Registro', 'Recording') };
   AMB.STATUS = {
     'no-acervo': { t: T('No acervo', 'In the archive'), d: T('O arquivo está no ar e toca aqui.', 'The file is online and plays here.') },

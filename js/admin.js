@@ -489,7 +489,7 @@
           campo('duration', 'Duração', v.duration ? AMB.fmtDur(v.duration) : '', { ph: '3:41' }) +
           campo('fit', 'Enquadramento', '', { tipo: 'select', ops: opcoes([['', 'Normal (imagem inteira)'], ['cover', 'Cortar bordas pretas das laterais'], ['fill', 'Desesticar (4:3 esticado em 16:9)']], v.fit || '') }) +
           campo('aspect', 'Tela', '', { tipo: 'select', ops: opcoes([['', '4:3 (TV)'], ['16:9', '16:9 (widescreen)']], v.aspect || '') }) +
-          campo('crt', 'Filtro CRT', '', { tipo: 'select', ops: opcoes([['', 'Automático (' + (AMB.crtAuto() ? 'liga, menos em cena de filme' : 'desligado') + ')'], ['sim', 'Sempre com CRT'], ['nao', 'Sem CRT']], v.crt === true ? 'sim' : v.crt === false ? 'nao' : '') }) +
+          campo('crt', 'Filtro CRT', '', { tipo: 'select', ops: opcoes([['', 'Automático (' + (AMB.crtAuto() ? 'liga, menos em trecho de filme' : 'desligado') + ')'], ['sim', 'Sempre com CRT'], ['nao', 'Sem CRT']], v.crt === true ? 'sim' : v.crt === false ? 'nao' : '') }) +
           campo('mirrors', 'Espelhos', (f.mirrors || []).join('\n'), { tipo: 'textarea', rows: 2, ajuda: '(outros links do mesmo MP4, um por linha)' }) +
         '</div></fieldset>' +
 
@@ -1545,7 +1545,7 @@
     const pub = est.publicado ? '<p>Você publicou ' + esc(AMB.ago(est.publicado.em)) + ' (revisão ' + esc(est.publicado.rev) + '). Este navegador já mostra a versão nova; o site público pode levar 1 ou 2 minutos.</p>' : '';
     const crtOn = AMB.crtAuto();
     const ajustes = '<form class="adm adm-ajustes" novalidate><div class="adm-grade">' +
-        campo('crt_auto', 'CRT automático', '', { tipo: 'select', ops: opcoes([['sim', 'Ligado: filtro CRT em todos os vídeos, menos cenas de filme'], ['nao', 'Desligado: sem filtro CRT (só nos vídeos marcados “Sempre com CRT”)']], crtOn ? 'sim' : 'nao'), larga: true }) +
+        campo('crt_auto', 'CRT automático', '', { tipo: 'select', ops: opcoes([['sim', 'Ligado: filtro CRT em todos os vídeos, menos trechos de filme'], ['nao', 'Desligado: sem filtro CRT (só nos vídeos marcados “Sempre com CRT”)']], crtOn ? 'sim' : 'nao'), larga: true }) +
       '</div><p class="mini">Vale para os vídeos com “Filtro CRT: Automático”. Cada vídeo pode ter a sua escolha no formulário do vídeo (Sempre com CRT / Sem CRT). O visitante ainda pode ligar ou desligar no botão CRT do player.</p>' +
       '<div class="form-pe"><button type="button" class="btn btn-y" data-adm="salvar-ajustes">Salvar configuração</button></div><p class="form-msg adm-msg-aj" role="status"></p></form>';
     return V.box('Configurações do site', ajustes, 'box-azul adm-sec-ajustes') +
