@@ -484,6 +484,14 @@
     return AMB.sources[id] ? Object.assign({ id }, AMB.sources[id]) : { id, t: id, u: AMB.isUrl(id) ? id : '' };
   };
 
+  // Link do vídeo original (de onde veio a cópia): o campo do curador ou, se não tiver, o primeiro link do YouTube nas fontes
+  AMB.linkOriginal = (v) => {
+    const so = (v && v.source) || {};
+    if (so.url && AMB.isUrl(so.url)) return so.url;
+    const s = ((v && v.src) || []).map(AMB.src).find((x) => x && /(^https?:\/\/)?(www\.|m\.)?(youtube\.com|youtu\.be)\//i.test(x.u || ''));
+    return s ? s.u : '';
+  };
+
   /* ---------------- discografia × videografia ---------------- */
   // Para cada disco: cada faixa com os registros em vídeo da mesma música.
   // "mesma" = o vídeo usa a mesma gravação da faixa; "outra" = outra versão (ao vivo, demo, regravação...).

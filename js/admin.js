@@ -530,6 +530,7 @@
         campo('standard', 'Padrão', '', { tipo: 'select', ops: opcoes([['', '—'], ['PAL-M', 'PAL-M (Brasil)'], ['NTSC', 'NTSC'], ['PAL', 'PAL'], ['SECAM', 'SECAM']], so.standard || '') }) +
         campo('speed', 'Velocidade', '', { tipo: 'select', ops: opcoes([['', '—'], ['SP', 'SP'], ['LP', 'LP'], ['EP', 'EP / SLP']], so.speed || '') }) +
         campo('from', 'Gravado de', so.from || '', { ph: 'ex.: TV aberta, fita comercial' }) +
+        campo('orig_url', 'Link do vídeo original', so.url || '', { tipo: 'url', ph: 'https://www.youtube.com/watch?v=…', ajuda: '(o nome em “Fita de:” leva para cá; vazio = o 1º link do YouTube das fontes)' }) +
         campo('aired', 'Exibido em', so.aired || '', { ph: '1985-05-12' }) +
         campo('generation', 'Geração', so.generation || '', { ph: 'ex.: 1ª geração (gravação original)' }) +
         campo('deck', 'Aparelho', so.deck || '', { ph: 'ex.: Samsung SV-300W (S-Video)' }) +
@@ -869,7 +870,7 @@
     if (!dataOk(data)) return { erro: 'Data em formato que não reconheci. Use 1985, 05/1985 ou 12/05/1985.', campo: 'date' };
     if (!id) return { erro: 'Não deu para criar o id: preencha o título.', campo: 'title' };
     if ((!original || id !== original.id) && rawVideo(id)) return { erro: 'Já existe um vídeo com o id “' + id + '”. Escolha outro id.', campo: 'id' };
-    for (const k of ['mu_qobuz', 'mu_youtube', 'mu_download']) if (val(k) && !AMB.isUrl(val(k))) return { erro: 'Os links de “onde ouvir” precisam começar com https://', campo: k };
+    for (const k of ['mu_qobuz', 'mu_youtube', 'mu_download', 'orig_url']) if (val(k) && !AMB.isUrl(val(k))) return { erro: 'Os links de “onde ouvir” precisam começar com https://', campo: k };
     for (const k of ['video', 'a2_url']) if (val(k) && !AMB.isUrl(val(k)) && !/^media\//.test(val(k))) return { erro: 'O link em “' + (k === 'video' ? 'Vídeo (MP4)' : 'Arquivo do som original') + '” precisa começar com https://', campo: k };
     if (v.status === 'no-acervo' && !val('video')) return { erro: 'Para ficar “No acervo” precisa do link do vídeo (MP4). Ou mude a situação para “Na fila”.', campo: 'video' };
     const espelhos = linhas(val('mirrors'));
@@ -936,7 +937,7 @@
     put(v, 'credits', cr);
     const so = Object.assign({}, v.source || {});
     [['medium', 'medium'], ['standard', 'standard'], ['speed', 'speed'], ['from', 'from'], ['aired', 'aired'], ['generation', 'generation'],
-      ['deck', 'deck'], ['capcard', 'capture'], ['notes', 'notes']].forEach(([k, n]) => put(so, n, k === 'aired' ? normData(val(k)) : val(k)));
+      ['deck', 'deck'], ['capcard', 'capture'], ['notes', 'notes'], ['orig_url', 'url']].forEach(([k, n]) => put(so, n, k === 'aired' ? normData(val(k)) : val(k)));
     put(v, 'source', so);
     put(v, 'description', val('description'));
     put(v, 'description_en', val('description_en'));

@@ -245,7 +245,12 @@
         '<aside class="col-side">' +
           (v.test ? '' : V.box(T('Sobre a música', 'About the song'), sobre, 'w-musica')) +
           V.ouvir(v) +
-          (cr && cr.w ? '<section class="box w-de w-de-mini"><div class="box-c"><span class="de-papel">' + esc(cr.papel) + ':</span> ' + V.quem(cr.w) + '</div></section>' : '') +
+          (cr && cr.w ? (() => {
+            const orig = AMB.linkOriginal(v);
+            const nome = orig ? '<a class="de-orig" href="' + esc(orig) + '" target="_blank" rel="noopener" title="' + T('Ver o vídeo original', 'See the original video') + '">' + esc(cr.w.name) + ' ↗</a>'
+              : '<span class="de-orig">' + esc(cr.w.name) + '</span>';
+            return '<section class="box w-de w-de-mini"><div class="box-c"><span class="de-papel">' + esc(cr.papel) + ':</span> ' + nome + '</div></section>';
+          })() : '') +
           (mais.length ? V.box(T('Mais de ', 'More from ') + esc(a.name), '<ul class="rel">' + mais.slice(0, 8).map(V.relItem).join('') + '</ul>' +
             (mais.length > 8 ? '<p class="mini"><a href="#a-' + esc(a.id) + '">' + T('Ver todos os ', 'See all ') + mais.length + '</a></p>' : ''), 'w-mais') : '') +
           V.box(T('Vídeos relacionados', 'Related videos'), '<ul class="rel">' + rel.filter((x) => x.artistObj !== a).slice(0, 10).map(V.relItem).join('') + '</ul>', 'w-rel') +

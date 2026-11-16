@@ -944,3 +944,6 @@ html[data-tema="escuro"] .tema-bt { color: #ffd76a; background: linear-gradient(
 /* página do vídeo: caixinha só com "Fita de:" */
 .w-de-mini .box-c { padding: 8px 10px; font-size: 13px; }
 .w-de-mini .box-c a { font-weight: 700; }
+.w-de-mini .de-orig { color: #d62222; font-weight: 700; }
+.w-de-mini a.de-orig:hover { color: #ff3b3b; }
+html[data-tema="escuro"] .w-de-mini .de-orig { color: #ff5c5c; }
