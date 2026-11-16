@@ -257,9 +257,24 @@ code { font: 12px Consolas, 'Courier New', monospace; background: #f1f4f8; paddi
 .com-msg, .form-msg { margin: 6px 0 0; font-size: 12px; min-height: 1em; }
 .com-msg.erro, .form-msg.erro { color: #c00; }
 .com-msg.ok, .form-msg.ok { color: #237a2a; }
-.com-item { padding: 8px 0; border-top: 1px dotted #ccc; }
+.com-fio { padding: 10px 0; border-top: 1px dotted #ccc; }
+.com-item { display: flex; gap: 10px; align-items: flex-start; }
+.com-corpo { flex: 1; min-width: 0; }
+.com-av { flex: none; width: 34px; height: 34px; border-radius: 50%; color: #fff; font: 700 15px/34px Arial, sans-serif; text-align: center; }
+.com-resp .com-av { width: 24px; height: 24px; font-size: 11px; line-height: 24px; }
 .com-cab b { color: var(--link); }
+.com-cab .mini { margin-left: 4px; }
 .com-item p { margin: 3px 0 0; white-space: pre-wrap; word-wrap: break-word; }
+.com-arroba { color: var(--link); font-weight: 700; }
+.com-acoes { margin-top: 2px; }
+.com-acoes .link-btn { font-size: 12px; color: #666; font-weight: 700; }
+.com-respostas, .com-resp-form { margin-left: 44px; }
+.com-ver { margin: 6px 0 2px; font-size: 12px; font-weight: 700; }
+.com-resp-lista .com-item { padding: 8px 0 0; }
+.com-form-resp { margin-top: 8px; display: grid; gap: 6px; }
+.com-form-resp input[type="text"] { max-width: 260px; }
+.com-form-resp .com-pe { display: flex; gap: 6px; align-items: center; justify-content: flex-end; }
+.com-form-resp .com-resta { margin-right: auto; }
  
 /* ficha técnica */
 .ficha { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 6px 12px; margin: 0 0 12px; }
@@ -710,3 +725,27 @@ html.vr-trava { overflow: hidden; }
 .videografia .vg-aud { color: #555; font-size: .92em; }
 .videografia .vg-aud b { color: #222; font-weight: 600; }
 .videografia .vg-mus { min-width: 140px; }
+/* onde ouvir a música */
+.ouvir-bts { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.selo-fora { display: inline-block; padding: 2px 6px; font: 700 11px Arial, sans-serif; color: #fff; background: #8a5a00; border-radius: 3px; letter-spacing: .5px; }
+/* galeria do artista */
+.galeria { columns: 3 220px; column-gap: 12px; }
+.gal-item { break-inside: avoid; margin: 0 0 12px; background: #fff; border: 1px solid #d6dde6; border-radius: 4px; overflow: hidden; }
+.gal-bt { display: block; width: 100%; padding: 0; border: 0; background: #111; cursor: zoom-in; }
+.gal-bt img { display: block; width: 100%; height: auto; transition: opacity .15s; }
+.gal-bt:hover img { opacity: .88; }
+.gal-item figcaption { padding: 6px 8px; font-size: 13px; line-height: 1.35; }
+.gal-item figcaption .mini, .gal-grande figcaption .mini { display: block; color: #777; }
+.modal.modal-gal { max-width: min(1100px, 94vw); }
+.gal-grande { margin: 0; text-align: center; }
+.gal-grande img { max-width: 100%; max-height: 74vh; display: block; margin: 0 auto; }
+.gal-grande figcaption { margin-top: 8px; font-size: 14px; }
+.gal-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+/* área do curador: galeria */
+.adm-gal-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-top: 1px dotted #ccc; }
+.adm-gal-item img { width: 110px; height: 82px; object-fit: cover; background: #222; border-radius: 3px; flex: none; }
+.adm-gal-campos { flex: 1; display: grid; gap: 4px; }
+.adm-gal-linha { display: grid; grid-template-columns: 1fr 90px; gap: 4px; }
+.adm-gal-bts { display: flex; gap: 4px; }
+.adm-gal-bts .btn { padding: 2px 8px; }
+.adm-gal-add { display: inline-block; margin-top: 8px; cursor: pointer; }

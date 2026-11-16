@@ -38,7 +38,7 @@ const ABA_COM = 'Comentarios';
 const ABA_EXI = 'Exibicoes';
 const ABA_AVA = 'Avaliacoes';
 const ABA_MSG = 'Mensagens';
-const COL_COM = ['id', 'criado_em', 'video', 'nome', 'texto', 'status', 'visitante', 'nota_admin'];
+const COL_COM = ['id', 'criado_em', 'video', 'nome', 'texto', 'status', 'visitante', 'nota_admin', 'resposta_a'];  // resposta_a = id do comentário respondido
 const COL_EXI = ['video', 'exibicoes', 'atualizado_em'];
 const COL_AVA = ['chave', 'video', 'estrelas', 'criado_em', 'atualizado_em'];
 const COL_MSG = ['id', 'criado_em', 'tipo', 'status', 'video', 'artista', 'titulo', 'nome', 'contato', 'mensagem', 'fonte_url', 'nota_admin'];
@@ -122,7 +122,11 @@ function comentarios_(video) {
   if (hit) return { ok: true, items: JSON.parse(hit) };
   const itens = linhas_(aba_(ABA_COM, COL_COM))
     .filter((r) => String(r.video) === video && String(r.status) === 'publicado')
-    .map((r) => ({ id: String(r.id), nome: String(r.nome), texto: String(r.texto), criado_em: str_(r.criado_em) }))
+    .map((r) => {
+      const o = { id: String(r.id), nome: String(r.nome), texto: String(r.texto), criado_em: str_(r.criado_em) };
+      if (r.resposta_a) o.resposta_a = String(r.resposta_a);
+      return o;
+    })
     .reverse().slice(0, 300);
   const s = JSON.stringify(itens);
   if (s.length < 95000) cache.put(chave, s, 600);
@@ -167,11 +171,15 @@ function comentar_(b) {
   cache.put('cg', String(ng + 1), 600);
 
   const item = { id: Utilities.getUuid(), nome: nome, texto: texto, criado_em: new Date().toISOString() };
+  const pai = texto_(b.resposta_a, 60);
+  if (pai && /^[a-z0-9-]{8,60}$/i.test(pai)) item.resposta_a = pai;
   const status = PUBLICAR_DIRETO ? 'publicado' : 'pendente';
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
-    aba_(ABA_COM, COL_COM).appendRow([item.id, item.criado_em, video, seguro_(nome), seguro_(texto), status, vis, '']);
+    const sh = aba_(ABA_COM, COL_COM);
+    colunaResposta_(sh);
+    sh.appendRow([item.id, item.criado_em, video, seguro_(nome), seguro_(texto), status, vis, '', item.resposta_a || '']);
   } finally { lock.releaseLock(); }
   const g = gen_();
   cache.removeAll(['c:' + g + ':' + video, 'r:' + g, 's:' + g]);
@@ -304,6 +312,12 @@ function aba_(nome, colunas) {
     sh.appendRow(colunas);
   }
   return sh;
+}
+
+// Planilhas criadas antes das respostas não têm a coluna "resposta_a": cria o título dela na hora
+function colunaResposta_(sh) {
+  const col = COL_COM.indexOf('resposta_a') + 1;
+  if (String(sh.getRange(1, col).getValue()) !== 'resposta_a') sh.getRange(1, col).setValue('resposta_a');
 }
 
 function cabecalho_(sh) {

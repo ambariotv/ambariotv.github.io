@@ -615,6 +615,7 @@
       if (!this.live()) {
         const todos = AMB.store.get(DEMO.c, {}) || {};
         const item = { id: AMB.uid('c'), nome, texto, criado_em: new Date().toISOString() };
+        if (extra && extra.resposta_a) item.resposta_a = extra.resposta_a;
         (todos[video] = todos[video] || []).push(item);
         AMB.store.set(DEMO.c, todos);
         bump(video, (s) => { s.c = (s.c || 0) + 1; });

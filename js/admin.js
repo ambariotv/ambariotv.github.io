@@ -50,8 +50,8 @@
     return n;
   }
   const ORDEM_VIDEO = ['id', 'artist', 'artist_name', 'song', 'song_title', 'ver', 'title', 'kind', 'date', 'program', 'channel', 'director', 'status',
-    'capa', 'fit', 'aspect', 'crt', 'duration', 'file', 'audio', 'credits', 'source', 'description', 'description_en', 'note', 'note_en', 'src', 'refs', 'tags', 'test', 'added', 'added_by'];
-  const ORDEM_ARTISTA = ['id', 'name', 'photo', 'alt', 'country', 'origin', 'years', 'members', 'intro', 'intro_en', 'src', 'releases'];
+    'capa', 'fit', 'aspect', 'crt', 'duration', 'file', 'audio', 'music', 'credits', 'source', 'description', 'description_en', 'note', 'note_en', 'src', 'refs', 'tags', 'test', 'added', 'added_by'];
+  const ORDEM_ARTISTA = ['id', 'name', 'photo', 'alt', 'country', 'origin', 'years', 'members', 'intro', 'intro_en', 'src', 'gallery', 'releases'];
   const ORDEM_DISCO = ['id', 'type', 'title', 'credit', 'year', 'date', 'label', 'format', 'partial', 'note', 'src', 'tracks'];
   const ORDEM_ACERVO = ['id', 'name', 'roles', 'since', 'city', 'bio', 'bio_en', 'links', 'avatar'];
 
@@ -434,7 +434,7 @@
     } : rawVideo(id);
     if (!v) return V.box('Vídeo não encontrado', '<p>Não há vídeo com o id “' + esc(id) + '”. <a href="#admin/videos">Voltar à lista</a></p>');
     const artistas = AMB.artistList.map((a) => [a.id, a.name]);
-    const f = v.file || {}, cr = v.credits || {}, so = v.source || {};
+    const f = v.file || {}, cr = v.credits || {}, so = v.source || {}, mu = v.music || {};
     const a1 = (v.audio || [])[0] || {}, a2 = (v.audio || [])[1] || {};
     const kinds = Object.keys(AMB.KINDS).map((k) => [k, AMB.KINDS[k]]);
     const audKinds = [['', '—']].concat(Object.keys(AMB.AUDIO_KINDS).map((k) => [k, AMB.AUDIO_KINDS[k]]));
@@ -507,6 +507,20 @@
         campo('a2_kind', 'Origem', '', { tipo: 'select', ops: opcoes(audKinds, a2.kind || (a2.url || a2.label ? '' : 'vhs')) }) +
       '</div></fieldset>' +
 
+      '<fieldset class="adm-ouvir"><legend>A música: onde ouvir</legend>' +
+        '<p class="mini">Aparece na página do vídeo. Em circulação: link para ouvir no Qobuz (ou no YouTube, se não tiver lá). Fora de circulação: link para baixar o áudio.</p>' +
+        '<div class="adm-grade">' +
+        campo('mu_status', 'A música está em circulação?', '', { tipo: 'select', ops: opcoes([['', 'Não informar'], ['streaming', 'Sim: está nos streamings'], ['fora', 'Não: só saiu em formatos antigos (LP, compacto, fita…)']], mu.status || ''), larga: true }) +
+        '<div class="larga adm-mu adm-mu-streaming">' +
+          campo('mu_qobuz', 'Link no Qobuz', mu.qobuz || '', { tipo: 'url', ph: 'https://www.qobuz.com/…/album/…', larga: true }) +
+          campo('mu_youtube', 'Link no YouTube', mu.youtube || '', { tipo: 'url', ph: 'https://www.youtube.com/watch?v=… (se não tiver no Qobuz)', larga: true }) +
+          '<p class="mini">Procurar: <a href="#" data-adm="mu-buscar" data-onde="qobuz">no Qobuz ↗</a> · <a href="#" data-adm="mu-buscar" data-onde="youtube">no YouTube Music ↗</a> (abre a busca com o artista e a música; copie o link e cole acima)</p>' +
+        '</div>' +
+        '<div class="larga adm-mu adm-mu-fora">' +
+          campo('mu_download', 'Link para baixar', mu.download || '', { tipo: 'url', ph: 'https://archive.org/download/…/….flac', larga: true }) +
+          campo('mu_download_note', 'O que é o arquivo', mu.download_note || '', { ph: 'FLAC do compacto de 1984, digitalizado do vinil', larga: true }) +
+        '</div>' +
+      '</div></fieldset>' +
       '<fieldset><legend>Créditos e origem da gravação</legend><div class="adm-grade">' +
         campo('tape', 'Fita de', cr.tape || '', { list: 'adm-acervos', ajuda: '(id de um acervo ou nome)' }) +
         campo('capture', 'Captura do vídeo', cr.capture || '', { list: 'adm-acervos' }) +
@@ -580,6 +594,9 @@
     }
 
     el('artist').addEventListener('change', () => { atualizarArtista(); idPrevisto(); });
+    const muMostrar = () => { const st = el('mu_status').value; f.querySelectorAll('.adm-mu').forEach((x) => { x.hidden = !x.classList.contains('adm-mu-' + st); }); };
+    el('mu_status').addEventListener('change', muMostrar);
+    muMostrar();
 
     // ---- Discogs ----
     const dMsg = f.querySelector('.adm-discogs-msg');
@@ -701,6 +718,12 @@
         if (r) { E.capaNova = r.dataUrl; E.capaRemovida = false; E.sujo = true; mostrarCapa(); }
       } else if (acao === 'discogs') {
         puxarDiscogs(b);
+      } else if (acao === 'mu-buscar') {
+        e.preventDefault();
+        const art = el('artist').value === '__novo' ? el('artist_name').value : ((AMB.artists[el('artist').value] || {}).name || '');
+        const mus = (el('song') && (AMB.cleanTitle(el('song').value.replace(/-/g, ' ')) || '')) || el('title').value;
+        const q = encodeURIComponent((art + ' ' + (el('title').value || mus)).trim());
+        window.open(b.dataset.onde === 'qobuz' ? 'https://www.qobuz.com/br-pt/search?q=' + q : 'https://music.youtube.com/search?q=' + q, '_blank', 'noopener');
       } else if (acao === 'capa-remover') {
         E.capaNova = null; E.capaRemovida = true; el('capa').value = ''; E.sujo = true; mostrarCapa();
       } else if (acao === 'importar') {
@@ -845,6 +868,7 @@
     if (!dataOk(data)) return { erro: 'Data em formato que não reconheci. Use 1985, 05/1985 ou 12/05/1985.', campo: 'date' };
     if (!id) return { erro: 'Não deu para criar o id: preencha o título.', campo: 'title' };
     if ((!original || id !== original.id) && rawVideo(id)) return { erro: 'Já existe um vídeo com o id “' + id + '”. Escolha outro id.', campo: 'id' };
+    for (const k of ['mu_qobuz', 'mu_youtube', 'mu_download']) if (val(k) && !AMB.isUrl(val(k))) return { erro: 'Os links de “onde ouvir” precisam começar com https://', campo: k };
     for (const k of ['video', 'a2_url']) if (val(k) && !AMB.isUrl(val(k)) && !/^media\//.test(val(k))) return { erro: 'O link em “' + (k === 'video' ? 'Vídeo (MP4)' : 'Arquivo do som original') + '” precisa começar com https://', campo: k };
     if (v.status === 'no-acervo' && !val('video')) return { erro: 'Para ficar “No acervo” precisa do link do vídeo (MP4). Ou mude a situação para “Na fila”.', campo: 'video' };
     const espelhos = linhas(val('mirrors'));
@@ -860,6 +884,12 @@
     put(v, 'capa', capa);
     put(v, 'fit', val('fit'));
     put(v, 'aspect', val('aspect'));
+    // onde ouvir a música
+    const mu = {};
+    put(mu, 'status', val('mu_status'));
+    if (mu.status === 'streaming') { put(mu, 'qobuz', val('mu_qobuz')); put(mu, 'youtube', val('mu_youtube')); }
+    if (mu.status === 'fora') { put(mu, 'download', val('mu_download')); put(mu, 'download_note', val('mu_download_note')); }
+    if (mu.status) v.music = mu; else delete v.music;
     if (val('crt') === 'sim') v.crt = true; else if (val('crt') === 'nao') v.crt = false; else delete v.crt;
     const dur = durDeTexto(val('duration'));
     put(v, 'duration', dur || '');
@@ -1034,6 +1064,11 @@
           '<button type="button" class="btn" data-adm="foto-remover">Sem foto</button></div>' +
           '<input type="hidden" name="photo" value="' + esc(a.photo || '') + '"><p class="mini adm-foto-info"></p></div>' +
       '</div></fieldset>' +
+      '<fieldset class="adm-gal"><legend>Galeria</legend>' +
+        '<p class="mini">Fotos da banda ou do artista, na aba “Galeria” da página do artista. Pode escolher várias de uma vez; elas são reduzidas para no máximo 1600 px. Escreva a legenda e, se souber, o crédito da foto e o ano.</p>' +
+        '<div class="adm-gal-lista"></div>' +
+        '<label class="btn btn-b adm-gal-add">+ Adicionar fotos…<input type="file" accept="image/*" multiple hidden data-adm-gal="arquivos"></label>' +
+      '</fieldset>' +
       '<fieldset><legend>Discografia</legend>' +
         '<p class="mini">Cada disco com as faixas em ordem. A coluna <b>Id da música</b> liga as faixas aos vídeos: a mesma música em discos diferentes usa o mesmo id (fica automático a partir do título). ' +
         'Use <b>Versão</b> para gravações diferentes da mesma música (ao vivo, remix, regravação).</p>' +
@@ -1062,6 +1097,57 @@
     }
     f.elements.name.addEventListener('input', mostrarFoto);
     mostrarFoto();
+
+    // ---- Galeria ----
+    E.galeria = ((original && original.gallery) || []).map((g) => Object.assign({}, g));
+    const galLista = f.querySelector('.adm-gal-lista');
+    function mostrarGaleria() {
+      galLista.innerHTML = E.galeria.length ? E.galeria.map((g, i) => '<div class="adm-gal-item" data-i="' + i + '">' +
+        '<img src="' + esc(g.dataUrl || AMB.local.arquivo(g.img) || g.img) + '" alt="">' +
+        '<div class="adm-gal-campos">' +
+          '<input type="text" data-g="caption" placeholder="Legenda (ex.: A banda no Rock in Rio, 1985)" value="' + esc(g.caption || '') + '">' +
+          '<div class="adm-gal-linha"><input type="text" data-g="credit" placeholder="Foto de / fonte" value="' + esc(g.credit || '') + '">' +
+          '<input type="text" data-g="year" placeholder="Ano" maxlength="10" value="' + esc(g.year || '') + '"></div>' +
+          (g.dataUrl ? '<span class="mini">Nova: vai para <code>media/artistas/galeria/</code> ao salvar.</span>' : '') +
+        '</div>' +
+        '<div class="adm-gal-bts"><button type="button" class="btn" data-adm="gal-sobe" title="Mover para cima"' + (i ? '' : ' disabled') + '>↑</button>' +
+          '<button type="button" class="btn" data-adm="gal-desce" title="Mover para baixo"' + (i < E.galeria.length - 1 ? '' : ' disabled') + '>↓</button>' +
+          '<button type="button" class="btn adm-perigo" data-adm="gal-tira" title="Tirar da galeria">✕</button></div>' +
+      '</div>').join('') : '<p class="mini">Nenhuma foto ainda.</p>';
+    }
+    mostrarGaleria();
+    galLista.addEventListener('input', (e) => {
+      const it = e.target.closest('[data-i]');
+      if (!it || !e.target.dataset.g) return;
+      E.galeria[Number(it.dataset.i)][e.target.dataset.g] = e.target.value;
+      E.sujo = true;
+    });
+    // reduz a foto para no máximo 1600 px (JPEG)
+    const reduzir = (arq) => new Promise((ok, falha) => {
+      const url = URL.createObjectURL(arq);
+      const img = new Image();
+      img.onload = () => {
+        const k = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        ok(c.toDataURL('image/jpeg', 0.86));
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); falha(new Error('imagem')); };
+      img.src = url;
+    });
+    f.querySelector('[data-adm-gal="arquivos"]').addEventListener('change', async (e) => {
+      const arqs = Array.from(e.target.files || []);
+      for (const arq of arqs) {
+        try { E.galeria.push({ dataUrl: await reduzir(arq), caption: '' }); } catch (er) { /* não é imagem */ }
+      }
+      e.target.value = '';
+      E.sujo = true;
+      mostrarGaleria();
+    });
     f.addEventListener('click', async (e) => {
       const b = e.target.closest('[data-adm]');
       if (!b) return;
@@ -1073,6 +1159,12 @@
         return;
       }
       if (acao === 'foto-remover') { E.fotoNova = null; f.elements.photo.value = ''; E.sujo = true; mostrarFoto(); return; }
+      if (acao === 'gal-sobe' || acao === 'gal-desce' || acao === 'gal-tira') {
+        const i = Number(b.closest('[data-i]').dataset.i);
+        if (acao === 'gal-tira') E.galeria.splice(i, 1);
+        else { const j = acao === 'gal-sobe' ? i - 1 : i + 1; const t = E.galeria[i]; E.galeria[i] = E.galeria[j]; E.galeria[j] = t; }
+        E.sujo = true; mostrarGaleria(); return;
+      }
       const disco = b.closest('.adm-disco');
       const tr = b.closest('tr');
       if (acao === 'disco-mais') {
@@ -1227,6 +1319,31 @@
       ops.push({ t: 'arquivo', caminho, dataUrl: E.fotoNova });
     }
     if (foto) r.a.photo = foto; else delete r.a.photo;
+    // galeria: fotos novas viram arquivos; fotos tiradas do site são apagadas do repositório
+    const gal = [];
+    const usadas = new Set();
+    (E.galeria || []).forEach((g) => {
+      const item = {};
+      if (g.dataUrl) {
+        const caminho = 'media/artistas/galeria/' + r.a.id + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5) + '.jpg';
+        ops.push({ t: 'arquivo', caminho, dataUrl: g.dataUrl });
+        item.img = caminho;
+      } else item.img = g.img;
+      usadas.add(GH.semQuery(item.img));
+      ['caption', 'caption_en', 'credit', 'year'].forEach((k) => { const x = String(g[k] || '').trim(); if (x) item[k] = x; });
+      if (item.img) gal.push(item);
+    });
+    ((original && original.gallery) || []).forEach((g) => {
+      const c = GH.semQuery(g.img || '');
+      if (/^media\//.test(c) && !usadas.has(c)) ops.push({ t: 'apagar-arquivo', caminho: c });
+    });
+    if (gal.length) r.a.gallery = gal; else delete r.a.gallery;
+    for (const g of gal) {
+      if (!g.caption) { delete g.caption_en; continue; }
+      const antes = ((original && original.gallery) || []).find((x) => x.img === g.img);
+      if (!antes || antes.caption !== g.caption || !antes.caption_en) { try { g.caption_en = await AMB.traduzir(g.caption); } catch (er) { delete g.caption_en; } }
+      else g.caption_en = antes.caption_en;
+    }
     r.a = ordenar(r.a, ORDEM_ARTISTA);
     ops.push({ t: 'artista', id: r.a.id, dados: r.a });
     salvarOps(ops, {

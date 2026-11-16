@@ -284,13 +284,26 @@
       (outra ? ' <button type="button" class="btn btn-p" data-acao="trocar-audio" data-id="' + esc(outra.id) + '">' + T('Ouvir: ', 'Listen to: ') + esc(outra.label || outra.short) + '</button>' : '');
   }
 
+  let abrirFio = '';
+  function mostrarRespostas(fio, abrir) {
+    const lista = fio.querySelector('.com-resp-lista');
+    const bt = fio.querySelector('.com-ver');
+    if (!lista || !bt) return;
+    lista.hidden = !abrir;
+    bt.setAttribute('aria-expanded', String(abrir));
+    const n = lista.children.length;
+    bt.textContent = (abrir ? '▴ ' : '▾ ') + (abrir ? T('Ocultar respostas', 'Hide replies') : n === 1 ? T('Ver 1 resposta', 'View 1 reply') : T('Ver ' + n + ' respostas', 'View ' + n + ' replies'));
+  }
   async function carregarComentarios(id) {
     const box = document.querySelector('.com-lista[data-video="' + id + '"]');
     if (!box) return;
     try {
       const l = await AMB.api.comments(id);
       if (!document.body.contains(box)) return;
-      box.innerHTML = l.length ? l.map(V.comentario).join('') : '<p class="mini">' + T('Nenhum comentário ainda.', 'No comments yet.') + '</p>';
+      const abertos = Array.from(box.querySelectorAll('.com-resp-lista:not([hidden])')).map((x) => x.closest('[data-fio]').dataset.fio);
+      box.innerHTML = l.length ? V.conversa(l) : '<p class="mini">' + T('Nenhum comentário ainda.', 'No comments yet.') + '</p>';
+      abertos.concat(abrirFio ? [abrirFio] : []).forEach((fid) => { const f = box.querySelector('[data-fio="' + fid + '"]'); if (f) mostrarRespostas(f, true); });
+      abrirFio = '';
       const n = document.querySelector('[data-st-com="' + id + '"]');
       if (n) n.textContent = l.length ? '(' + l.length + ')' : '';
     } catch (e) {
@@ -399,13 +412,15 @@
     botao.disabled = true;
     msg.className = 'com-msg'; msg.textContent = T('Enviando…', 'Sending…');
     try {
-      const r = await AMB.api.postComment(id, nome, texto, { website: form.website.value, t: desde });
+      const pai = form.dataset.pai || '';
+      const r = await AMB.api.postComment(id, nome, texto, Object.assign({ website: form.website.value, t: desde }, pai ? { resposta_a: pai } : {}));
       AMB.store.set('amb.nome', nome.trim());
+      if (pai) abrirFio = pai;
       form.texto.value = '';
       contarResta(form);
       if (r.pendente) { msg.className = 'com-msg ok'; msg.textContent = T('Recebido! Seu comentário aparece depois que a moderação aprovar.', 'Received! Your comment will show up once moderators approve it.'); }
       else { msg.className = 'com-msg ok'; msg.textContent = r.demo ? T('Publicado (modo demonstração: só neste navegador).', 'Posted (demo mode: this browser only).') : T('Publicado!', 'Posted!'); }
-      carregarComentarios(id);
+      if (!(pai && r.pendente)) carregarComentarios(id); // resposta aguardando moderação: deixa o aviso na caixa
     } catch (e) {
       msg.className = 'com-msg erro'; msg.textContent = AMB.erroMsg(e);
     } finally { botao.disabled = false; }
@@ -466,11 +481,38 @@
         main.querySelectorAll('[data-aba-c]').forEach((c) => { c.hidden = c.dataset.abaC !== alvo; });
         break;
       }
-      case 'responder': {
-        const ta = main.querySelector('.com-form textarea');
-        if (ta) { ta.value = '@' + el.dataset.nome + ' ' + ta.value.replace(/^@\S+\s/, ''); ta.focus(); contarResta(ta.form); }
+      case 'responder': { // abre a caixa de resposta logo abaixo da conversa
+        const fio = el.closest('[data-fio]');
+        const lugar = fio && fio.querySelector('.com-resp-form');
+        const lista = el.closest('.com-lista');
+        if (!lugar || !lista) break;
+        main.querySelectorAll('.com-resp-form').forEach((x) => { if (x !== lugar) x.innerHTML = ''; });
+        lugar.innerHTML = V.formResposta(lista.dataset.video, el.dataset.pai, el.dataset.nome);
+        const f = lugar.querySelector('form');
+        f.dataset.aberto = String(Date.now());
+        const ta = f.texto;
+        contarResta(f);
+        ta.focus();
+        ta.setSelectionRange(ta.value.length, ta.value.length);
         break;
       }
+      case 'gal-foto': case 'gal-ir': { // foto da galeria em tamanho grande, com anterior / próxima
+        const a = AMB.artists[el.dataset.artista];
+        const gal = (a && a.gallery) || [];
+        if (!gal.length) break;
+        const i = (Number(el.dataset.i) + gal.length) % gal.length;
+        const g = gal[i];
+        abrirModal('<figure class="gal-grande"><img src="' + esc(V.galeriaSrc(g)) + '" alt="' + esc(g.caption || a.name) + '">' +
+          '<figcaption>' + (V.galeriaLegenda(g) || esc(a.name)) + '</figcaption></figure>' +
+          (gal.length > 1 ? '<div class="gal-nav"><button type="button" class="btn" data-acao="gal-ir" data-artista="' + esc(a.id) + '" data-i="' + (i - 1) + '">◀ ' + T('Anterior', 'Previous') + '</button>' +
+            '<span class="mini">' + (i + 1) + ' / ' + gal.length + '</span>' +
+            '<button type="button" class="btn" data-acao="gal-ir" data-artista="' + esc(a.id) + '" data-i="' + (i + 1) + '">' + T('Próxima', 'Next') + ' ▶</button></div>' : ''), a.name);
+        const m = document.querySelector('.modal');
+        if (m) m.classList.add('modal-gal');
+        break;
+      }
+      case 'cancelar-resposta': { const l = el.closest('.com-resp-form'); if (l) l.innerHTML = ''; break; }
+      case 'ver-respostas': { const fio = el.closest('[data-fio]'); mostrarRespostas(fio, el.getAttribute('aria-expanded') !== 'true'); break; }
       case 'trocar-audio': if (player) { AMB.clique(); player.selecionar(el.dataset.id); } break;
       case 'so-com-video': break; // tratado no "change"
       default: break;

@@ -266,6 +266,7 @@
             '</div>' +
             '<div class="de-link"><label>' + T('Link', 'Link') + ' <input type="text" readonly value="' + esc(url) + '"></label></div>' +
           '</div></section>' +
+          V.ouvir(v) +
           (v.test ? '' : V.box(T('Sobre a música', 'About the song'), sobre, 'w-musica')) +
           (mais.length ? V.box(T('Mais de ', 'More from ') + esc(a.name), '<ul class="rel">' + mais.slice(0, 8).map(V.relItem).join('') + '</ul>' +
             (mais.length > 8 ? '<p class="mini"><a href="#a-' + esc(a.id) + '">' + T('Ver todos os ', 'See all ') + mais.length + '</a></p>' : ''), 'w-mais') : '') +
@@ -277,6 +278,25 @@
   V.relItem = (x) => '<li>' + V.thumb(x, 's') + '<div><a href="#v-' + esc(x.id) + '" class="rel-tit">' + esc(x.title) + '</a>' +
     '<span class="mini">' + esc(x.artistObj.name) + (x.year ? ' · ' + esc(x.year) : '') + '</span>' +
     (x.hasFile ? '<span class="mini">' + V.statsSlot(x, true) + '</span>' : '<span class="mini">' + V.selo(x.status) + '</span>') + '</div></li>';
+
+  // Onde ouvir a música: streaming (Qobuz, ou YouTube) ou, se está fora de circulação, o download do áudio
+  V.ouvir = (v) => {
+    const m = v.music || {};
+    if (m.status === 'streaming' && (m.qobuz || m.youtube)) {
+      const bt = (u, cls, txt) => '<a class="btn ' + cls + '" href="' + esc(u) + '" target="_blank" rel="noopener">' + txt + ' ↗</a>';
+      return V.box(T('Ouvir a música', 'Listen to the song'),
+        '<p class="mini">' + T('Esta gravação está disponível nos serviços de streaming.', 'This recording is available on streaming services.') + '</p>' +
+        '<div class="ouvir-bts">' + (m.qobuz ? bt(m.qobuz, 'btn-b', T('Ouvir no Qobuz', 'Listen on Qobuz')) : '') + (m.youtube ? bt(m.youtube, m.qobuz ? '' : 'btn-b', T('Ouvir no YouTube', 'Listen on YouTube')) : '') + '</div>', 'w-ouvir');
+    }
+    if (m.status === 'fora') {
+      return V.box(T('Ouvir a música', 'Listen to the song'),
+        '<p><span class="selo-fora">' + T('FORA DE CIRCULAÇÃO', 'OUT OF PRINT') + '</span></p>' +
+        '<p class="mini">' + T('Esta gravação só saiu em formatos que não são mais fabricados e não está nos serviços de streaming. O acervo disponibiliza o áudio digitalizado para que ela não se perca.', 'This recording only came out on formats no longer made and is not on streaming services. The archive offers the digitized audio so it is not lost.') + '</p>' +
+        (m.download ? '<div class="ouvir-bts"><a class="btn btn-y" href="' + esc(m.download) + '" target="_blank" rel="noopener" download>⬇ ' + T('Baixar o áudio', 'Download the audio') + '</a></div>' +
+          (m.download_note ? '<p class="mini">' + V.tx(m, 'download_note') + '</p>' : '') : ''), 'w-ouvir');
+    }
+    return '';
+  };
 
   V.comentarios = (v) => {
     const nome = esc(AMB.store.get('amb.nome', ''));
@@ -294,9 +314,45 @@
     '</div>';
   };
 
-  V.comentario = (c) => '<div class="com-item"><div class="com-cab"><b>' + esc(c.nome) + '</b> <span class="mini">(' + esc(AMB.ago(c.criado_em) || '') + ')</span>' +
-    ' <button type="button" class="link-btn" data-acao="responder" data-nome="' + esc(c.nome) + '">' + T('Responder', 'Reply') + '</button></div>' +
-    '<p>' + esc(c.texto) + '</p></div>';
+  // Comentários em conversa, como no YouTube: cada comentário com as respostas logo abaixo (recolhidas)
+  const avatarCom = (nome) => {
+    const n = String(nome || '?').trim();
+    let h = 0;
+    for (let i = 0; i < n.length; i++) h = (h * 31 + n.charCodeAt(i)) % 360;
+    return '<span class="com-av" style="background:hsl(' + h + ',45%,48%)" aria-hidden="true">' + esc(n.charAt(0).toUpperCase() || '?') + '</span>';
+  };
+  V.comentario = (c, pai) => '<div class="com-item' + (pai ? ' com-resp' : '') + '" id="com-' + esc(c.id) + '">' + avatarCom(c.nome) +
+    '<div class="com-corpo"><div class="com-cab"><b>' + esc(c.nome) + '</b> <span class="mini">' + esc(AMB.ago(c.criado_em) || '') + '</span></div>' +
+    '<p>' + esc(c.texto).replace(/^(@[^\s]+)/, '<span class="com-arroba">$1</span>') + '</p>' +
+    '<div class="com-acoes"><button type="button" class="link-btn" data-acao="responder" data-nome="' + esc(c.nome) + '" data-pai="' + esc(pai || c.id) + '">' + T('Responder', 'Reply') + '</button></div>' +
+    '</div></div>';
+  // l: lista na ordem que vem do servidor (mais novos primeiro). Respostas ficam embaixo do comentário, das mais antigas para as mais novas.
+  V.conversa = (l) => {
+    const ids = {};
+    l.forEach((c) => { ids[c.id] = true; });
+    const resp = {};
+    const topo = [];
+    l.forEach((c) => {
+      const p = c.resposta_a && ids[c.resposta_a] ? c.resposta_a : '';
+      if (p) (resp[p] = resp[p] || []).push(c); else topo.push(c);
+    });
+    return topo.map((c) => {
+      const rs = (resp[c.id] || []).slice().sort((a, b) => String(a.criado_em).localeCompare(String(b.criado_em)));
+      return '<div class="com-fio" data-fio="' + esc(c.id) + '">' + V.comentario(c) +
+        (rs.length ? '<div class="com-respostas">' +
+          '<button type="button" class="link-btn com-ver" data-acao="ver-respostas" aria-expanded="false">▾ ' +
+            (rs.length === 1 ? T('Ver 1 resposta', 'View 1 reply') : T('Ver ' + rs.length + ' respostas', 'View ' + rs.length + ' replies')) + '</button>' +
+          '<div class="com-resp-lista" hidden>' + rs.map((r) => V.comentario(r, c.id)).join('') + '</div></div>' : '') +
+        '<div class="com-resp-form"></div></div>';
+    }).join('');
+  };
+  V.formResposta = (video, pai, nomeResp) => '<form class="com-form com-form-resp" data-video="' + esc(video) + '" data-pai="' + esc(pai) + '" novalidate>' +
+      '<input type="text" name="nome" maxlength="40" value="' + esc(AMB.store.get('amb.nome', '')) + '" placeholder="' + T('Seu nome ou apelido', 'Your name or nickname') + '" aria-label="' + T('Seu nome ou apelido', 'Your name or nickname') + '" required>' +
+      '<textarea name="texto" maxlength="500" rows="2" required aria-label="' + T('Resposta', 'Reply') + '">@' + esc(String(nomeResp || '').replace(/\s+/g, '')) + ' </textarea>' +
+      '<label class="hp" aria-hidden="true">' + T('Não preencha', 'Leave blank') + ' <input type="text" name="website" tabindex="-1" autocomplete="off"></label>' +
+      '<div class="com-pe"><span class="mini com-resta"></span><button type="button" class="btn" data-acao="cancelar-resposta">' + T('Cancelar', 'Cancel') + '</button>' +
+        '<button type="submit" class="btn btn-b">' + T('Responder', 'Reply') + '</button></div>' +
+      '<p class="com-msg" role="status"></p></form>';
 
   V.creditos = (v) => {
     const cr = v.credits || {};
@@ -364,7 +420,9 @@
     const cob = AMB.coverage(a);
     const temDisco = a.videos.length > 0;
     aba = aba || (temDisco ? 'discografia' : 'videos');
-    const abas = [['discografia', T('Videografia', 'Videography')], ['videos', T('Vídeos', 'Videos') + ' (' + a.videos.length + ')'], ['sobre', T('Sobre', 'About')]];
+    const gal = a.gallery || [];
+    const abas = [['discografia', T('Videografia', 'Videography')], ['videos', T('Vídeos', 'Videos') + ' (' + a.videos.length + ')']]
+      .concat(gal.length ? [['galeria', T('Galeria', 'Gallery') + ' (' + gal.length + ')']] : []).concat([['sobre', T('Sobre', 'About')]]);
     const info = [];
     if (a.origin) info.push([T('Origem', 'Origin'), esc(a.origin)]);
     if (a.country) info.push([T('País', 'Country'), esc(AMB.country(a.country))]);
@@ -372,6 +430,7 @@
     if (a.alt && a.alt.length) info.push([T('Também conhecido como', 'Also known as'), esc(a.alt.join(', '))]);
     let corpo = '';
     if (aba === 'discografia') corpo = V.videografia(a);
+    else if (aba === 'galeria') corpo = V.galeria(a);
     else if (aba === 'videos') corpo = a.videos.length ? '<div class="grade">' + a.videos.map(V.card).join('') + '</div>' : V.vazio(T('Nenhum vídeo deste artista ainda.', 'No videos by this artist yet.'));
     else corpo = V.sobreArtista(a);
     return '<div class="pg-artista">' +
@@ -395,6 +454,20 @@
     return '<a class="vchip vchip-' + esc(v.status) + (x.rel === 'outra' ? ' vchip-outra' : '') + '" href="#v-' + esc(v.id) + '" title="' +
       esc(v.kindLabel + (v.year ? ', ' + v.year : '') + ' — ' + (AMB.STATUS[v.status] || {}).t + (x.rel === 'outra' ? T(' (outra versão da música)', ' (different version of the song)') : '')) + '">' +
       '<i>' + ico + '</i>' + esc(v.kindShort) + (v.year ? ' ' + esc(v.year) : '') + (x.rel === 'outra' ? '<small>' + T('outra versão', 'other version') + '</small>' : '') + '</a>';
+  };
+
+  // Galeria de fotos do artista (clique abre a foto grande)
+  V.galeriaSrc = (g) => AMB.local.arquivo(g.img) || g.img;
+  V.galeriaLegenda = (g) => [g.caption ? V.tx(g, 'caption') : '', [g.credit ? T('Foto: ', 'Photo: ') + esc(g.credit) : '', g.year ? esc(g.year) : ''].filter(Boolean).join(' · ')]
+    .filter(Boolean).map((x, i) => i ? '<span class="mini">' + x + '</span>' : x).join(' ');
+  V.galeria = (a) => {
+    const gal = a.gallery || [];
+    if (!gal.length) return V.vazio(T('Ainda não há fotos de ' + esc(a.name) + '.', 'No photos of ' + esc(a.name) + ' yet.'));
+    return '<div class="galeria">' + gal.map((g, i) => '<figure class="gal-item">' +
+      '<button type="button" class="gal-bt" data-acao="gal-foto" data-artista="' + esc(a.id) + '" data-i="' + i + '" aria-label="' + T('Ver foto ampliada', 'View larger photo') + '">' +
+        '<img src="' + esc(V.galeriaSrc(g)) + '" alt="' + esc(g.caption || a.name) + '" loading="lazy"></button>' +
+      (g.caption || g.credit || g.year ? '<figcaption>' + V.galeriaLegenda(g) + '</figcaption>' : '') + '</figure>').join('') + '</div>' +
+      '<p class="mini">' + T('Tem fotos de ', 'Have photos of ') + esc(a.name) + T('? <a href="#colaborar">Mande para o acervo</a>.', '? <a href="#colaborar">Send them to the archive</a>.') + '</p>';
   };
 
   // Videografia: uma linha por música com vídeo — ano original da música, o disco de onde veio o áudio e os registros.
