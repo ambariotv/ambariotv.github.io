@@ -258,7 +258,7 @@
           (v.test ? '' : V.box(T('Sobre a música', 'About the song'), sobre, 'w-musica')) +
           V.ouvir(v) +
           '<section class="box w-de"><div class="box-c">' +
-            (cr && cr.w ? '<div class="de-topo">' + V.avatar(c || { id: cr.w.name, name: cr.w.name }, 'm') +
+            (cr && cr.w ? '<div class="de-topo de-sem-icone">' +
               '<div class="de-txt"><span class="de-papel">' + esc(cr.papel) + ':</span> ' + V.quem(cr.w) +
                 (c && c.since ? '<br><span class="mini">' + T('Colabora desde ', 'Contributing since ') + esc(AMB.fmtMonth(c.since)) + '</span>' : '') +
                 (c ? '<br><span class="mini">' + T('Registros: ', 'Recordings: ') + qtd + '</span>' : '') + '</div>' +
