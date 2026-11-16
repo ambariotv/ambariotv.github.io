@@ -248,7 +248,7 @@
           (cr && cr.w ? (() => {
             const orig = AMB.linkOriginal(v);
             const nome = orig ? '<a class="de-orig" href="' + esc(orig) + '" target="_blank" rel="noopener" title="' + T('Ver o vídeo original', 'See the original video') + '">' + esc(cr.w.name) + ' ↗</a>'
-              : '<span class="de-orig">' + esc(cr.w.name) + '</span>';
+              : '<span class="de-orig de-sem-link">' + esc(cr.w.name) + '</span>';
             return '<section class="box w-de w-de-mini"><div class="box-c"><span class="de-papel">' + esc(cr.papel) + ':</span> ' + nome + '</div></section>';
           })() : '') +
           (mais.length ? V.box(T('Mais de ', 'More from ') + esc(a.name), '<ul class="rel">' + mais.slice(0, 8).map(V.relItem).join('') + '</ul>' +
