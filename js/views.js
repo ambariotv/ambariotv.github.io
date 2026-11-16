@@ -398,10 +398,17 @@
 
   /* ---------------- artistas ---------------- */
   V.artistas = (st) => {
+    // um filtro por país (os que têm artistas), Brasil primeiro e os outros em ordem alfabética
+    const paises = {};
+    AMB.artistList.forEach((a) => { const c = String(a.country || '').toUpperCase(); if (c) paises[c] = (paises[c] || 0) + 1; });
+    const codigos = Object.keys(paises).sort((x, y) => (x === 'BR' ? -1 : y === 'BR' ? 1 : AMB.norm(AMB.country(x)).localeCompare(AMB.norm(AMB.country(y)))));
+    let f = st.origem || 'tudo';
+    if (f === 'br') f = 'BR';
     let lista = AMB.artistList;
-    if (st.origem === 'br') lista = lista.filter((a) => a.nacional);
-    if (st.origem === 'gringo') lista = lista.filter((a) => !a.nacional);
-    const chips = [['tudo', T('Todos', 'All')], ['br', T('Nacionais', 'Brazilian')], ['gringo', T('Internacionais', 'International')]];
+    if (f === 'gringo') lista = lista.filter((a) => !a.nacional);
+    else if (f !== 'tudo') lista = lista.filter((a) => String(a.country || '').toUpperCase() === f);
+    st.origem = f;
+    const chips = [['tudo', T('Todos', 'All') + ' (' + AMB.artistList.length + ')']].concat(codigos.map((c) => [c, esc(AMB.country(c)) + ' (' + paises[c] + ')']));
     return '<section class="box box-azul"><div class="box-h"><h2>' + T('Artistas', 'Artists') + '</h2><span class="box-h-dir">' + pl(lista.length, T('artista', 'artist'), T('artistas', 'artists')) + '</span></div><div class="box-c">' +
       '<div class="chips">' + chips.map(([k, t]) => '<button type="button" class="chip' + (st.origem === k ? ' ativo' : '') + '" data-acao="art-origem" data-f="' + k + '" aria-pressed="' + (st.origem === k) + '">' + t + '</button>').join('') + '</div>' +
       '<div class="grade-art">' + lista.map((a) => {
