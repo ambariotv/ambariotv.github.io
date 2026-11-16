@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-16",
-  "rev": 57,
+  "rev": 58,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -880,10 +880,11 @@ window.AMB_DATA = {
           "url": "https://archive.org/download/ambario-joe-euthanazia-febre-tropical-1985/joe-euthanazia-febre-tropical-1985-fita.m4a"
         }
       ],
-      "credits": { "sync": "Miguel Lins", "tape": "Renato" },
+      "credits": { "sync": "Miguel Lins", "tape": "XREYNATO" },
       "source": {
         "medium": "Cópia digital",
-        "from": "Cópia com marcas d’água de colecionador (“Rei dos Arquivos Raros”, “Renato 1980”, “Nacionais Anos 80’s”)"
+        "from": "Cópia com marcas d’água de colecionador (“Rei dos Arquivos Raros”, “Renato 1980”, “Nacionais Anos 80’s”)",
+        "url": "https://youtu.be/51AGAP5mJnk?si=VBU6-1ZwJcTmgOSC"
       },
       "description": "Joe Euthanazia e banda tocam “Febre Tropical”, do LP Tudo Pode Mudar (RCA, 1985), num palco de TV.",
       "description_en": "Joe Euthanazia and his band play “Febre Tropical”, from the LP Tudo Pode Mudar (RCA, 1985), on a TV stage.",
