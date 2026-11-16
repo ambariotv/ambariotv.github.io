@@ -415,7 +415,7 @@
         const c = AMB.coverage(a);
         return '<a class="art-card" href="#a-' + esc(a.id) + '">' + V.discoIcone(a, 'm') +
           '<span class="art-nome">' + esc(a.name) + '</span>' +
-          '<span class="mini">' + esc([AMB.country(a.country), a.years].filter(Boolean).join(' · ')) + '</span>' +
+          '<span class="mini">' + esc(AMB.country(a.country) || '') + '</span>' +
           '<span class="mini">' + pl(c.videos, T('registro', 'recording'), T('registros', 'recordings')) + '</span></a>';
       }).join('') + '</div></div></section>';
   };
