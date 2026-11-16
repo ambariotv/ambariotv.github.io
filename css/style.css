@@ -774,3 +774,5 @@ tr.adm-com-oculto .adm-com-txt { color: #888; text-decoration: line-through; }
 .mus-foto .art-foto-m { width: 64px; height: 64px; }
 .mus-tit .mus-art { color: var(--link); font-weight: 700; }
 .w-musica .mus-tit { margin: 0; }
+.grade-vg .card-aud { font-size: 11px; line-height: 1.35; color: #666; white-space: normal; overflow: visible; text-overflow: clip; }
+.grade-vg .card-aud b { color: #333; font-weight: 600; }

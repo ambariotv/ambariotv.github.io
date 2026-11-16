@@ -491,22 +491,31 @@
       const anos = (faixa && faixa.year ? [faixa.year] : aps.map((x) => x.track.year || x.release.year).concat(vs.map((v) => v.year)))
         .map((x) => String(x || '').slice(0, 4)).filter((x) => /^\d{4}$/.test(x)).sort();
       const ano = anos[0] || '';
-      const titulo = g.song ? g.song.t : vs[0].title;
       const dg = disco ? (disco.src || []).map(AMB.src).filter(Boolean).find((s) => /discogs\.com/.test(s.u || '')) : null;
-      const discoTxt = disco ? '<span class="vg-disco">' + esc(AMB.RELTYPES[disco.type] || disco.type) + ' <b>' + esc(disco.title) + '</b>' +
-        esc([disco.label, disco.year].filter(Boolean).length ? ' (' + [disco.label, disco.year].filter(Boolean).join(', ') + ')' : '') +
-        (faixa ? ' · ' + T('faixa ', 'track ') + esc(faixa.n) : '') +
-        (dg ? ' · <a href="' + esc(dg.u) + '" target="_blank" rel="noopener">Discogs ↗</a>' : '') + '</span>' : '<span class="f-sem" title="' + T('Ainda não informado', 'Not set yet') + '">—</span>';
-      return { ano, html: '<tr>' +
-        '<td class="vg-ano">' + esc(ano) + '</td>' +
-        '<td class="vg-mus"><b>' + esc(titulo) + '</b>' + (g.song && g.song.w ? '<span class="f-w">' + esc(g.song.w) + '</span>' : '') + '</td>' +
-        '<td class="vg-aud">' + discoTxt + '</td>' +
-        '<td class="f-v">' + vs.map((v) => V.vchip({ v, rel: 'mesma' })).join('') + '</td></tr>' };
-    }).sort((x, y) => String(x.ano || '9999').localeCompare(String(y.ano || '9999')));
-    return '<table class="faixas videografia"><thead><tr><th scope="col">' + T('Ano', 'Year') + '</th><th scope="col">' + T('Música', 'Song') + '</th>' +
-        '<th scope="col">' + T('Áudio de', 'Audio from') + '</th><th scope="col">' + T('Registros em vídeo', 'Video recordings') + '</th></tr></thead><tbody>' +
-        linhas.map((l) => l.html).join('') + '</tbody></table>' +
-      '<p class="mini">' + T('Ano: lançamento original da música. “Áudio de”: o disco usado como fonte do som do vídeo. Faltou algo?', 'Year: original release of the song. “Audio from”: the record used as the video’s audio source. Something missing?') +
+      const discoTxt = disco ? esc(AMB.RELTYPES[disco.type] || disco.type) + ' <b>' + esc(disco.title) + '</b>' + (disco.year ? ' (' + esc(disco.year) + ')' : '') +
+        (dg ? ' · <a href="' + esc(dg.u) + '" target="_blank" rel="noopener">Discogs ↗</a>' : '') : '';
+      return { k, ano, disco: discoTxt };
+    });
+    // um card por vídeo (como na página inicial), em ordem do ano original da música
+    const cards = [];
+    ordem.forEach((k) => {
+      const g = grupos[k];
+      const l = linhas.find((x) => x.k === k);
+      g.videos.forEach((v) => cards.push({ v, ano: (l && l.ano) || String(v.year || ''), disco: l ? l.disco : '' }));
+    });
+    cards.sort((x, y) => String(x.ano || '9999').localeCompare(String(y.ano || '9999')) || x.v.sortKey.localeCompare(y.v.sortKey));
+    return '<div class="grade grade-vg">' + cards.map((c) => {
+      const v = c.v;
+      return '<div class="card">' + V.thumb(v, 'm') +
+        '<div class="card-txt">' +
+          '<a class="card-tit" href="#v-' + esc(v.id) + '">' + esc(v.title) + '</a>' +
+          '<div class="card-meta">' + esc(v.kindShort) + (v.year ? ' · ' + esc(v.year) : '') + '</div>' +
+          (c.ano && String(c.ano) !== String(v.year) ? '<div class="card-meta">' + T('Música de ', 'Song from ') + esc(c.ano) + '</div>' : '') +
+          (c.disco ? '<div class="card-meta card-aud">' + T('Áudio: ', 'Audio: ') + c.disco + '</div>' : '') +
+          (v.hasFile ? '<div class="card-meta">' + V.statsSlot(v) + '</div>' : '') +
+        '</div></div>';
+    }).join('') + '</div>' +
+      '<p class="mini">' + T('Em ordem do ano original da música. “Áudio”: o disco usado como fonte do som do vídeo. Faltou algo?', 'In order of the song’s original year. “Audio”: the record used as the video’s audio source. Something missing?') +
         ' <a href="#" data-acao="corrigir" data-artista="' + esc(a.id) + '">' + T('Sugira', 'Suggest it') + '</a>.</p>';
   };
 
