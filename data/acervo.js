@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-16",
-  "rev": 60,
+  "rev": 61,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -396,6 +396,7 @@ window.AMB_DATA = {
     {
       "id": "legiao-urbana",
       "name": "Legião Urbana",
+      "photo": "media/artistas/legiao-urbana.jpg?v=mwjkm4sa",
       "country": "BR",
       "origin": "Brasília, DF",
       "years": "1982–1996",
@@ -416,6 +417,7 @@ window.AMB_DATA = {
           "year": 1985,
           "label": "EMI-Odeon",
           "format": "LP",
+          "partial": true,
           "note": "Produção de José Emílio Rondeau; letras de Renato Russo. Saiu em janeiro de 1985 segundo a Wikipédia e o Correio da Manhã; o livro “Será!”, do produtor, fala em 15 de fevereiro.",
           "src": [
             "wp-legiao-album",
@@ -430,7 +432,6 @@ window.AMB_DATA = {
             { "n": "A1", "t": "Será", "song": "sera", "len": "2:30" },
             { "n": "6", "t": "Geração Coca-Cola", "song": "geracao-coca-cola", "len": "2:22" }
           ],
-          "partial": true,
           "discogs": 2240720
         }
       ]
