@@ -41,6 +41,26 @@
       document.querySelectorAll('[data-en-ph]').forEach((el) => { el.placeholder = el.dataset.enPh; });
       document.querySelectorAll('[data-en-al]').forEach((el) => { el.setAttribute('aria-label', el.dataset.enAl); });
     }
+    // tema claro / escuro
+    const temaBt = document.querySelector('[data-tema-bt]');
+    const pintarTema = () => {
+      const escuro = document.documentElement.getAttribute('data-tema') === 'escuro';
+      if (!temaBt) return;
+      temaBt.textContent = escuro ? '☀' : '☾';
+      const rot = escuro ? T('Tema claro', 'Light theme') : T('Tema escuro', 'Dark theme');
+      temaBt.title = rot; temaBt.setAttribute('aria-label', rot);
+      temaBt.setAttribute('aria-pressed', String(escuro));
+    };
+    if (temaBt && !temaBt.dataset.ligado) {
+      temaBt.dataset.ligado = '1';
+      temaBt.addEventListener('click', () => {
+        const escuro = document.documentElement.getAttribute('data-tema') !== 'escuro';
+        if (escuro) document.documentElement.setAttribute('data-tema', 'escuro'); else document.documentElement.removeAttribute('data-tema');
+        AMB.store.set('amb.tema', escuro ? 'escuro' : 'claro');
+        pintarTema();
+      });
+    }
+    pintarTema();
     // seletor de idioma
     document.querySelectorAll('[data-lang]').forEach((b) => {
       b.setAttribute('aria-pressed', String(b.dataset.lang === AMB.lang));

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <script>/* tema escuro escolhido antes: aplica já, sem piscar o claro */ try { if (JSON.parse(localStorage.getItem('amb.tema') || 'null') === 'escuro') document.documentElement.setAttribute('data-tema', 'escuro'); } catch (e) {}</script>
   <meta charset="utf-8">
   <link rel="preconnect" href="https://archive.org">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,6 +41,7 @@
       <nav class="topo-links" aria-label="Links">
         <a href="#sobre" data-en="About">Sobre</a><span>|</span><a href="#colaborar" data-en="Contribute">Como colaborar</a><span>|</span><a href="#politica" data-en="Policy">Política</a>
         <span class="lang" role="group" aria-label="Idioma / Language"><button type="button" data-lang="pt" title="Português">PT</button><button type="button" data-lang="en" title="English">EN</button></span>
+        <button type="button" class="tema-bt" data-tema-bt title="Tema escuro" data-en-al="Dark theme" aria-label="Tema escuro">☾</button>
       </nav>
     </div>
     <nav class="abas-topo" aria-label="Seções" data-en-al="Sections">
