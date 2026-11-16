@@ -98,7 +98,7 @@
   V.chipsHome = () => {
     const vs = AMB.videos.filter((v) => !v.test);
     const decadas = Array.from(new Set(vs.map((v) => v.decade).filter(Boolean))).sort();
-    const chips = [['tudo', T('Tudo', 'All')], ['no-acervo', AMB.STATUS['no-acervo'].t], ['nacionais', T('Nacionais', 'Brazilian')], ['internacionais', T('Internacionais', 'International')],
+    const chips = [['tudo', T('Tudo', 'All')], ['no-acervo', AMB.STATUS['no-acervo'].t],
       ['clipe', T('Clipes', 'Music videos')], ['tv', T('Na TV', 'On TV')], ['ao-vivo', T('Ao vivo', 'Live')], ['filme', T('Filmes', 'Films')]]
       .concat(decadas.map((d) => ['d' + d, AMB.en ? d + 's' : 'Anos ' + (d >= 2000 ? d : String(d).slice(2))]));
     if (AMB.favs.list().length) chips.push(['favoritos', T('★ Favoritos', '★ Favorites')]);
@@ -130,7 +130,7 @@
     return '<div class="cols">' +
       '<div class="col-main">' +
         '<section class="box box-azul box-videos"><div class="box-h"><h2>' + T('Vídeos', 'Videos') + '</h2><span class="box-h-dir">' + pl(lista.length, T('registro', 'recording'), T('registros', 'recordings')) + '</span></div>' +
-          '<div class="box-c"><div class="chips" role="toolbar" aria-label="' + T('Filtrar vídeos', 'Filter videos') + '">' +
+          '<div class="box-c"><div class="chips chips-cheio" role="toolbar" aria-label="' + T('Filtrar vídeos', 'Filter videos') + '">' +
             V.chipsHome().map(([k, t]) => '<button type="button" class="chip' + (st.filtro === k ? ' ativo' : '') + '" data-acao="filtro" data-f="' + esc(k) + '" aria-pressed="' + (st.filtro === k) + '">' + esc(t) + '</button>').join('') +
           '</div>' +
           (mostra.length ? '<div class="grade">' + mostra.map(V.card).join('') + '</div>' : V.vazio(T('Nenhum vídeo com esse filtro ainda.', 'No videos with this filter yet.'))) +

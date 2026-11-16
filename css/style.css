@@ -930,3 +930,6 @@ html[data-tema="escuro"] .rodape { color: #8199b3; border-top-color: #23415f; }
 .tema-bt { margin-left: 6px; padding: 0 7px; font: 700 12px/18px Arial, sans-serif; color: #5a6b80; background: linear-gradient(#fff, #e6edf5); border: 1px solid #b9c7d8; border-radius: 3px; cursor: pointer; }
 .tema-bt:hover { border-color: #7f9dc5; }
 html[data-tema="escuro"] .tema-bt { color: #ffd76a; background: linear-gradient(#21405f, #142a42); text-shadow: 0 0 6px rgba(255,200,80,.5); }
+/* filtros da página inicial: ocupam a linha toda, com balões do mesmo tamanho */
+.chips-cheio { display: flex; flex-wrap: wrap; }
+.chips-cheio .chip { flex: 1 1 0; min-width: max-content; text-align: center; white-space: nowrap; }
