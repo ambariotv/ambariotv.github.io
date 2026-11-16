@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-16",
-  "rev": 55,
+  "rev": 56,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1141,6 +1141,7 @@ window.AMB_DATA = {
         }
       ],
       "credits": { "tape": "Canal CMB", "sync": "Miguel Lins" },
+      "source": { "aired": "1986", "url": "https://youtu.be/VDstqyg-l6Q?si=gUECr_N6EvJXtCRg" },
       "description": "Videoclipe de \"Simca Chambord\", de Camisa de Vênus (1986)",
       "description_en": "Music video for “Simca Chambord” by Camisa de Vênus (1986).",
       "added": "2026-11-09",
