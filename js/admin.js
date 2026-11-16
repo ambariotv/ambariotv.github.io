@@ -252,6 +252,7 @@
       '<nav class="abas adm-abas" aria-label="Seções da área do curador">' +
         aba('videos', '#admin/videos', 'Vídeos (' + n.videos + ')') + aba('artistas', '#admin/artistas', 'Artistas (' + n.artistas + ')') +
         aba('acervos', '#admin/acervos', 'Acervos (' + n.acervos + ')') +
+        aba('comentarios', '#admin/comentarios', 'Comentários') +
         aba('publicar', '#admin/publicar', 'Publicar e conexão' + (pend ? ' <b class="adm-badge" title="Alterações só neste navegador">' + pend + '</b>' : '')) +
       '</nav>';
   }
@@ -1632,6 +1633,148 @@
   }
 
   /* =================== roteamento da área =================== */
+  /* =================== comentários: moderação ===================
+   * Fala com o servidor (Apps Script) usando a "chave do curador", que fica só neste navegador.
+   */
+  const CHAVE_COM = 'amb.chaveComentarios';
+  const COM_ST = { publicado: 'Publicado', pendente: 'Pendente', oculto: 'Oculto' };
+  function telaComentarios() {
+    if (!AMB.api.live()) return V.box('Comentários', '<p>O servidor de comentários (Apps Script) ainda não está ligado: os comentários estão em modo demonstração, só no navegador de quem comentou.</p>', 'box-azul');
+    const chave = AMB.store.get(CHAVE_COM, '');
+    if (!chave) {
+      return V.box('Comentários: conectar', '<p>Para ver e moderar os comentários daqui, cole a <b>chave do curador</b> do servidor. Ela fica só neste navegador.</p>' +
+        '<ol class="passos"><li>Abra a planilha do Ambário → <b>Extensões → Apps Script</b>.</li>' +
+        '<li>Confira se o código é o mais novo (<code>backend/Code.gs</code> do repositório) e se a implantação está na versão nova.</li>' +
+        '<li>No menu de funções, escolha <b>mostrarChaveAdmin</b> e clique em <b>Executar</b>. A chave aparece no <b>Registro de execução</b>, embaixo.</li>' +
+        '<li>Copie a chave e cole aqui.</li></ol>' +
+        '<form class="adm adm-com-chave" novalidate autocomplete="off"><div class="adm-grade">' +
+          campo('chave', 'Chave do curador', '', { tipo: 'password', larga: true, attrs: ' autocomplete="off" spellcheck="false"' }) +
+        '</div><div class="form-pe"><button type="button" class="btn btn-y" data-adm="com-chave">Conectar</button></div><p class="form-msg adm-msg" role="status"></p></form>', 'box-azul');
+    }
+    return V.box('Comentários', '<div class="adm-com-barra">' +
+        '<select data-com-f="status" aria-label="Situação"><option value="">Todos</option><option value="publicado">Publicados</option><option value="pendente">Pendentes</option><option value="oculto">Ocultos</option></select>' +
+        '<input type="search" data-com-f="q" placeholder="Filtrar por nome, texto ou vídeo…" aria-label="Filtrar comentários">' +
+        '<button type="button" class="btn" data-adm="com-atualizar">↻ Atualizar</button>' +
+      '</div>' +
+      '<div class="adm-com-massa" hidden><span class="adm-com-nsel"></span> ' +
+        '<button type="button" class="btn" data-adm="com-massa" data-st="publicado">Publicar</button>' +
+        '<button type="button" class="btn" data-adm="com-massa" data-st="oculto">Ocultar</button>' +
+        '<button type="button" class="btn adm-perigo" data-adm="com-massa" data-st="apagar">Apagar</button></div>' +
+      '<p class="form-msg adm-msg" role="status"></p>' +
+      '<div class="adm-com-lista"><p class="mini">Carregando…</p></div>' +
+      '<p class="mini">Ocultar tira o comentário do site, mas ele continua na planilha (dá para publicar de novo). Apagar tira da planilha de vez, junto com as respostas dele. ' +
+        'O site atualiza em até 2 minutos. <a href="#" data-adm="com-sair">Esquecer a chave neste navegador</a></p>', 'box-azul adm-com');
+  }
+  function ligarComentarios(root) {
+    const box = root.querySelector('.adm-com-lista');
+    const msg = root.querySelector('.adm-msg');
+    let itens = [];
+    const sel = new Set();
+    const aviso = (t, tipo) => { if (msg) { msg.className = 'form-msg adm-msg' + (tipo ? ' ' + tipo : ''); msg.innerHTML = t; } };
+    const chamar = async (acao, extra) => {
+      const j = await AMB.api.post(Object.assign({ action: acao, chave: AMB.store.get(CHAVE_COM, '') }, extra || {}));
+      return j;
+    };
+    const erroTxt = (e) => {
+      const m = String((e && e.message) || e);
+      if (m === 'chave_invalida') return 'A chave não confere. Rode “mostrarChaveAdmin” de novo no Apps Script e cole a chave certa (clique em “Esquecer a chave” abaixo).';
+      if (m === 'acao_desconhecida') return 'O servidor ainda está com o código antigo. Cole o <code>backend/Code.gs</code> novo no Apps Script e faça uma nova versão da implantação.';
+      return esc(AMB.erroMsg(e));
+    };
+    // conectar com a chave
+    const fChave = root.querySelector('.adm-com-chave');
+    if (fChave) {
+      const conectar = async () => {
+        const ch = fChave.elements.chave.value.trim();
+        if (!ch) return;
+        aviso('Conferindo a chave…');
+        try {
+          await AMB.api.post({ action: 'admin_comments', chave: ch });
+          AMB.store.set(CHAVE_COM, ch);
+          AMB.render();
+        } catch (e) { aviso(erroTxt(e), 'erro'); }
+      };
+      root.querySelector('[data-adm="com-chave"]').addEventListener('click', conectar);
+      fChave.elements.chave.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); conectar(); } });
+      return;
+    }
+    if (!box) return;
+    const fSt = root.querySelector('[data-com-f="status"]');
+    const fQ = root.querySelector('[data-com-f="q"]');
+    const nomeVid = (id) => { const v = AMB.videos.find((x) => x.id === id); return v ? v.artistObj.name + ' — ' + v.title : id; };
+    function desenhar() {
+      const st = fSt.value, q = AMB.norm(fQ.value || '');
+      const porId = {};
+      itens.forEach((c) => { porId[c.id] = c; });
+      const lista = itens.filter((c) => (!st || c.status === st) && (!q || AMB.norm(c.nome + ' ' + c.texto + ' ' + nomeVid(c.video)).indexOf(q) >= 0));
+      const cont = { publicado: 0, pendente: 0, oculto: 0 };
+      itens.forEach((c) => { cont[c.status] = (cont[c.status] || 0) + 1; });
+      fSt.options[0].text = 'Todos (' + itens.length + ')';
+      ['publicado', 'pendente', 'oculto'].forEach((k, i) => { fSt.options[i + 1].text = COM_ST[k] + 's (' + (cont[k] || 0) + ')'; });
+      box.innerHTML = lista.length ? '<table class="adm-tab adm-com-tab"><thead><tr><th><input type="checkbox" data-com-todos aria-label="Selecionar todos"></th><th>Comentário</th><th>Vídeo</th><th>Situação</th><th></th></tr></thead><tbody>' +
+        lista.map((c) => {
+          const pai = c.resposta_a && porId[c.resposta_a];
+          return '<tr data-id="' + esc(c.id) + '" class="adm-com-' + esc(c.status) + '">' +
+            '<td><input type="checkbox" data-com-sel' + (sel.has(c.id) ? ' checked' : '') + ' aria-label="Selecionar"></td>' +
+            '<td><b>' + esc(c.nome) + '</b> <span class="mini">' + esc(AMB.ago(c.criado_em)) + (c.visitante ? ' · visitante ' + esc(c.visitante) : '') + '</span>' +
+              (pai ? '<div class="mini adm-com-resp">↳ resposta a <b>' + esc(pai.nome) + '</b>: “' + esc(pai.texto.slice(0, 60)) + (pai.texto.length > 60 ? '…' : '') + '”</div>' : '') +
+              '<div class="adm-com-txt">' + esc(c.texto) + '</div></td>' +
+            '<td><a href="#v-' + esc(c.video) + '" target="_blank" rel="noopener">' + esc(nomeVid(c.video)) + '</a></td>' +
+            '<td><span class="adm-com-st adm-com-st-' + esc(c.status) + '">' + esc(COM_ST[c.status] || c.status) + '</span></td>' +
+            '<td class="adm-com-acoes">' +
+              (c.status !== 'publicado' ? '<button type="button" class="btn" data-adm="com-st" data-st="publicado">Publicar</button>' : '<button type="button" class="btn" data-adm="com-st" data-st="oculto">Ocultar</button>') +
+              '<button type="button" class="btn adm-perigo" data-adm="com-apagar">Apagar</button></td></tr>';
+        }).join('') + '</tbody></table>' : '<p class="mini">Nenhum comentário' + (st || q ? ' com esse filtro' : '') + '.</p>';
+      const massa = root.querySelector('.adm-com-massa');
+      massa.hidden = !sel.size;
+      root.querySelector('.adm-com-nsel').textContent = sel.size + (sel.size === 1 ? ' selecionado:' : ' selecionados:');
+    }
+    async function carregar() {
+      box.innerHTML = '<p class="mini">Carregando…</p>';
+      try {
+        const j = await chamar('admin_comments');
+        itens = j.items || [];
+        sel.forEach((id) => { if (!itens.some((c) => c.id === id)) sel.delete(id); });
+        aviso('');
+        desenhar();
+      } catch (e) { box.innerHTML = ''; aviso(erroTxt(e), 'erro'); }
+    }
+    async function mudar(ids, st) {
+      if (!ids.length) return;
+      if (st === 'apagar') {
+        const temResp = itens.some((c) => ids.indexOf(c.resposta_a) >= 0 && ids.indexOf(c.id) < 0);
+        if (!(await confirmar({ titulo: ids.length === 1 ? 'Apagar este comentário?' : 'Apagar ' + ids.length + ' comentários?', ok: 'Apagar de vez', perigo: true,
+          html: '<p>Sai do site e da planilha, sem volta.' + (temResp ? ' As <b>respostas</b> desses comentários também são apagadas.' : '') + ' Se só quiser esconder, use “Ocultar”.</p>' }))) return;
+      }
+      aviso(st === 'apagar' ? 'Apagando…' : 'Salvando…');
+      try {
+        const j = st === 'apagar' ? await chamar('admin_delete', { ids }) : await chamar('admin_status', { ids, status: st });
+        ids.forEach((id) => sel.delete(id));
+        await carregar();
+        aviso((st === 'apagar' ? V.pl(j.n || 0, 'comentário apagado', 'comentários apagados') : V.pl(j.n || 0, 'comentário', 'comentários') + ' agora ' + (st === 'publicado' ? 'publicado' : 'oculto') + ((j.n || 0) === 1 ? '' : 's')) + '. O site atualiza em até 2 minutos.', 'ok');
+      } catch (e) { aviso(erroTxt(e), 'erro'); }
+    }
+    root.querySelector('.adm-com').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-adm]');
+      if (!b) return;
+      const tr = b.closest('tr[data-id]');
+      const acao = b.dataset.adm;
+      if (acao === 'com-atualizar') carregar();
+      else if (acao === 'com-st') mudar([tr.dataset.id], b.dataset.st);
+      else if (acao === 'com-apagar') mudar([tr.dataset.id], 'apagar');
+      else if (acao === 'com-massa') mudar(Array.from(sel), b.dataset.st);
+      else if (acao === 'com-sair') { e.preventDefault(); AMB.store.set(CHAVE_COM, ''); AMB.render(); }
+    });
+    box.addEventListener('change', (e) => {
+      if (e.target.matches('[data-com-sel]')) { const id = e.target.closest('tr').dataset.id; if (e.target.checked) sel.add(id); else sel.delete(id); }
+      if (e.target.matches('[data-com-todos]')) box.querySelectorAll('[data-com-sel]').forEach((c) => { c.checked = e.target.checked; const id = c.closest('tr').dataset.id; if (c.checked) sel.add(id); else sel.delete(id); });
+      desenhar();
+    });
+    fSt.addEventListener('change', desenhar);
+    fQ.addEventListener('input', desenhar);
+    carregar();
+  }
+
   function render(root, rota) {
     const partes = String(rota || 'admin').split('/');
     const sec = partes[1] || 'videos';
@@ -1645,6 +1788,7 @@
     else if (sec === 'acervos') corpo = telaAcervos();
     else if (sec === 'acervo') { corpo = telaAcervo(id || 'novo'); aba = 'acervos'; }
     else if (sec === 'publicar') corpo = telaPublicar();
+    else if (sec === 'comentarios') corpo = telaComentarios();
     else corpo = V.box('Página não encontrada', '<p><a href="#admin">Voltar à área do curador</a></p>');
     root.innerHTML = cabecalho(aba) + flash() + corpo;
     // marca o formulário como "mexido" a cada alteração (para perguntar antes de sair)
@@ -1670,6 +1814,7 @@
     else if (sec === 'artista') ligarArtista(root, id || 'novo');
     else if (sec === 'acervo') ligarAcervo(root, id || 'novo');
     else if (sec === 'publicar') ligarPublicar(root);
+    else if (sec === 'comentarios') ligarComentarios(root);
   }
 
   async function confirmarSaida(seguir) {

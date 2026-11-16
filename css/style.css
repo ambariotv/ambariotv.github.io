@@ -749,3 +749,20 @@ html.vr-trava { overflow: hidden; }
 .adm-gal-bts { display: flex; gap: 4px; }
 .adm-gal-bts .btn { padding: 2px 8px; }
 .adm-gal-add { display: inline-block; margin-top: 8px; cursor: pointer; }
+/* área do curador: moderação de comentários */
+.adm-com-barra { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.adm-com-barra input[type="search"] { flex: 1; min-width: 200px; }
+.adm-com-massa { display: flex; gap: 6px; align-items: center; padding: 6px 8px; margin-bottom: 8px; background: #fff8d6; border: 1px solid #e8d48a; border-radius: 4px; }
+.adm-com-tab { width: 100%; border-collapse: collapse; font-size: 13px; }
+.adm-com-tab th { text-align: left; font-size: 11px; color: #667; text-transform: uppercase; padding: 4px 6px; border-bottom: 1px solid #ccd; }
+.adm-com-tab td { padding: 8px 6px; border-bottom: 1px dotted #ccc; vertical-align: top; }
+.adm-com-tab td:first-child { width: 22px; }
+.adm-com-txt { margin-top: 3px; white-space: pre-wrap; word-wrap: break-word; }
+.adm-com-resp { margin-top: 2px; color: #557; }
+.adm-com-acoes { white-space: nowrap; text-align: right; }
+.adm-com-acoes .btn { padding: 2px 8px; margin-left: 4px; }
+.adm-com-st { display: inline-block; padding: 1px 6px; border-radius: 3px; font: 700 11px Arial, sans-serif; }
+.adm-com-st-publicado { background: #d9ead3; color: #2d5a1f; }
+.adm-com-st-pendente { background: #fff2cc; color: #7a5b00; }
+.adm-com-st-oculto { background: #f4cccc; color: #8a1f1f; }
+tr.adm-com-oculto .adm-com-txt { color: #888; text-decoration: line-through; }

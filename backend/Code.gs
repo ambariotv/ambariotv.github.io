@@ -66,6 +66,8 @@ function setup() {
   const props = PropertiesService.getScriptProperties();
   if (!props.getProperty('SAL')) props.setProperty('SAL', Utilities.getUuid());
   props.setProperty('GEN', String(Date.now()));
+  if (!props.getProperty('CHAVE_ADMIN')) props.setProperty('CHAVE_ADMIN', novaChave_());
+  Logger.log('Chave da área do curador (aba Comentários do site): ' + props.getProperty('CHAVE_ADMIN'));
 
   ScriptApp.getProjectTriggers().filter((t) => t.getHandlerFunction() === 'aoEditar').forEach((t) => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('aoEditar').forSpreadsheet(ss).onEdit().create();
@@ -76,6 +78,19 @@ function setup() {
 // Qualquer edição na planilha (moderação) faz o site buscar os dados de novo
 function aoEditar() { PropertiesService.getScriptProperties().setProperty('GEN', String(Date.now())); }
 function limparCache() { aoEditar(); Logger.log('Cache limpo.'); }
+
+// Chave que a área do curador do site usa para moderar os comentários.
+// Rode "mostrarChaveAdmin" para ver a chave; rode "trocarChaveAdmin" se ela vazar (a antiga para de funcionar).
+function novaChave_() { return Utilities.getUuid().replace(/-/g, '') + Utilities.getUuid().replace(/-/g, '').slice(0, 8); }
+function mostrarChaveAdmin() {
+  const props = PropertiesService.getScriptProperties();
+  if (!props.getProperty('CHAVE_ADMIN')) props.setProperty('CHAVE_ADMIN', novaChave_());
+  Logger.log('Chave da área do curador: ' + props.getProperty('CHAVE_ADMIN'));
+}
+function trocarChaveAdmin() {
+  PropertiesService.getScriptProperties().setProperty('CHAVE_ADMIN', novaChave_());
+  mostrarChaveAdmin();
+}
 
 /* ------------------------------------------------------------------ */
 /* Pontos de entrada do Web App                                         */
@@ -104,6 +119,9 @@ function doPost(e) {
       case 'view': return json_(exibicao_(b));
       case 'rate': return json_(avaliar_(b));
       case 'suggest': return json_(mensagem_(b));
+      case 'admin_comments': return json_(adminComentarios_(b));
+      case 'admin_status': return json_(adminStatus_(b));
+      case 'admin_delete': return json_(adminApagar_(b));
       default: return json_({ ok: false, error: 'acao_desconhecida' });
     }
   } catch (err) {
@@ -131,6 +149,53 @@ function comentarios_(video) {
   const s = JSON.stringify(itens);
   if (s.length < 95000) cache.put(chave, s, 600);
   return { ok: true, items: itens };
+}
+
+/* ---------- moderação pela área do curador (precisa da chave) ---------- */
+function chaveOk_(b) {
+  const certa = PropertiesService.getScriptProperties().getProperty('CHAVE_ADMIN');
+  if (!certa || !b || String(b.chave || '') !== certa) { Utilities.sleep(800); return false; }
+  return true;
+}
+function adminComentarios_(b) {
+  if (!chaveOk_(b)) return { ok: false, error: 'chave_invalida' };
+  const sh = aba_(ABA_COM, COL_COM);
+  const itens = linhas_(sh).map((r) => ({
+    id: String(r.id), criado_em: str_(r.criado_em), video: String(r.video), nome: String(r.nome), texto: String(r.texto),
+    status: String(r.status), visitante: String(r.visitante || '').slice(0, 10), resposta_a: String(r.resposta_a || '')
+  })).filter((r) => r.id).reverse().slice(0, 2000);
+  return { ok: true, items: itens };
+}
+function adminStatus_(b) {
+  if (!chaveOk_(b)) return { ok: false, error: 'chave_invalida' };
+  const ids = [].concat(b.ids || []).map(String);
+  const st = String(b.status || '');
+  if (ST_COM.indexOf(st) < 0) return { ok: false, error: 'status_invalido' };
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const sh = aba_(ABA_COM, COL_COM);
+    const col = COL_COM.indexOf('status') + 1;
+    let n = 0;
+    linhas_(sh).forEach((r) => { if (ids.indexOf(String(r.id)) >= 0) { sh.getRange(r._row, col).setValue(st); n++; } });
+    aoEditar();
+    return { ok: true, n: n };
+  } finally { lock.releaseLock(); }
+}
+// Apaga os comentários (e as respostas deles) da planilha de vez
+function adminApagar_(b) {
+  if (!chaveOk_(b)) return { ok: false, error: 'chave_invalida' };
+  const ids = [].concat(b.ids || []).map(String);
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const sh = aba_(ABA_COM, COL_COM);
+    const todas = linhas_(sh);
+    const apagar = todas.filter((r) => ids.indexOf(String(r.id)) >= 0 || ids.indexOf(String(r.resposta_a || '')) >= 0).map((r) => r._row);
+    apagar.sort((x, y) => y - x).forEach((row) => sh.deleteRow(row));
+    aoEditar();
+    return { ok: true, n: apagar.length };
+  } finally { lock.releaseLock(); }
 }
 
 function recentes_() {
