@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 81,
+  "rev": 82,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -168,7 +168,7 @@ window.AMB_DATA = {
       "name": "Miguel Lins",
       "roles": ["curadoria", "captura", "audio", "sincronizacao", "restauracao"],
       "since": "2026-11",
-      "city": "Petrolina",
+      "city": "Brasil",
       "bio": "Arquivista e curador do Ambário. Sincroniza o áudio dos discos com os vídeos usando o EternalDub, ferramenta própria de código aberto.",
       "bio_en": "Archivist and curator of Ambário. Syncs record audio to the videos using EternalDub, his own open-source tool.",
       "links": [
