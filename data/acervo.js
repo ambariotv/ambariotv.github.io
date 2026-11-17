@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 79,
+  "rev": 80,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -744,6 +744,31 @@ window.AMB_DATA = {
           ],
           "tracks": [{ "n": "A1", "t": "Boy Do Subterrâneo", "song": "boy-do-subterraneo" }],
           "discogs": 9073250
+        }
+      ]
+    },
+    {
+      "id": "the-dickies",
+      "name": "The Dickies",
+      "country": "US",
+      "origin": "Los Angeles",
+      "releases": [
+        {
+          "id": "killer-klowns-from-outer-space-1988",
+          "type": "single",
+          "title": "Killer Klowns From Outer Space",
+          "year": 1988,
+          "label": "Enigma (D1-73322)",
+          "format": "Vinyl, 12\", Mini-Album",
+          "partial": true,
+          "src": [
+            {
+              "t": "Discogs — The Dickies – Killer Klowns From Outer Space",
+              "u": "https://www.discogs.com/release/1191499"
+            }
+          ],
+          "tracks": [{ "n": "A1", "t": "Killer Klowns", "song": "killer-klowns", "len": "4:33" }],
+          "discogs": 1191499
         }
       ]
     }
@@ -1545,6 +1570,51 @@ window.AMB_DATA = {
       },
       "description": "Eu tenho pressa e tanta coisa me interessa...",
       "description_en": "I'm in a hurry and so many things interest me...",
+      "added": "2026-11-17",
+      "added_by": "moguell"
+    },
+    {
+      "id": "the-dickies-killer-klowns-clipe-1988",
+      "artist": "the-dickies",
+      "song": "killer-klowns",
+      "title": "Killer Klowns",
+      "kind": "clipe",
+      "date": "1988",
+      "status": "no-acervo",
+      "capa": "media/capas/the-dickies-killer-klowns-clipe-1988.jpg?v=mwkutm0k",
+      "duration": 265,
+      "file": {
+        "video": "https://archive.org/download/ambario-the-dickies-killer-klowns-1988/the-dickies-killer-klowns-1988.mp4",
+        "ia": "ambario-the-dickies-killer-klowns-1988"
+      },
+      "audio": [
+        {
+          "id": "principal",
+          "short": "DISCO",
+          "label": "Single Killer Klowns From Outer Space (Enigma, 1988)",
+          "kind": "compacto",
+          "release": "killer-klowns-from-outer-space-1988",
+          "by": "soulseek_user",
+          "note": "faixa A1",
+          "embedded": true
+        },
+        {
+          "id": "original",
+          "short": "GRAVAÇÃO",
+          "label": "Som original da gravação",
+          "kind": "vhs",
+          "url": "https://archive.org/download/ambario-the-dickies-killer-klowns-1988/the-dickies-killer-klowns-1988-fita.m4a"
+        }
+      ],
+      "music": { "status": "streaming", "qobuz": "https://open.qobuz.com/track/11475822" },
+      "credits": { "tape": "Thom CD-ROM", "sync": "Miguel Lins" },
+      "source": {
+        "medium": "VHS",
+        "aired": "1988",
+        "url": "https://youtu.be/7CzLdg0PpLI?si=7uAe8lOX3JERe-Fs"
+      },
+      "description": "Melhor filme do mundo",
+      "description_en": "Best film in the world",
       "added": "2026-11-17",
       "added_by": "moguell"
     }
