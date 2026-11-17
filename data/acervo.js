@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 74,
+  "rev": 75,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -524,6 +524,7 @@ window.AMB_DATA = {
     {
       "id": "rpm",
       "name": "RPM",
+      "photo": "media/artistas/rpm.jpg?v=mwk5apm7",
       "alt": ["Revoluções por Minuto"],
       "country": "BR",
       "origin": "São Paulo, SP",
@@ -544,6 +545,7 @@ window.AMB_DATA = {
           "year": 1986,
           "label": "Epic (CBS)",
           "format": "LP",
+          "partial": true,
           "note": "Gravado ao vivo em 26 e 27 de maio de 1986 no Palácio das Convenções do Anhembi, em São Paulo; chegou às lojas cerca de dois meses depois.",
           "src": [
             "agora-rpm-2026",
@@ -559,11 +561,10 @@ window.AMB_DATA = {
               "n": "A2",
               "t": "Alvorada Voraz",
               "song": "alvorada-voraz",
-              "note": "inédita",
-              "len": "3:40"
+              "len": "3:40",
+              "note": "inédita"
             }
           ],
-          "partial": true,
           "discogs": 1463393
         }
       ]
