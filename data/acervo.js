@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 70,
+  "rev": 71,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1278,7 +1278,7 @@ window.AMB_DATA = {
       "kind": "clipe",
       "date": "1985",
       "status": "no-acervo",
-      "capa": "media/capas/plebe-rude-ate-quando-esperar-clipe-1985.jpg?v=mweclho2",
+      "capa": "media/capas/plebe-rude-ate-quando-esperar-clipe-1985.jpg?v=mwk56s6n",
       "duration": 268,
       "file": {
         "video": "https://archive.org/download/ambario-plebe-rude-ate-quando-esperar-1985/plebe-rude-ate-quando-esperar-1985.mp4",
