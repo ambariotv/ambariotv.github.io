@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-16",
-  "rev": 66,
+  "rev": 67,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -727,31 +727,25 @@ window.AMB_DATA = {
           "label": "Single Beat Acelerado (CBS, 1984)",
           "kind": "compacto",
           "release": "beat-acelerado-1984",
-          "note": "faixa A",
+          "by": "soulseek_user",
           "embedded": true
         },
         {
           "id": "original",
-          "short": "ORIGINAL",
+          "short": "GRAVAÇÃO",
           "label": "Som original da gravação",
           "kind": "tv",
           "url": "https://archive.org/download/ambario-metro-beat-acelerado-1984/metro-beat-acelerado-1984-fita.m4a"
         }
       ],
-      "credits": { "sync": "moguell" },
+      "music": { "status": "streaming", "qobuz": "https://open.qobuz.com/track/33951340" },
+      "credits": { "sync": "moguell", "tape": "Virginie Boutaud" },
       "source": {
         "medium": "Cópia digital",
-        "from": "Reprise no canal Multishow (a logo do canal aparece no canto da tela)"
+        "from": "Reprise no canal Multishow (a logo do canal aparece no canto da tela)",
+        "aired": "1984",
+        "url": "https://youtu.be/XhRQsqWMVLc?si=t5RvkpZCrwY0CXSF"
       },
-      "description": "Videoclipe do primeiro compacto do Metrô, com Virginie Boutaud nos vocais. Esta cópia tem 2min33s, mais curta que a faixa do compacto (3min46s).",
-      "description_en": "Music video for Metrô's first single, with Virginie Boutaud on vocals. This copy runs 2:33, shorter than the single's track (3:46).",
-      "src": ["wp-beat"],
-      "refs": [
-        {
-          "t": "Cópia citada pela Wikipédia (YouTube)",
-          "u": "https://www.youtube.com/watch?v=knQYxU4yHCA"
-        }
-      ],
       "added": "2026-11-07",
       "added_by": "moguell"
     },
