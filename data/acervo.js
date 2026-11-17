@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 80,
+  "rev": 81,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -750,6 +750,7 @@ window.AMB_DATA = {
     {
       "id": "the-dickies",
       "name": "The Dickies",
+      "photo": "media/artistas/the-dickies.jpg?v=mwkuw8zo",
       "country": "US",
       "origin": "Los Angeles",
       "releases": [
