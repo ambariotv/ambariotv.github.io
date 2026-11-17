@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 82,
+  "rev": 83,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -328,6 +328,10 @@ window.AMB_DATA = {
       "intro": "Cantor e compositor gaúcho. Depois de dois compactos simples (1983 e 1984), lançou em 1985 o LP Tudo Pode Mudar, pela RCA, com produção de Gutti. Também escreveu para o Metrô: é coautor de “Johnny Love” e de “Tudo Pode Mudar”, que a banda gravou no LP Olhar (1985). Em 1989 saiu o álbum Joe, com vocais de Virginie Boutaud, do Metrô, em duas faixas.",
       "intro_en": "Singer-songwriter from Rio Grande do Sul. After two singles (1983 and 1984), he released the LP Tudo Pode Mudar on RCA in 1985, produced by Gutti. He also wrote for Metrô: he co-wrote “Johnny Love” and “Tudo Pode Mudar”, which the band recorded on the LP Olhar (1985). In 1989 came the album Joe, with Metrô's Virginie Boutaud on vocals in two tracks.",
       "src": ["scribd-rock-gaucho", "ddb-joe-1985", "letras-joe", "wp-tudo", "wp-virginie"],
+      "gallery": [
+        { "img": "media/artistas/galeria/joe-euthanazia-mwlckxpb7pe.jpg" },
+        { "img": "media/artistas/galeria/joe-euthanazia-mwlckxpb6h0.jpg" }
+      ],
       "releases": [
         {
           "id": "me-leva-pra-casa-1984",
@@ -335,6 +339,7 @@ window.AMB_DATA = {
           "title": "Me Leva pra Casa",
           "year": 1984,
           "format": "Compacto simples",
+          "partial": true,
           "note": "Gravadora ainda não confirmada.",
           "src": [
             "scribd-rock-gaucho",
@@ -345,7 +350,6 @@ window.AMB_DATA = {
             }
           ],
           "tracks": [{ "n": "A", "t": "Me Leva pra Casa", "song": "me-leva-pra-casa" }],
-          "partial": true,
           "discogs": 9069789
         },
         {
@@ -355,6 +359,7 @@ window.AMB_DATA = {
           "year": 1985,
           "label": "RCA",
           "format": "LP",
+          "partial": true,
           "note": "Produção de Gutti; arranjos de Joe Euthanazia. Lado A: faixas 1 a 5; lado B: 6 a 10.",
           "src": [
             "ddb-joe-1985",
@@ -382,7 +387,6 @@ window.AMB_DATA = {
               "w": "Gastão Lamounier, Joe, Tavinho Paes"
             }
           ],
-          "partial": true,
           "discogs": 7502690
         },
         {
