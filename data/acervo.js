@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 72,
+  "rev": 73,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1059,7 +1059,7 @@ window.AMB_DATA = {
       "date": "1986",
       "program": "Rock Estrela",
       "status": "no-acervo",
-      "capa": "media/capas/metro-johnny-love-rock-estrela-1985.jpg?v=mweal2bf",
+      "capa": "media/capas/metro-johnny-love-rock-estrela-1986.jpg?v=mwk5878z",
       "aspect": "16:9",
       "duration": 217,
       "file": {
