@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 83,
+  "rev": 84,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -330,7 +330,8 @@ window.AMB_DATA = {
       "src": ["scribd-rock-gaucho", "ddb-joe-1985", "letras-joe", "wp-tudo", "wp-virginie"],
       "gallery": [
         { "img": "media/artistas/galeria/joe-euthanazia-mwlckxpb7pe.jpg" },
-        { "img": "media/artistas/galeria/joe-euthanazia-mwlckxpb6h0.jpg" }
+        { "img": "media/artistas/galeria/joe-euthanazia-mwlckxpb6h0.jpg" },
+        { "img": "media/artistas/galeria/joe-euthanazia-mwlcosg35av.jpg" }
       ],
       "releases": [
         {
