@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 71,
+  "rev": 72,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1192,7 +1192,7 @@ window.AMB_DATA = {
       "date": "1985",
       "program": "Rock Estrela",
       "status": "no-acervo",
-      "capa": "media/capas/metro-stabilo-rock-estrela-1986.jpg?v=mwi49ysq",
+      "capa": "media/capas/metro-stabilo-rock-estrela-1986.jpg?v=mwk57jo8",
       "aspect": "16:9",
       "duration": 54,
       "file": {
