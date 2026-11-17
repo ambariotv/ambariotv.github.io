@@ -15,8 +15,8 @@
  *   sources   : { id: { t: título, u: link } } (usadas por id nos campos src)
  */
 window.AMB_DATA = {
-  "updated": "2026-11-16",
-  "rev": 68,
+  "updated": "2026-11-17",
+  "rev": 69,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -545,9 +545,26 @@ window.AMB_DATA = {
           "label": "Epic (CBS)",
           "format": "LP",
           "note": "Gravado ao vivo em 26 e 27 de maio de 1986 no Palácio das Convenções do Anhembi, em São Paulo; chegou às lojas cerca de dois meses depois.",
-          "src": ["agora-rpm-2026", "bb-rpm-2026", "cif-rpm"],
-          "tracks": [{ "n": "2", "t": "Alvorada Voraz", "song": "alvorada-voraz", "note": "inédita" }],
-          "partial": true
+          "src": [
+            "agora-rpm-2026",
+            "bb-rpm-2026",
+            "cif-rpm",
+            {
+              "t": "Discogs — RPM – Rádio Pirata Ao Vivo",
+              "u": "https://www.discogs.com/release/1463393"
+            }
+          ],
+          "tracks": [
+            {
+              "n": "A2",
+              "t": "Alvorada Voraz",
+              "song": "alvorada-voraz",
+              "note": "inédita",
+              "len": "3:40"
+            }
+          ],
+          "partial": true,
+          "discogs": 1463393
         }
       ]
     },
@@ -858,23 +875,34 @@ window.AMB_DATA = {
       "title": "Alvorada Voraz",
       "kind": "clipe",
       "date": "1986",
-      "status": "na-fila",
+      "status": "no-acervo",
       "capa": "media/capas/rpm-alvorada-voraz-1986.jpg",
-      "duration": 257,
+      "duration": 222,
+      "file": {
+        "video": "https://archive.org/download/ambario-rpm-alvorada-voraz-1986/rpm-alvorada-voraz-1986.mp4",
+        "ia": "ambario-rpm-alvorada-voraz-1986"
+      },
       "audio": [
         {
           "id": "principal",
-          "short": "DISCO",
-          "label": "Áudio do disco (FLAC)",
-          "kind": "digital",
-          "embedded": true,
+          "short": "CD",
+          "label": "LP Rádio Pirata Ao Vivo (Epic, 1986)",
+          "kind": "cd",
           "release": "radio-pirata-ao-vivo-1986",
-          "note": "faixa 2"
+          "note": "faixa A2",
+          "embedded": true
         },
-        { "id": "original", "short": "ORIGINAL", "label": "Som original da gravação", "kind": "tv" }
+        {
+          "id": "original",
+          "short": "GRAVAÇÃO",
+          "label": "Som original da gravação",
+          "kind": "tv",
+          "url": "https://archive.org/download/ambario-rpm-alvorada-voraz-1986/rpm-alvorada-voraz-1986-fita.m4a"
+        }
       ],
-      "credits": { "sync": "moguell" },
-      "source": { "medium": "Cópia digital" },
+      "music": { "status": "streaming", "qobuz": "https://open.qobuz.com/album/0888880422637" },
+      "credits": { "sync": "Miguel Lins", "tape": "Paulo Ricardo" },
+      "source": { "medium": "Cópia digital", "url": "https://youtu.be/rEZU3CdM1DI?si=-BkwSpUYbNSRevRX" },
       "description": "Clipe de “Alvorada Voraz”, uma das inéditas do disco ao vivo Rádio Pirata (1986). Mistura cenas do show, imagens aéreas e closes da banda.",
       "description_en": "Video for “Alvorada Voraz”, one of the new songs on the live album Rádio Pirata (1986). It mixes concert footage, aerial shots and close-ups of the band.",
       "src": ["agora-rpm-2026"],
