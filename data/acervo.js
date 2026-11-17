@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-16",
-  "rev": 67,
+  "rev": 68,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -715,6 +715,7 @@ window.AMB_DATA = {
       "date": "1984",
       "status": "no-acervo",
       "capa": "media/capas/metro-beat-acelerado-clipe-1984.jpg?v=mwjud687",
+      "fit": "cover",
       "duration": 229,
       "file": {
         "video": "https://archive.org/download/ambario-metro-beat-acelerado-1984/metro-beat-acelerado-1984.mp4",
