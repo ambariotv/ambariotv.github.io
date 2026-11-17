@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 76,
+  "rev": 77,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -693,6 +693,31 @@ window.AMB_DATA = {
           ],
           "tracks": [{ "n": "A2", "t": "Por Que Não Eu?", "song": "por-que-nao-eu" }],
           "discogs": 1382976
+        },
+        {
+          "id": "seu-espiao-2001",
+          "type": "cd",
+          "title": "Seu Espião",
+          "year": 2001,
+          "label": "Wea Music (092740480-2)",
+          "format": "CD, Album, Reissue, Remastered",
+          "partial": true,
+          "src": [
+            {
+              "t": "Discogs — Kid Abelha – Seu Espião",
+              "u": "https://www.discogs.com/release/19941889"
+            }
+          ],
+          "tracks": [
+            {
+              "n": "2",
+              "t": "Nada Tanto Assim",
+              "song": "nada-tanto-assim",
+              "len": "3:51",
+              "year": 1984
+            }
+          ],
+          "discogs": 19941889
         }
       ]
     },
@@ -1478,6 +1503,49 @@ window.AMB_DATA = {
       "description_en": "This is from the \"underground\".",
       "src": [{ "t": "youtu.be", "u": "https://youtu.be/3PN56DLkiLg?si=CEXHMMX98kgAm1Pz" }],
       "added": "2026-11-15",
+      "added_by": "moguell"
+    },
+    {
+      "id": "kid-abelha-nada-tanto-assim-clipe-1984",
+      "artist": "kid-abelha",
+      "song": "nada-tanto-assim",
+      "title": "Nada Tanto Assim",
+      "kind": "clipe",
+      "date": "1984",
+      "status": "no-acervo",
+      "capa": "media/capas/kid-abelha-nada-tanto-assim-clipe-1984.jpg?v=mwktz9ie",
+      "duration": 222,
+      "file": {
+        "video": "https://archive.org/download/ambario-kid-abelha-nada-tanto-assim-1984/kid-abelha-nada-tanto-assim-1984.mp4",
+        "ia": "ambario-kid-abelha-nada-tanto-assim-1984"
+      },
+      "audio": [
+        {
+          "id": "principal",
+          "short": "CD",
+          "label": "CD Seu Espião (Wea Music, 2001)",
+          "kind": "cd",
+          "by": "Miguel Lins",
+          "embedded": true
+        },
+        {
+          "id": "original",
+          "short": "GRAVAÇÃO",
+          "label": "Som original da gravação",
+          "kind": "vhs",
+          "url": "https://archive.org/download/ambario-kid-abelha-nada-tanto-assim-1984/kid-abelha-nada-tanto-assim-1984-fita.m4a"
+        }
+      ],
+      "music": { "status": "streaming", "qobuz": "https://open.qobuz.com/track/2622794" },
+      "credits": { "tape": "Musicalidade", "sync": "Miguel Lins" },
+      "source": {
+        "medium": "VHS",
+        "aired": "1984",
+        "url": "https://youtu.be/VnXicN5EpKk?si=LaojswuwqOU6f2xw"
+      },
+      "description": "Eu tenho pressa e tanta coisa me interessa...",
+      "description_en": "I'm in a hurry and so many things interest me...",
+      "added": "2026-11-17",
       "added_by": "moguell"
     }
   ]
