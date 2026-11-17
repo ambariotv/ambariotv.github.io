@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 73,
+  "rev": 74,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -181,7 +181,7 @@ window.AMB_DATA = {
     {
       "id": "metro",
       "name": "Metrô",
-      "photo": "media/artistas/metro.jpg?v=mwi1f30j",
+      "photo": "media/artistas/metro.jpg?v=mwk5988e",
       "alt": ["A Gota Suspensa (1978–1984)"],
       "country": "BR",
       "origin": "São Paulo, SP",
@@ -294,7 +294,7 @@ window.AMB_DATA = {
           "tracks": [
             { "n": "10", "t": "Stabilo", "song": "stabilo" },
             { "n": "4", "t": "Sândalo De Dândi", "song": "sandalo-de-dandi" },
-            { "n": "12", "t": "Ti Ti Ti", "song": "ti-ti-ti", "year": 1985 }
+            { "n": "12", "t": "Ti Ti Ti", "song": "ti-ti-ti" }
           ],
           "discogs": 3869832
         },
