@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 69,
+  "rev": 70,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -823,7 +823,7 @@ window.AMB_DATA = {
       "program": "Programa Vamos Nessa",
       "channel": "SBT",
       "status": "no-acervo",
-      "capa": "media/capas/joe-euthanazia-me-leva-pra-casa-1985.jpg",
+      "capa": "media/capas/joe-euthanazia-me-leva-pra-casa-1985.jpg?v=mwk564md",
       "fit": "cover",
       "duration": 213,
       "file": {
