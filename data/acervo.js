@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 86,
+  "rev": 87,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -589,8 +589,8 @@ window.AMB_DATA = {
         { "name": "Christine Hahn", "role": "bateria" },
         { "name": "Susanne Kuhnke" }
       ],
-      "intro": "Grupo só de mulheres de Berlim Ocidental, formado em 1981 por Bettina Köster e Gudrun Gut. Gravou “You You” duas vezes: em Nova York, em agosto de 1983, e no Hansa Studio, em Berlim; as duas saíram no 12\" Beat the Distance (1984). O clipe de “You You” foi dirigido por Anne Carlisle, atriz do filme Liquid Sky.",
-      "intro_en": "All-female band from West Berlin, formed in 1981 by Bettina Köster and Gudrun Gut. They recorded “You You” twice: in New York in August 1983 and at Hansa Studio in Berlin; both came out on the 12\" Beat the Distance (1984). The video for “You You” was directed by Anne Carlisle, an actress in the film Liquid Sky.",
+      "intro": "Grupo só de mulheres de Berlim Ocidental, formado em 1981 por Bettina Köster e Gudrun Gut.",
+      "intro_en": "All-female group from West Berlin, formed in 1981 by Bettina Köster and Gudrun Gut.",
       "src": ["wp-malaria", "tapemag-malaria", "dm-malaria"],
       "releases": [
         {
