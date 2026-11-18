@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 88,
+  "rev": 89,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -430,9 +430,14 @@ window.AMB_DATA = {
         { "name": "Marcelo Bonfá", "role": "bateria" },
         { "name": "Renato Rocha", "role": "baixo" }
       ],
-      "intro": "Banda de Brasília liderada por Renato Russo. O primeiro disco, Legião Urbana, saiu pela EMI-Odeon em 1985 com “Será”, “Ainda É Cedo” e “Geração Coca-Cola”, e o clipe de “Será” foi o primeiro da banda. A formação acima é a da época desse disco.",
-      "intro_en": "Brasília band led by Renato Russo. Their first album, Legião Urbana, came out on EMI-Odeon in 1985 with “Será”, “Ainda É Cedo” and “Geração Coca-Cola”, and the video for “Será” was the band's first. The lineup above is the one from that album.",
+      "intro": "Banda de Brasília liderada por Renato Russo.",
+      "intro_en": "Band from Brasília led by Renato Russo.",
       "src": ["wp-legiao", "wp-legiao-album", "cm-legiao-2025"],
+      "gallery": [
+        { "img": "media/artistas/galeria/legiao-urbana-mwld3zpm2r5.jpg" },
+        { "img": "media/artistas/galeria/legiao-urbana-mwld3zpmm42.jpg" },
+        { "img": "media/artistas/galeria/legiao-urbana-mwld3zpmv1q.jpg" }
+      ],
       "releases": [
         {
           "id": "legiao-urbana-1985",
