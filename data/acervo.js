@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 87,
+  "rev": 88,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -592,6 +592,11 @@ window.AMB_DATA = {
       "intro": "Grupo só de mulheres de Berlim Ocidental, formado em 1981 por Bettina Köster e Gudrun Gut.",
       "intro_en": "All-female group from West Berlin, formed in 1981 by Bettina Köster and Gudrun Gut.",
       "src": ["wp-malaria", "tapemag-malaria", "dm-malaria"],
+      "gallery": [
+        { "img": "media/artistas/galeria/malaria-mwld2iowxru.jpg" },
+        { "img": "media/artistas/galeria/malaria-mwld2iowcj0.jpg" },
+        { "img": "media/artistas/galeria/malaria-mwld2iow34f.jpg" }
+      ],
       "releases": [
         {
           "id": "beat-the-distance-1984",
