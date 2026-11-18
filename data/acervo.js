@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 84,
+  "rev": 85,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -659,6 +659,10 @@ window.AMB_DATA = {
       "photo": "media/artistas/eletrodomesticos.jpg?v=mwejtpit",
       "country": "BR",
       "origin": "Rio de Janeiro",
+      "gallery": [
+        { "img": "media/artistas/galeria/eletrodomesticos-mwlcv9yra10.jpg" },
+        { "img": "media/artistas/galeria/eletrodomesticos-mwlcv9yrin8.jpg" }
+      ],
       "releases": [
         {
           "id": "overdoze-1986",
