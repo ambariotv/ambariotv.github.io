@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 85,
+  "rev": 86,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -684,6 +684,11 @@ window.AMB_DATA = {
       "photo": "media/artistas/kid-abelha.jpg?v=mwhuvyzu",
       "country": "BR",
       "origin": "Rio de Janeiro",
+      "gallery": [
+        { "img": "media/artistas/galeria/kid-abelha-mwlcxwgwc6m.jpg" },
+        { "img": "media/artistas/galeria/kid-abelha-mwlcxwgwkl1.jpg" },
+        { "img": "media/artistas/galeria/kid-abelha-mwlcxwgw8we.jpg" }
+      ],
       "releases": [
         {
           "id": "amor-com-amor-se-paga-nacional-1984",
@@ -717,15 +722,7 @@ window.AMB_DATA = {
               "u": "https://www.discogs.com/release/19941889"
             }
           ],
-          "tracks": [
-            {
-              "n": "2",
-              "t": "Nada Tanto Assim",
-              "song": "nada-tanto-assim",
-              "len": "3:51",
-              "year": 1984
-            }
-          ],
+          "tracks": [{ "n": "2", "t": "Nada Tanto Assim", "song": "nada-tanto-assim", "len": "3:51" }],
           "discogs": 19941889
         }
       ]
