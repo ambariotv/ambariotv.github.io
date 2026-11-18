@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-17",
-  "rev": 89,
+  "rev": 90,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -434,9 +434,9 @@ window.AMB_DATA = {
       "intro_en": "Band from Brasília led by Renato Russo.",
       "src": ["wp-legiao", "wp-legiao-album", "cm-legiao-2025"],
       "gallery": [
-        { "img": "media/artistas/galeria/legiao-urbana-mwld3zpm2r5.jpg" },
+        { "img": "media/artistas/galeria/legiao-urbana-mwld3zpmv1q.jpg" },
         { "img": "media/artistas/galeria/legiao-urbana-mwld3zpmm42.jpg" },
-        { "img": "media/artistas/galeria/legiao-urbana-mwld3zpmv1q.jpg" }
+        { "img": "media/artistas/galeria/legiao-urbana-mwld3zpm2r5.jpg" }
       ],
       "releases": [
         {
