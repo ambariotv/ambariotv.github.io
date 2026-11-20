@@ -15,8 +15,8 @@
  *   sources   : { id: { t: título, u: link } } (usadas por id nos campos src)
  */
 window.AMB_DATA = {
-  "updated": "2026-11-17",
-  "rev": 90,
+  "updated": "2026-11-20",
+  "rev": 91,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -786,6 +786,31 @@ window.AMB_DATA = {
           ],
           "tracks": [{ "n": "A1", "t": "Killer Klowns", "song": "killer-klowns", "len": "4:33" }],
           "discogs": 1191499
+        }
+      ]
+    },
+    {
+      "id": "til-tuesday",
+      "name": "'Til Tuesday",
+      "country": "US",
+      "origin": "Boston",
+      "releases": [
+        {
+          "id": "welcome-home-1986",
+          "type": "lp",
+          "title": "Welcome Home",
+          "year": 1986,
+          "label": "Epic (144.906)",
+          "format": "Vinyl, LP, Album",
+          "partial": true,
+          "src": [
+            {
+              "t": "Discogs — 'Til Tuesday – Welcome Home",
+              "u": "https://www.discogs.com/release/11167282"
+            }
+          ],
+          "tracks": [{ "n": "A2", "t": "Coming Up Close", "song": "coming-up-close" }],
+          "discogs": 11167282
         }
       ]
     }
@@ -1633,6 +1658,47 @@ window.AMB_DATA = {
       "description": "Melhor filme do mundo",
       "description_en": "Best film in the world",
       "added": "2026-11-17",
+      "added_by": "moguell"
+    },
+    {
+      "id": "til-tuesday-coming-up-close-tv-1987",
+      "artist": "til-tuesday",
+      "song": "coming-up-close",
+      "title": "Coming Up Close",
+      "kind": "tv",
+      "date": "1987",
+      "status": "no-acervo",
+      "capa": "media/capas/til-tuesday-coming-up-close-tv-1987.jpg?v=mwp8296l",
+      "duration": 277,
+      "file": {
+        "video": "https://archive.org/download/ambario-til-tuesday-coming-up-close-1986/til-tuesday-coming-up-close-1986.mp4",
+        "ia": "ambario-til-tuesday-coming-up-close-1986"
+      },
+      "audio": [
+        {
+          "id": "principal",
+          "short": "LP",
+          "label": "LP Welcome Home (Epic, 1986)",
+          "kind": "lp",
+          "release": "welcome-home-1986",
+          "by": "Miguel Lins",
+          "note": "faixa A2",
+          "embedded": true
+        },
+        {
+          "id": "original",
+          "short": "GRAVAÇÃO",
+          "label": "Som original da gravação",
+          "kind": "vhs",
+          "url": "https://archive.org/download/ambario-til-tuesday-coming-up-close-1986/til-tuesday-coming-up-close-1986-fita.m4a"
+        }
+      ],
+      "music": { "status": "streaming", "qobuz": "https://open.qobuz.com/track/34807" },
+      "credits": { "tape": "DiscoBar80", "sync": "Miguel Lins" },
+      "source": { "medium": "VHS", "url": "https://youtu.be/eBNl-wxe2Jo?si=pd8WF4wHB0QVZois" },
+      "description": "Tá aí uma banda que todo mundo deveria conhecer. São fantásticos",
+      "description_en": "There's a band that everyone should know. They are fantastic",
+      "added": "2026-11-20",
       "added_by": "moguell"
     }
   ]
