@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-20",
-  "rev": 91,
+  "rev": 92,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -792,8 +792,16 @@ window.AMB_DATA = {
     {
       "id": "til-tuesday",
       "name": "'Til Tuesday",
+      "photo": "media/artistas/til-tuesday.jpg?v=mwp86rbr",
       "country": "US",
       "origin": "Boston",
+      "gallery": [
+        { "img": "media/artistas/galeria/til-tuesday-mwp86rbr3ux.jpg" },
+        { "img": "media/artistas/galeria/til-tuesday-mwp86rbrpua.jpg" },
+        { "img": "media/artistas/galeria/til-tuesday-mwp86rbry47.jpg" },
+        { "img": "media/artistas/galeria/til-tuesday-mwp86rbsh8i.jpg" },
+        { "img": "media/artistas/galeria/til-tuesday-mwp86rbs512.jpg" }
+      ],
       "releases": [
         {
           "id": "welcome-home-1986",
