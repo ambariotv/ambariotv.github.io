@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-21",
-  "rev": 94,
+  "rev": 95,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1212,7 +1212,7 @@ window.AMB_DATA = {
       "audio": [
         {
           "id": "principal",
-          "short": "DISCO",
+          "short": "LP",
           "label": "LP Tudo Pode Mudar (RCA Victor, 1985)",
           "kind": "lp",
           "release": "tudo-pode-mudar-1985",
