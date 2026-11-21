@@ -15,8 +15,8 @@
  *   sources   : { id: { t: título, u: link } } (usadas por id nos campos src)
  */
 window.AMB_DATA = {
-  "updated": "2026-11-20",
-  "rev": 92,
+  "updated": "2026-11-21",
+  "rev": 93,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -935,7 +935,7 @@ window.AMB_DATA = {
       "audio": [
         {
           "id": "principal",
-          "short": "DISCO",
+          "short": "LP",
           "label": "Coletânea Um Sonho A Mais (Nacional) (Som Livre, 1985)",
           "kind": "lp",
           "release": "um-sonho-a-mais-nacional-1985",
