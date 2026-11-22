@@ -358,7 +358,7 @@
     if (cr.capture) add(T('Captura do vídeo', 'Video capture'), V.quem(AMB.who(cr.capture)) + (s.deck || s.capture ? ' <span class="mini">(' + esc([s.deck, s.capture].filter(Boolean).join(' → ')) + ')</span>' : ''));
     (v.audio || []).forEach((t, i) => {
       const rel = t.release ? v.artistObj.releases.find((r) => r.id === t.release) : null;
-      add(i === 0 ? T('Áudio principal', 'Main audio') : T('Outro áudio', 'Other audio'), esc(t.label || t.short) + (rel ? ' — <a href="#a-' + esc(v.artistObj.id) + '" data-disco="' + esc(rel.id) + '">' + esc(rel.title) + '</a> (' + esc(AMB.RELTYPES[rel.type] || rel.type) + ', ' + esc(rel.year || '') + ')' : '') +
+      add(i === 0 ? (v.live ? T('Áudio', 'Audio') : T('Áudio principal', 'Main audio')) : T('Outro áudio', 'Other audio'), esc(t.label || t.short) + (rel ? ' — <a href="#a-' + esc(v.artistObj.id) + '" data-disco="' + esc(rel.id) + '">' + esc(rel.title) + '</a> (' + esc(AMB.RELTYPES[rel.type] || rel.type) + ', ' + esc(rel.year || '') + ')' : '') +
         (t.by ? T(', digitalizado por ', ', digitized by ') + V.quem(AMB.who(t.by)) : '') + (t.note ? ' <span class="mini">' + esc(t.note) + '</span>' : ''));
     });
     if (cr.sync) add(T('Sincronização', 'Syncing'), V.quem(AMB.who(cr.sync)) + ' <span class="mini">(EternalDub)</span>');
