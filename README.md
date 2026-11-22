@@ -82,7 +82,7 @@ Cada alteração é aplicada por cima da versão mais nova que está no GitHub, 
    | Arquivo | O que é |
    |---|---|
    | `nome.mkv` | o original, íntegro. É um atalho de disco para o seu MKV (não gasta espaço; se o disco não permitir, ele oferece copiar) |
-   | `nome.mp4` | **cópia sem perda** (`-c copy`): imagem e som são exatamente os do MKV, só o envelope vira MP4. Só recodifica se o navegador não tocar o original (vídeo que não seja H.264 yuv420p; áudio que não seja AAC, MP3, Opus ou FLAC) |
+   | `nome.mp4` | para assistir no site. Se o vídeo do MKV é leve (H.264 yuv420p até ~3,6 Mbps), é **cópia sem perda** (`-c copy`): imagem e som exatamente os do MKV, só o envelope vira MP4. Se é pesado (as capturas de 5 a 6 Mbps travam no streaming) ou o navegador não toca o original, é recodificado em H.264 de alta qualidade (CRF 19, até 3,5 Mbps, AAC 256k): visualmente quase igual e bem mais leve; o MKV guarda o original. Dá para forçar a cópia sem perda (tecla **C**, ou a lista "MP4 do site" na janela) |
    | `nome-fita.m4a` | o som original da fita, também copiado sem perda (guarda o Opus sem converter) |
    | `nome_celular.mp4` | versão leve para celular: H.264 até 480p (CRF 23, no máximo 1200 kb/s), AAC estéreo 128 kb/s. O site toca esta no celular e o `nome.mp4` no computador |
 
@@ -165,6 +165,6 @@ data/acervo.js              fontes, acervos, artistas, discos e vídeos
 media/capas/                capas dos vídeos (640×480)
 fonts/                      VT323 (licença SIL OFL)
 backend/Code.gs             servidor no Google Apps Script
-ferramentas/Exportar_para_o_site.bat   MKV do EternalDub → 4 arquivos: MKV, MP4 sem perda, M4A e MP4 para celular (ao vivo: 3, sem o M4A)
+ferramentas/Exportar_para_o_site.bat   MKV do EternalDub → 4 arquivos: MKV, MP4 (sem perda se o vídeo for leve; senão recodificado), M4A e MP4 para celular (ao vivo: 3, sem o M4A)
 ferramentas/Exportador_Ambario.bat     o mesmo, numa janela (Exportador_Ambario.ps1)
 ```
