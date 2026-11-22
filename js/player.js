@@ -88,7 +88,7 @@
   // No computador e em tablet grande segue o MP4 de preservação. Se a versão leve falhar, o player cai para o principal.
   AMB.preferirLeve = () => {
     try {
-      const q = AMB.store.get('amb.qualidade', '');   // escolha feita no botão ALTA / LEVE do player
+      const q = AMB.store.get('amb.qualidade', '');   // escolha feita no botão HQ / LQ do player
       if (q === 'leve') return true;
       if (q === 'alta') return false;
       const mq = (q) => typeof matchMedia !== 'undefined' && matchMedia(q).matches;
@@ -207,8 +207,8 @@
             '<input type="range" class="vr-vol" min="0" max="100" step="1" value="' + Math.round(this.volume * 100) + '" aria-label="Volume">' +
             (trilhas ? '<div class="vr-audio" role="group" aria-label="' + T('Escolher o áudio', 'Choose audio') + '">' + trilhas + '</div>' : '') +
             (v.hasFile && v.file.mobile ? '<div class="vr-audio vr-qual" role="group" aria-label="' + T('Qualidade do vídeo', 'Video quality') + '">' +
-              '<button type="button" data-a="qual" data-q="alta" aria-pressed="' + (this.fontesLeves.length === 0) + '" title="' + T('Qualidade original (arquivo grande)', 'Original quality (large file)') + '">' + T('ALTA', 'HIGH') + '</button>' +
-              '<button type="button" data-a="qual" data-q="leve" aria-pressed="' + (this.fontesLeves.length > 0) + '" title="' + T('Versão leve: usa menos dados e carrega mais rápido', 'Light version: uses less data and loads faster') + '">' + T('LEVE', 'LIGHT') + '</button></div>' : '') +
+              '<button type="button" data-a="qual" data-q="alta" aria-pressed="' + (this.fontesLeves.length === 0) + '" title="' + T('HQ: qualidade original (arquivo grande)', 'HQ: original quality (large file)') + '">HQ</button>' +
+              '<button type="button" data-a="qual" data-q="leve" aria-pressed="' + (this.fontesLeves.length > 0) + '" title="' + T('LQ: versão leve (usa menos dados e carrega mais rápido)', 'LQ: light version (uses less data, loads faster)') + '">LQ</button></div>' : '') +
           '</div>' +
         '</div>' +
         '<div class="vr-controles">' +
@@ -534,12 +534,12 @@
     const p = iaPartes(m);
     return url === m || (!!p && url.slice(-p.caminho.length) === p.caminho);
   };
-  // botões ALTA / LEVE: mostram o que está tocando agora
+  // botões HQ / LQ: mostram o que está tocando agora
   Player.prototype.marcarQualidade = function () {
     const leve = this.eLeve(this.fontes[this.fonteIdx]);
     this.root.querySelectorAll('[data-a="qual"]').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.q === 'leve') === leve)));
   };
-  // o espectador escolheu ALTA (MP4 principal) ou LEVE (versão para celular); a escolha fica guardada neste navegador
+  // o espectador escolheu HQ (MP4 principal) ou LQ (versão leve, para celular); a escolha fica guardada neste navegador
   Player.prototype.escolherQualidade = function (q) {
     if (!this.v.hasFile || !this.fontes.length) return;
     const querLeve = q === 'leve';
@@ -550,11 +550,11 @@
     const tempo = v.readyState > 0 ? v.currentTime : (this._tempoAlvo || 0);
     const tocando = !v.paused;
     this.falhas = 0;
-    this.osd(querLeve ? T('VERSÃO LEVE', 'LIGHT VERSION') : T('QUALIDADE ALTA', 'HIGH QUALITY'));
+    this.osd(querLeve ? T('LQ · VERSÃO LEVE', 'LQ · LIGHT VERSION') : T('HQ · QUALIDADE ORIGINAL', 'HQ · ORIGINAL QUALITY'));
     this.trocarFonte(idx, tempo, tocando);
   };
   Player.prototype.trocarFonte = function (i, tempo, continuar) {
-    if (this.eLeve(this.fontes[i]) && !this.eLeve(this.fontes[this.fonteIdx])) this.osd(T('VERSÃO LEVE', 'LIGHT VERSION'));
+    if (this.eLeve(this.fontes[i]) && !this.eLeve(this.fontes[this.fonteIdx])) this.osd(T('LQ · VERSÃO LEVE', 'LQ · LIGHT VERSION'));
     this.fonteIdx = i;
     this.marcarQualidade();
     this._tempoAlvo = tempo || 0;

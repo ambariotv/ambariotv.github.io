@@ -137,7 +137,7 @@ A **versão** separa gravações diferentes da mesma música: vazia é a versão
 ## 9. O player
 
 - Atalhos: **espaço** tocar/pausar · **← →** 5 s · **A** trocar o áudio · **F** tela cheia · **M** som · **C** filtro CRT.
-- Versão para celular: se o vídeo tem `file.mobile`, o player começa por ele em tela pequena (até 600 px, ou até 900 px quando é toque) ou com “economizar dados” ligado; no computador toca o `file.video`. Se a versão leve falhar, cai sozinho para o MP4 principal.
+- Versão para celular: se o vídeo tem `file.mobile`, o player começa por ele em tela pequena (até 600 px, ou até 900 px quando é toque) ou com “economizar dados” ligado; no computador toca o `file.video`. O player tem o botão **HQ | LQ** (original | leve): a escolha de quem assiste fica guardada no navegador e vale para os próximos vídeos. Se a versão leve falhar, cai sozinho para o MP4 principal.
 - Os dois áudios: o MP4 toca a imagem com o áudio do disco; o som original é um arquivo à parte, tocado junto e corrigido a cada 1/4 de segundo (nos testes, diferença abaixo de 30 milésimos).
 - Vídeo “na fila” mostra a tela azul do videocassete por cima da capa, com o botão “Tenho essa gravação”.
 - Para o visual vermelho do Eternal Medias original, troque `--vr-acento` e `--vr-moldura` no `css/style.css`.
