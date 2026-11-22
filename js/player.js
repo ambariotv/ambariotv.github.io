@@ -140,7 +140,9 @@
     this.ext = {};
     this.extAtivo = null;
     this.fontes = this.v.hasFile ? [this.v.file.video].concat(this.v.file.mirrors || []).filter(Boolean) : [];
-    this.fontesLeves = this.v.hasFile && this.v.file.mobile && AMB.preferirLeve() ? [this.v.file.mobile] : []; // vão na frente, só no celular
+    const leveAgora = !!(this.v.hasFile && this.v.file.mobile && AMB.preferirLeve());
+    this.fontesLeves = leveAgora ? [this.v.file.mobile] : []; // vão na frente, só no celular
+    this.fontesReserva = this.v.hasFile && this.v.file.mobile && !leveAgora ? [this.v.file.mobile] : []; // no computador: a versão leve é o último recurso se o MP4 principal travar
     this.fonteIdx = 0;
     this.falhas = 0;
     this.audFontes = {};
@@ -302,8 +304,8 @@
     // cada grupo (versão leve; vídeo principal e espelhos) é ordenado pelo servidor mais rápido, mas a versão leve fica sempre na frente
     const grupo = (links) => Promise.all(links.map((u) => AMB.iaFontes(u))).catch(() => [links])
       .then((listas) => AMB.iaMaisRapido(unicos([].concat.apply([], listas))));
-    Promise.all([grupo(this.fontesLeves), grupo(this.fontes)])
-      .then((g) => { if (!this.morto) this.comecar(unicos(g[0].concat(g[1]))); });
+    Promise.all([grupo(this.fontesLeves), grupo(this.fontes), grupo(this.fontesReserva)])
+      .then((g) => { if (!this.morto) this.comecar(unicos(g[0].concat(g[1], g[2]))); });
   };
   Player.prototype.comecar = function (fontes) {
     const video = this.video;
@@ -519,7 +521,15 @@
     this.tocar();
     this.osd(T('PLAYER REINICIADO', 'PLAYER RESTARTED'));
   };
+  // o endereço é o da versão leve (celular)? (com ou sem o servidor direto do Internet Archive na frente)
+  Player.prototype.eLeve = function (url) {
+    const m = this.v.file && this.v.file.mobile;
+    if (!m || !url) return false;
+    const p = iaPartes(m);
+    return url === m || (!!p && url.slice(-p.caminho.length) === p.caminho);
+  };
   Player.prototype.trocarFonte = function (i, tempo, continuar) {
+    if (this.eLeve(this.fontes[i]) && !this.eLeve(this.fontes[this.fonteIdx])) this.osd(T('VERSÃO LEVE', 'LIGHT VERSION'));
     this.fonteIdx = i;
     this._tempoAlvo = tempo || 0;
     this._recuperando = continuar !== false;
@@ -731,7 +741,12 @@
       if (a && a.paused) { const p = a.play(); if (p && p.catch) p.catch(() => {}); }
       if (this.primeiroPlay) {
         this.primeiroPlay = false;
-        this.tracks.forEach((t) => { if (!t.embedded) { const el = this.audioDe(t); if (el && el.preload !== 'auto') el.preload = 'auto'; } });
+        // o som da fita (arquivo separado, às vezes de dezenas de MB) só começa a baixar depois que a imagem já pegou
+        // embalo: assim não disputa a conexão com o vídeo logo no início. Com "economizar dados", só baixa se for escolhido.
+        this.timer('precarga', () => {
+          if (this.morto || (navigator.connection || {}).saveData) return;
+          this.tracks.forEach((t) => { if (!t.embedded) { const el = this.audioDe(t); if (el && el.preload !== 'auto') el.preload = 'auto'; } });
+        }, 8000);
         this.mediaSession();
       }
     });
