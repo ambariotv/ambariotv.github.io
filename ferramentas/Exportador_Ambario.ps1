@@ -5,13 +5,17 @@
 #  arraste o MKV do EternalDub (faixa 1 = disco, faixa 2 = fita), confira
 #  as opções e clique em Exportar. Numa pasta "para_o_site\NOME" saem só 4 arquivos:
 #    NOME.mkv          o original, íntegro (atalho de disco: não gasta espaço)
-#    NOME.mp4          cópia sem perda (-c copy) do vídeo e do áudio do disco;
-#                      só recodifica se o navegador não tocar o original
+#    NOME.mp4          para assistir no site. Vídeo leve (H.264 até ~3,6 Mbps):
+#                      cópia sem perda (-c copy). Vídeo pesado (capturas de 5 a 6
+#                      Mbps travam no streaming): recodifica em H.264 de alta
+#                      qualidade (CRF 19, até 3,5 Mbps), quase igual e bem mais leve
 #    NOME-fita.m4a     som original da fita (cópia sem perda quando possível)
 #    NOME_celular.mp4  versão leve para celular (H.264 até 480p + AAC estéreo)
 #  A conferência (pacotes idênticos ao MKV, duração, leitura sem erros) aparece
 #  na janela, sem criar arquivos. O MKV original nunca é alterado. Cada arquivo é escrito como .part e só ganha
 #  o nome final quando o FFmpeg termina sem erro.
+#  AO VIVO: marque "Gravação ao vivo" (vídeo normal, uma só faixa de áudio):
+#  saem só 3 arquivos (NOME-ao-vivo.mkv, .mp4 e _celular.mp4), sem o M4A.
 #  Para abrir: dois cliques em "Exportador_Ambario.bat" (ao lado deste arquivo).
 #  Precisa do FFmpeg (o mesmo do EternalDub): no PATH, ao lado deste arquivo,
 #  ou instalado com: winget install Gyan.FFmpeg
@@ -21,7 +25,8 @@ Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 [System.Windows.Forms.Application]::EnableVisualStyles()
 $ErrorActionPreference = 'Stop'
-$VERSAO = '2.0'
+$VERSAO = '3.0'
+$LIMITE_COPIA = 3600   # kb/s: acima disso o MP4 do site é recodificado
 # pasta deste programa (o .bat passa em AMB_PASTA, porque carrega o script já como UTF-8)
 $Pasta = if ($env:AMB_PASTA) { $env:AMB_PASTA.TrimEnd('\') } elseif ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }
 # qualquer erro inesperado aparece numa janela (em vez de o programa sumir sem explicar)
@@ -129,12 +134,16 @@ $tNome.Location = New-Object System.Drawing.Point(170, 120); $tNome.Size = New-O
 $form.Controls.Add($tNome)
 $lId = Rotulo '' 170 146 350
 $lId.ForeColor = [System.Drawing.Color]::DimGray
+$chVivo = New-Object System.Windows.Forms.CheckBox
+$chVivo.Text = 'Gravação ao vivo'
+$chVivo.Location = New-Object System.Drawing.Point(16, 148); $chVivo.Size = New-Object System.Drawing.Size(150, 24)
+$form.Controls.Add($chVivo)
 
-Rotulo 'Áudio do DISCO' 16 180 150 $true | Out-Null
+$rDisco = Rotulo 'Áudio do DISCO' 16 180 150 $true
 $cDisco = New-Object System.Windows.Forms.ComboBox
 $cDisco.DropDownStyle = 'DropDownList'; $cDisco.Location = New-Object System.Drawing.Point(170, 177); $cDisco.Size = New-Object System.Drawing.Size(576, 24)
 $form.Controls.Add($cDisco)
-Rotulo 'Som da FITA' 16 212 150 $true | Out-Null
+$rFita = Rotulo 'Som da FITA' 16 212 150 $true
 $cFita = New-Object System.Windows.Forms.ComboBox
 $cFita.DropDownStyle = 'DropDownList'; $cFita.Location = New-Object System.Drawing.Point(170, 209); $cFita.Size = New-Object System.Drawing.Size(576, 24)
 $form.Controls.Add($cFita)
@@ -160,11 +169,12 @@ $cProp.DropDownStyle = 'DropDownList'; $cProp.Location = New-Object System.Drawi
 $cProp.SelectedIndex = 0
 $form.Controls.Add($cProp)
 
-$chCopia = New-Object System.Windows.Forms.CheckBox
-$chCopia.Text = 'Copiar sem perda quando o arquivo permitir (recomendado)'
-$chCopia.Checked = $true
-$chCopia.Location = New-Object System.Drawing.Point(16, 338); $chCopia.Size = New-Object System.Drawing.Size(500, 24)
-$form.Controls.Add($chCopia)
+Rotulo 'MP4 do site' 16 341 150 $true | Out-Null
+$cMp4 = New-Object System.Windows.Forms.ComboBox
+$cMp4.DropDownStyle = 'DropDownList'; $cMp4.Location = New-Object System.Drawing.Point(170, 338); $cMp4.Size = New-Object System.Drawing.Size(576, 24)
+[void]$cMp4.Items.AddRange(@('Automático: copia sem perda se o vídeo for leve; se for pesado, recodifica (recomendado)', 'Sempre copiar sem perda (arquivo grande: pode travar no site)', 'Sempre recodificar (alta qualidade, bem mais leve)'))
+$cMp4.SelectedIndex = 0
+$form.Controls.Add($cMp4)
 $lCopia = Rotulo '' 36 362 710
 $lCopia.ForeColor = [System.Drawing.Color]::DimGray
 $lCopia.AutoSize = $false
@@ -255,14 +265,33 @@ function Filtro([string]$modo = 'send_field', [int]$altMax = 0) {
 # audio que o navegador toca sem converter pode ser copiado; o resto vira AAC
 function Audio-Copiavel([string]$c) { return (@('aac', 'mp3', 'opus', 'flac') -contains $c) }
 
+# taxa estimada só do vídeo (kb/s): tamanho do arquivo menos uma estimativa do áudio de cada faixa
+function Kbps-Video() {
+  if ($S.dur -le 0) { return 0.0 }
+  $tot = $S.tamanho * 8 / $S.dur / 1000
+  $aud = 0
+  foreach ($cod in $S.audios) {
+    if ($cod -eq 'flac') { $aud += 900 } elseif ($cod -like 'pcm*') { $aud += 1400 } elseif ($cod -eq 'opus') { $aud += 160 } else { $aud += 256 }
+  }
+  $r = $tot - $aud
+  if ($r -lt 0) { $r = 0 }
+  return [double]$r
+}
+
 # o que será copiado e o que será recodificado, de acordo com o arquivo e com as opções da janela
 function Estrategia() {
   $e = @{ copV = $false; copD = $false; copF = $false; motivo = '' }
   if (-not $S.arquivo -or $S.audios.Count -eq 0) { return $e }
-  if (-not $chCopia.Checked) { $e.motivo = 'a cópia sem perda está desligada'; return $e }
+  $modo = $cMp4.SelectedIndex
+  $e.kbpsV = Kbps-Video
+  if ($modo -eq 2) { $e.motivo = 'a recodificação está escolhida'; return $e }
   $okPix = (@('yuv420p', 'yuvj420p') -contains $S.pixfmt)
-  $e.copV = (($S.vcodec -eq 'h264') -and $okPix)
-  if (-not $e.copV) { $e.motivo = 'o vídeo é ' + $S.vcodec + ' ' + $S.pixfmt + ', que o navegador não toca' }
+  $codecOk = (($S.vcodec -eq 'h264') -and $okPix)
+  $e.copV = ($codecOk -and ($modo -eq 1 -or $e.kbpsV -le $LIMITE_COPIA))
+  if (-not $e.copV) {
+    if ($codecOk) { $e.motivo = 'o vídeo tem uns ' + [int]$e.kbpsV + ' kb/s, pesado demais para assistir direto no site' }
+    else { $e.motivo = 'o vídeo é ' + $S.vcodec + ' ' + $S.pixfmt + ', que o navegador não toca' }
+  }
   $d = $cDisco.SelectedIndex
   if ($d -ge 0 -and $d -lt $S.audios.Count) { $e.copD = (Audio-Copiavel $S.audios[$d]) }
   $f = $cFita.SelectedIndex - 1
@@ -274,17 +303,18 @@ function AtualizarEstrategia() {
   if ($S.carregando -or -not $S.arquivo) { return }
   try {
     $e = Estrategia
-    if (-not $chCopia.Checked) {
-      $lCopia.Text = 'O MP4 do site será recodificado (H.264, CRF 19, AAC 256k). Entrelaçamento, bordas e proporção valem para ele, para o celular e para a capa.'
+    if ($cMp4.SelectedIndex -eq 2) {
+      $lCopia.Text = 'O MP4 do site será recodificado (H.264, CRF 19, até 3,5 Mbps, AAC 256k). Entrelaçamento, bordas e proporção valem para ele, para o celular e para a capa.'
     } elseif ($e.copV) {
       $a = if ($e.copD) { 'áudio do disco também copiado' } else { 'áudio do disco convertido para AAC 320k' }
-      $lCopia.Text = 'MP4 do site: vídeo copiado sem perda (' + $S.vcodec + '), ' + $a + '. Entrelaçamento, bordas e proporção valem só para o celular e a capa.'
+      $pesa = if ($e.kbpsV -gt $LIMITE_COPIA) { ' Atenção: o vídeo é pesado (uns ' + [int]$e.kbpsV + ' kb/s) e pode travar no site.' } else { '' }
+      $lCopia.Text = 'MP4 do site: vídeo copiado sem perda (' + $S.vcodec + '), ' + $a + '. Entrelaçamento, bordas e proporção valem só para o celular e a capa.' + $pesa
     } else {
-      $lCopia.Text = 'Não dá para copiar: ' + $e.motivo + '. O MP4 do site será recodificado (H.264, CRF 19) com os ajustes acima.'
+      $lCopia.Text = 'Não vai copiar: ' + $e.motivo + '. O MP4 do site será recodificado (H.264 de alta qualidade, quase igual ao original) com os ajustes acima.'
     }
   } catch { }
 }
-$chCopia.Add_CheckedChanged({ AtualizarEstrategia })
+$cMp4.Add_SelectedIndexChanged({ AtualizarEstrategia })
 $cDisco.Add_SelectedIndexChanged({ AtualizarEstrategia })
 $cFita.Add_SelectedIndexChanged({ AtualizarEstrategia })
 
@@ -403,6 +433,27 @@ $chEntr.Add_CheckedChanged({ Previa })
 $chCorte.Add_CheckedChanged({ Previa })
 $cProp.Add_SelectedIndexChanged({ Previa })
 
+# gravação ao vivo: um só áudio, sem som da fita; o nome ganha -ao-vivo
+function AplicarVivo() {
+  $v = $chVivo.Checked
+  $rDisco.Text = $(if ($v) { 'Áudio do vídeo' } else { 'Áudio do DISCO' })
+  $rFita.Text = $(if ($v) { '(sem som da fita)' } else { 'Som da FITA' })
+  $n = Slug $tNome.Text
+  if ($v) {
+    if ($cFita.Items.Count -gt 0) { $cFita.SelectedIndex = 0 }
+    $cFita.Enabled = $false
+    if ($n -notmatch '(^|-)ao-vivo(-|$)') { $tNome.Text = $(if ($n) { $n + '-ao-vivo' } else { 'ao-vivo' }) }
+  } else {
+    $cFita.Enabled = [bool]$S.arquivo
+    if ($S.audios.Count -ge 2 -and $cFita.Items.Count -gt 2) { $cFita.SelectedIndex = 2 }
+    $t = ($n -replace '-?ao-vivo$', '').Trim('-')
+    if ($t -ne $n) { $tNome.Text = $t }
+  }
+  AtualizarEstrategia
+  AtualizarId
+}
+$chVivo.Add_CheckedChanged({ AplicarVivo })
+
 function Carregar([string]$arq) {
   if ($S.proc -or $S.concluindo) { return }
   if (-not (Test-Path -LiteralPath $arq)) { return }
@@ -458,6 +509,8 @@ function Carregar([string]$arq) {
     if ($i -eq 0) { throw 'Este arquivo não tem nenhuma faixa de áudio.' }
     $cDisco.SelectedIndex = 0
     $cFita.SelectedIndex = $(if ($i -ge 2) { 2 } else { 0 })
+    $chVivo.Checked = [bool]($base -match '(?i)ao[\s._-]?vivo')
+    if ($chVivo.Checked) { $cFita.SelectedIndex = 0; $cFita.Enabled = $false } else { $cFita.Enabled = $true }
 
     # bordas pretas
     $S.corte = $null
@@ -506,8 +559,8 @@ $bAbrir.Add_Click({ $alvo = if ($S.saida) { $S.saida } else { $tSaida.Text }; if
 
 # ---------------- exportação (uma etapa por vez, sem travar a janela) ----------------
 function Travar([bool]$sim) {
-  foreach ($c in @($zona, $tNome, $cDisco, $cFita, $chEntr, $chCorte, $cProp, $tSaida, $bSaida, $chCopia, $chCel, $cCel, $chMatriz)) { $c.Enabled = -not $sim }
-  if (-not $sim) { $chCorte.Enabled = [bool]$S.corte; $cCel.Enabled = $chCel.Checked }
+  foreach ($c in @($zona, $tNome, $chVivo, $cDisco, $cFita, $chEntr, $chCorte, $cProp, $tSaida, $bSaida, $cMp4, $chCel, $cCel, $chMatriz)) { $c.Enabled = -not $sim }
+  if (-not $sim) { $chCorte.Enabled = [bool]$S.corte; $cCel.Enabled = $chCel.Checked; $cFita.Enabled = -not $chVivo.Checked }
   $bCancelar.Enabled = $sim
   $bExp.Enabled = -not $sim
 }

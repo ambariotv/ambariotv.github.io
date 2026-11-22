@@ -4,7 +4,7 @@ chcp 65001 >nul
 title Ambario - Exportar para o site
 
 rem ======================================================================
-rem  Ambario - Exportar para o site   (versao 4)
+rem  Ambario - Exportar para o site   (versao 5)
 rem
 rem  Arraste para cima deste arquivo o MKV que o EternalDub gerou no padrao
 rem  de videoclipe (faixa 1 = musica do disco, faixa 2 = som da fita).
@@ -17,9 +17,12 @@ rem  C ajusta qualquer coisa. Nada do original e alterado ou apagado.
 rem
 rem  Numa pasta "para_o_site\NOME" ao lado do MKV saem so 4 arquivos:
 rem    NOME.mkv           o original, integro (atalho de disco: nao gasta espaco)
-rem    NOME.mp4           imagem + audio do disco. COPIA SEM PERDA (-c copy),
-rem                       so troca o envelope MKV por MP4 (recodifica apenas
-rem                       se o navegador nao tocar o codec do original)
+rem    NOME.mp4           imagem + audio do disco, para assistir no site. Se o
+rem                       video do MKV ja e leve (ate ~3,6 Mbps, H.264), COPIA
+rem                       SEM PERDA (-c copy). Se e pesado (capturas de 5 a 6
+rem                       Mbps travam no streaming), recodifica em H.264 de alta
+rem                       qualidade (CRF 19, ate 3,5 Mbps): visualmente quase
+rem                       igual e metade do tamanho. O MKV guarda o original.
 rem    NOME-fita.m4a      som original da fita, copia sem perda, na mesma
 rem                       linha do tempo
 rem    NOME_celular.mp4   versao leve (480p, H.264 + AAC) para celulares:
@@ -61,17 +64,18 @@ endlocal
 exit /b
 #PS-INICIO
 # ======================================================================
-#  Ambario - Exportar para o site (versao 4) - parte PowerShell
+#  Ambario - Exportar para o site (versao 5) - parte PowerShell
 #  (o .bat acima so chama este trecho; tudo aqui e texto simples, sem acentos)
 # ======================================================================
 $ErrorActionPreference = 'Stop'
 [Threading.Thread]::CurrentThread.CurrentCulture = [Globalization.CultureInfo]::InvariantCulture
 
-$VERSAO = '4'
+$VERSAO = '5'
 $G = @{ auto = $false; avisos = (New-Object System.Collections.ArrayList); resultados = (New-Object System.Collections.ArrayList) }
 $PastaBat = if ($env:AMB_PASTA) { $env:AMB_PASTA.TrimEnd('\') } else { (Get-Location).Path }
 $RUIDO = @('-hide_banner', '-loglevel', 'error', '-stats', '-nostdin', '-y')
 $EH_WINDOWS = ($env:OS -eq 'Windows_NT')
+$LIMITE_COPIA = 3600   # kb/s: acima disso o MP4 do site e recodificado (leve de assistir no streaming)
 
 # ---------------- mensagens ----------------
 function Cabecalho([string]$t) {
@@ -145,7 +149,7 @@ function Slug([string]$s) {
 
 # modo "ao vivo": o nome termina em -ao-vivo
 function Nome-Vivo([string]$n) {
-  if ($n -match '(^|-)ao-vivo$') { return $n }
+  if ($n -match '(^|-)ao-vivo(-|$)') { return $n }
   if (-not $n) { return 'ao-vivo' }
   return ($n + '-ao-vivo')
 }
@@ -360,16 +364,33 @@ function Sugerir-Faixas($A) {
   return @{ disco = $disco; fita = $fita }
 }
 
+# taxa estimada so do video (kb/s): tamanho do arquivo menos uma estimativa do audio de cada faixa
+function Kbps-Video($A) {
+  if ($A.dur -le 0) { return 0.0 }
+  $tot = $A.tamanho * 8 / $A.dur / 1000
+  $aud = 0
+  foreach ($au in $A.audios) {
+    $c = [string]$au.codec
+    if ($c -eq 'flac') { $aud += 900 } elseif ($c -like 'pcm*') { $aud += 1400 } elseif ($c -eq 'opus') { $aud += 160 } else { $aud += 256 }
+  }
+  $r = $tot - $aud
+  if ($r -lt 0) { $r = 0 }
+  return [double]$r
+}
+
 # ---------------- o que sera feito ----------------
 # audio que o navegador toca sem converter: pode ser copiado; o resto vira AAC
 function Audio-Copiavel([string]$c) { return (@('aac', 'mp3', 'opus', 'flac') -contains $c) }
 
 function Estrategia($A, $o) {
   $e = @{}
-  $e.copV = ($A.vcodec -eq 'h264' -and @('yuv420p', 'yuvj420p') -contains $A.pixfmt)
+  $codecOk = ($A.vcodec -eq 'h264' -and @('yuv420p', 'yuvj420p') -contains $A.pixfmt)
+  $e.kbpsV = Kbps-Video $A
+  $e.copV = ($codecOk -and ($e.kbpsV -le $LIMITE_COPIA -or $o.semPerda))
   if ($e.copV) { $e.motivoV = '' }
-  elseif ($A.vcodec -ne 'h264') { $e.motivoV = ('o video e ' + $A.vcodec + ', que o navegador nao toca') }
-  else { $e.motivoV = ('o video e h264 ' + $A.pixfmt + ', que o navegador nao toca') }
+  elseif (-not $codecOk -and $A.vcodec -ne 'h264') { $e.motivoV = ('o video e ' + $A.vcodec + ', que o navegador nao toca') }
+  elseif (-not $codecOk) { $e.motivoV = ('o video e h264 ' + $A.pixfmt + ', que o navegador nao toca') }
+  else { $e.motivoV = ('o video tem uns ' + [int]$e.kbpsV + ' kb/s: pesado demais para assistir direto no site') }
   $e.disco = $A.audios[$o.disco - 1]
   $e.copD = Audio-Copiavel $e.disco.codec
   $e.fita = $null
@@ -447,6 +468,7 @@ function Mostrar-Plano($A, $o, $e, $pasta, $ent) {
     if (-not $e.copD) { Write-Host ('     (o audio ' + $e.disco.codec + ' vira AAC 320k, porque o navegador nao toca; o original segue no MKV)') -ForegroundColor Yellow }
   } else {
     Write-Host ('  2) ' + $n + '.mp4  =  recodificado H.264 + AAC (' + $e.motivoV + '; o original segue no MKV)') -ForegroundColor Yellow
+    Dica 'qualidade alta (CRF 19, ate 3,5 Mbps): visualmente quase igual ao original, bem mais leve para o site'
   }
   if ($o.vivo) {
   } elseif ($o.fita -gt 0) {
@@ -486,6 +508,9 @@ function Ajustar($A, $o, $ent) {
   }
   if ($o.fita -eq $o.disco) { $o.fita = 0 }
   $o.mobile = SimNao 'Gerar tambem o arquivo menor para celular?' $o.mobile
+  if ($A.vcodec -eq 'h264' -and @('yuv420p', 'yuvj420p') -contains $A.pixfmt -and (Kbps-Video $A) -gt $LIMITE_COPIA) {
+    $o.semPerda = SimNao ('O video tem uns ' + [int](Kbps-Video $A) + ' kb/s. Copiar sem perda para o MP4 (arquivo grande, pesado para assistir no site)?') $o.semPerda
+  }
   $e2 = Estrategia $A $o
   $onde = Onde-Filtra $e2 $o
   if ($onde) {
@@ -578,7 +603,7 @@ function Exportar-Um([string]$arqEntrada) {
     $corte = Detectar-Corte $A
     $fx = Sugerir-Faixas $A
     $vivoNome = ([IO.Path]::GetFileNameWithoutExtension($arq) -match '(?i)ao[\s._-]?vivo')
-    $o = @{ nome = $nome; disco = $fx.disco; fita = $fx.fita; entr = $ent.entr; corte = $corte; corteDetectado = $corte; ar = ''; altMob = 480; mobile = $true; matriz = $true; vivo = $vivoNome }
+    $o = @{ nome = $nome; disco = $fx.disco; fita = $fx.fita; entr = $ent.entr; corte = $corte; corteDetectado = $corte; ar = ''; altMob = 480; mobile = $true; matriz = $true; semPerda = $false; vivo = $vivoNome }
     if ($o.vivo) { $o.fita = 0; $o.nome = Nome-Vivo $o.nome }
 
     $raiz = Join-Path (Split-Path -Parent $arq) 'para_o_site'
