@@ -613,6 +613,7 @@
     // ao ligar: tira os valores padrão de disco (sigla DISCO, origem LP) para valer a sigla AO VIVO
     function ligouAoVivo() {
       if (el('live').checked) {
+        if (el('kind').value === 'clipe') { el('kind').value = 'ao-vivo'; el('kind').dispatchEvent(new Event('input')); }
         if (el('a1_short').value.trim().toUpperCase() === 'DISCO') el('a1_short').value = '';
         if (el('a1_kind').value === 'lp') el('a1_kind').value = '';
       }
@@ -883,7 +884,7 @@
     const title = val('title') || (a && song && a.songs[song] ? a.songs[song].t : '');
     put(v, 'title', title);
     v.kind = val('kind') || 'outro';
-    if (vivo) v.live = true; else delete v.live;
+    if (vivo) { v.live = true; if (v.kind === 'clipe') v.kind = 'ao-vivo'; } else delete v.live;
     const data = normData(val('date'));
     put(v, 'date', data);
     ['program', 'channel', 'director'].forEach((k) => put(v, k, val(k)));
