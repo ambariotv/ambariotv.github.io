@@ -363,6 +363,7 @@
     v = Object.assign({ audio: [], credits: {}, source: {}, src: [], refs: [], tags: [] }, v);
     v.file = v.file || {};
     v.live = v.live === true;
+    if (v.live && (!v.kind || v.kind === 'clipe')) v.kind = 'ao-vivo';   // gravação ao vivo entra no tipo “Ao vivo”
     v.hasFile = !!v.file.video;
     if (!v.status) v.status = v.hasFile ? 'no-acervo' : 'na-fila';
     if (v.status === 'no-acervo' && !v.hasFile) v.status = 'na-fila';
