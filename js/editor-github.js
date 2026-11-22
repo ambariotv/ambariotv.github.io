@@ -120,7 +120,7 @@
     ' * Se for editar à mão, mantenha o formato JSON: aspas duplas, sem vírgula sobrando',
     ' * no fim das listas e sem comentários dentro do bloco. Campos principais:',
     ' *   videos[]  : id, artist, song, ver, title, kind, date, program, channel, director, status,',
-    ' *               capa, fit, duration, file {video, ia, mirrors}, audio[], credits, source,',
+    ' *               capa, fit, duration, file {video, mobile, ia, mirrors}, audio[], credits, source,',
     ' *               description, note, src[], refs[], added, added_by',
     ' *   artists[] : id, name, alt[], country, origin, years, members[], intro, src[], releases[]',
     ' *               (releases[]: id, type, title, year, date, label, format, note, partial, src[], tracks[])',

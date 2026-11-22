@@ -84,6 +84,15 @@
       });
     });
   };
+  // Celular com tela pequena (ou "economizar dados" ligado): toca a versão leve do vídeo, se o registro tiver uma.
+  // No computador e em tablet grande segue o MP4 de preservação. Se a versão leve falhar, o player cai para o principal.
+  AMB.preferirLeve = () => {
+    try {
+      const mq = (q) => typeof matchMedia !== 'undefined' && matchMedia(q).matches;
+      const c = navigator.connection || {};
+      return !!c.saveData || mq('(max-width: 600px)') || (mq('(pointer: coarse)') && mq('(max-width: 900px)'));
+    } catch (e) { return false; }
+  };
   const iaFontesJa = (url) => { const p = iaPartes(url); return iaLista(url, p && IA.ok[p.id]); };
   const unicos = (l) => l.filter((u, i) => u && l.indexOf(u) === i);
  
@@ -131,6 +140,7 @@
     this.ext = {};
     this.extAtivo = null;
     this.fontes = this.v.hasFile ? [this.v.file.video].concat(this.v.file.mirrors || []).filter(Boolean) : [];
+    this.fontesLeves = this.v.hasFile && this.v.file.mobile && AMB.preferirLeve() ? [this.v.file.mobile] : []; // vão na frente, só no celular
     this.fonteIdx = 0;
     this.falhas = 0;
     this.audFontes = {};
@@ -289,9 +299,11 @@
     if (this.v.thumb) video.poster = this.v.thumb;
     video.volume = this.volume;
     this.carregando(true);
-    Promise.all(this.fontes.map((u) => AMB.iaFontes(u))).catch(() => [this.fontes])
-      .then((listas) => AMB.iaMaisRapido(unicos([].concat.apply([], listas))))
-      .then((lista) => { if (!this.morto) this.comecar(lista); });
+    // cada grupo (versão leve; vídeo principal e espelhos) é ordenado pelo servidor mais rápido, mas a versão leve fica sempre na frente
+    const grupo = (links) => Promise.all(links.map((u) => AMB.iaFontes(u))).catch(() => [links])
+      .then((listas) => AMB.iaMaisRapido(unicos([].concat.apply([], listas))));
+    Promise.all([grupo(this.fontesLeves), grupo(this.fontes)])
+      .then((g) => { if (!this.morto) this.comecar(unicos(g[0].concat(g[1]))); });
   };
   Player.prototype.comecar = function (fontes) {
     const video = this.video;

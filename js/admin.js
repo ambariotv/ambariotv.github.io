@@ -486,6 +486,7 @@
         '<p class="mini adm-ia-msg" role="status"></p>' +
         '<div class="adm-grade">' +
           campo('video', 'Vídeo (MP4)', f.video || '', { tipo: 'url', ph: 'https://archive.org/download/…/….mp4', larga: true }) +
+          campo('mobile', 'Vídeo leve para celular (MP4)', f.mobile || '', { tipo: 'url', ph: 'https://archive.org/download/…/…_celular.mp4', larga: true, ajuda: '(opcional: o site usa este no celular e deixa o de cima para o computador)' }) +
           campo('duration', 'Duração', v.duration ? AMB.fmtDur(v.duration) : '', { ph: '3:41' }) +
           campo('fit', 'Enquadramento', '', { tipo: 'select', ops: opcoes([['', 'Normal (imagem inteira)'], ['cover', 'Cortar bordas pretas das laterais'], ['fill', 'Desesticar (4:3 esticado em 16:9)']], v.fit || '') }) +
           campo('aspect', 'Tela', '', { tipo: 'select', ops: opcoes([['', '4:3 (TV)'], ['16:9', '16:9 (widescreen)']], v.aspect || '') }) +
@@ -761,7 +762,9 @@
       const arqs = j.files.filter((x) => !/__ia_thumb|_thumb\.|\.thumbs\//i.test(x.name));
       const achar = (re, pref) => arqs.filter((x) => re.test(x.name))
         .sort((x, y) => ((pref && pref.test(y.name)) ? 1 : 0) - ((pref && pref.test(x.name)) ? 1 : 0) || (y.source === 'original') - (x.source === 'original'))[0];
-      const mp4 = achar(/\.mp4$/i, /^(?!.*_512kb)/i);
+      // o vídeo principal é o MP4 de preservação; o "_celular.mp4" (versão leve) vai para o campo próprio
+      const mp4 = achar(/^(?!.*_celular\.mp4$).*\.mp4$/i, /^(?!.*_512kb)/i);
+      const cel = achar(/_celular\.mp4$/i);
       const fita = achar(/\.(m4a|mp3|ogg|opus)$/i, /(fita|vhs|tape|original)/i);
       const capa = achar(/\.(jpe?g|png)$/i);
       const el = (n) => f.elements[n];
@@ -770,6 +773,7 @@
         if (mp4.length) el('duration').value = AMB.fmtDur(durDeTexto(mp4.length));
         if (el('status').value !== 'no-acervo') el('status').value = 'no-acervo';
       }
+      if (cel) el('mobile').value = url(cel.name);
       if (fita) { el('a2_url').value = url(fita.name); if (!el('a2_label').value.trim()) el('a2_label').value = 'Som original da gravação'; if (!el('a2_short').value.trim()) el('a2_short').value = 'ORIGINAL'; }
       if (capa && !el('capa').value.trim() && !E.capaNova) { el('capa').value = url(capa.name); el('capa').dispatchEvent(new Event('input')); }
       const meta = j.metadata || {};
@@ -777,7 +781,7 @@
       if (!el('date').value.trim() && meta.date) el('date').value = String(meta.date).slice(0, 10);
       if (!el('description').value.trim() && meta.description) el('description').value = String(meta.description).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 600);
       E.sujo = true;
-      msg.textContent = 'Encontrado: ' + [mp4 && 'vídeo ' + mp4.name, fita && 'som original ' + fita.name, capa && 'imagem ' + capa.name].filter(Boolean).join(' · ') +
+      msg.textContent = 'Encontrado: ' + [mp4 && 'vídeo ' + mp4.name, cel && 'versão para celular ' + cel.name, fita && 'som original ' + fita.name, capa && 'imagem ' + capa.name].filter(Boolean).join(' · ') +
         (mp4 ? '' : ' — ainda sem MP4 (o Archive pode estar processando o envio).');
     } catch (er) {
       msg.textContent = (er && er.message) || 'Não deu para ler o item agora.';
@@ -873,7 +877,8 @@
     if ((!original || id !== original.id) && rawVideo(id)) return { erro: 'Já existe um vídeo com o id “' + id + '”. Escolha outro id.', campo: 'id' };
     if (String(val('orig_url') || '').split(/\s+/).filter(Boolean).some((u) => !AMB.isUrl(u))) return { erro: 'Os links dos vídeos originais precisam começar com https:// (um por linha).', campo: 'orig_url' };
     for (const k of ['mu_qobuz', 'mu_youtube', 'mu_download']) if (val(k) && !AMB.isUrl(val(k))) return { erro: 'Os links de “onde ouvir” precisam começar com https://', campo: k };
-    for (const k of ['video', 'a2_url']) if (val(k) && !AMB.isUrl(val(k)) && !/^media\//.test(val(k))) return { erro: 'O link em “' + (k === 'video' ? 'Vídeo (MP4)' : 'Arquivo do som original') + '” precisa começar com https://', campo: k };
+    const ROT_LINK = { video: 'Vídeo (MP4)', mobile: 'Vídeo leve para celular (MP4)', a2_url: 'Arquivo do som original' };
+    for (const k of ['video', 'mobile', 'a2_url']) if (val(k) && !AMB.isUrl(val(k)) && !/^media\//.test(val(k))) return { erro: 'O link em “' + ROT_LINK[k] + '” precisa começar com https://', campo: k };
     if (v.status === 'no-acervo' && !val('video')) return { erro: 'Para ficar “No acervo” precisa do link do vídeo (MP4). Ou mude a situação para “Na fila”.', campo: 'video' };
     const espelhos = linhas(val('mirrors'));
     if (espelhos.some((u) => !AMB.isUrl(u))) return { erro: 'Os espelhos precisam ser links (https://…), um por linha.', campo: 'mirrors' };
@@ -901,9 +906,10 @@
     // arquivo
     const file = Object.assign({}, v.file || {});
     put(file, 'video', val('video'));
+    put(file, 'mobile', val('mobile'));
     put(file, 'ia', val('ia'));
     put(file, 'mirrors', espelhos);
-    put(v, 'file', file);
+    put(v, 'file', ordenar(file, ['video', 'mobile', 'ia', 'mirrors']));
 
     // áudios (os dois primeiros vêm do formulário; outros, se houver, ficam como estão)
     const extras = (v.audio || []).slice(2);
