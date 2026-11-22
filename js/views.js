@@ -97,7 +97,7 @@
   /* ---------------- início ---------------- */
   V.chipsHome = () => {
     const chips = [['tudo', T('Tudo', 'All')],
-      ['clipe', T('Clipes', 'Music videos')], ['tv', T('Na TV', 'On TV')], ['ao-vivo', T('Ao vivo', 'Live')], ['filme', T('Filmes', 'Films')]];
+      ['clipe', T('Clipes', 'Music videos')], ['tv', T('Na TV', 'On TV')], ['ao-vivo', T('Ao vivo', 'Live')], ['filme', T('Filmes', 'Films')], ['fan', 'Fan Made']];
     if (AMB.favs.list().length) chips.push(['favoritos', T('★ Favoritos', '★ Favorites')]);
     return chips;
   };
