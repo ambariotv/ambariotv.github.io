@@ -4,7 +4,7 @@ chcp 65001 >nul
 title Ambario - Exportar para o site
 
 rem ======================================================================
-rem  Ambario - Exportar para o site   (versao 3)
+rem  Ambario - Exportar para o site   (versao 4)
 rem
 rem  Arraste para cima deste arquivo o MKV que o EternalDub gerou no padrao
 rem  de videoclipe (faixa 1 = musica do disco, faixa 2 = som da fita).
@@ -24,6 +24,11 @@ rem    NOME-fita.m4a      som original da fita, copia sem perda, na mesma
 rem                       linha do tempo
 rem    NOME_celular.mp4   versao leve (480p, H.264 + AAC) para celulares:
 rem                       tira o entrelacamento, corta bordas pretas
+rem
+rem  AO VIVO: se for uma apresentacao ao vivo (video normal, uma so faixa de
+rem  audio, sem som da fita), aperte V na tela do plano. Saem so 3 arquivos
+rem  (NOME-ao-vivo.mkv, .mp4 e _celular.mp4) e o nome ganha "-ao-vivo". Se o
+rem  nome do MKV tiver "ao vivo", ele ja comeca ligado.
 rem
 rem  Conferencias automaticas (mostradas na tela, sem criar arquivos): os
 rem  pacotes de video e audio do MP4 e do M4A sao comparados (SHA-256) com os
@@ -56,13 +61,13 @@ endlocal
 exit /b
 #PS-INICIO
 # ======================================================================
-#  Ambario - Exportar para o site (versao 3) - parte PowerShell
+#  Ambario - Exportar para o site (versao 4) - parte PowerShell
 #  (o .bat acima so chama este trecho; tudo aqui e texto simples, sem acentos)
 # ======================================================================
 $ErrorActionPreference = 'Stop'
 [Threading.Thread]::CurrentThread.CurrentCulture = [Globalization.CultureInfo]::InvariantCulture
 
-$VERSAO = '3'
+$VERSAO = '4'
 $G = @{ auto = $false; avisos = (New-Object System.Collections.ArrayList); resultados = (New-Object System.Collections.ArrayList) }
 $PastaBat = if ($env:AMB_PASTA) { $env:AMB_PASTA.TrimEnd('\') } else { (Get-Location).Path }
 $RUIDO = @('-hide_banner', '-loglevel', 'error', '-stats', '-nostdin', '-y')
@@ -136,6 +141,32 @@ function Slug([string]$s) {
   }
   $t = $sb.ToString().ToLower() -replace '[^a-z0-9]+', '-'
   return $t.Trim('-')
+}
+
+# modo "ao vivo": o nome termina em -ao-vivo
+function Nome-Vivo([string]$n) {
+  if ($n -match '(^|-)ao-vivo$') { return $n }
+  if (-not $n) { return 'ao-vivo' }
+  return ($n + '-ao-vivo')
+}
+function Tirar-Vivo([string]$n) {
+  $t = ($n -replace '-?ao-vivo$', '').Trim('-')
+  if (-not $t) { $t = 'video' }
+  return $t
+}
+
+# liga/desliga o modo ao vivo: ao vivo = uma faixa de audio, sem som da fita
+function Alternar-Vivo($A, $o) {
+  $o.vivo = -not $o.vivo
+  if ($o.vivo) {
+    $o.fita = 0
+    $o.nome = Nome-Vivo $o.nome
+  } else {
+    $o.nome = Tirar-Vivo $o.nome
+    $fx = Sugerir-Faixas $A
+    $o.disco = $fx.disco
+    $o.fita = $fx.fita
+  }
 }
 
 # ---------------- FFmpeg ----------------
@@ -388,9 +419,10 @@ function Mostrar-Plano($A, $o, $e, $pasta, $ent) {
   $tipo = if ($ent.entr) { 'entrelacado' } else { 'progressivo' }
   Write-Host (' Video   : ' + $A.vcodec + ' ' + $A.w + 'x' + $A.h + ', ' + ('{0:0.##}' -f $A.fps) + ' quadros/s, ' + $tipo)
   Dica ($ent.motivo)
+  if ($o.vivo) { Write-Host ' Modo    : AO VIVO (video normal: so uma faixa de audio, sem som da fita)' -ForegroundColor Magenta }
   foreach ($au in $A.audios) {
     $marca = ''
-    if ($au.ord -eq $o.disco) { $marca = '   <- DISCO' }
+    if ($au.ord -eq $o.disco) { if ($o.vivo) { $marca = '   <- AUDIO' } else { $marca = '   <- DISCO' } }
     if ($au.ord -eq $o.fita) { $marca = '   <- FITA' }
     $t = ' Audio ' + $au.ord + ' : ' + $au.codec + ' ' + $au.canais + 'ch'
     if ($au.taxa) { $t += ' ' + $au.taxa + ' Hz' }
@@ -403,16 +435,21 @@ function Mostrar-Plano($A, $o, $e, $pasta, $ent) {
   Write-Host ''
   Write-Host (' Pasta   : ' + $pasta) -ForegroundColor White
   Write-Host ''
-  Write-Host ' VAO SAIR 4 ARQUIVOS' -ForegroundColor White
+  $tot = 4
+  if ($o.vivo) { $tot = 3 }
+  $aud = 'o audio do disco'
+  if ($o.vivo) { $aud = 'o audio' }
+  Write-Host (' VAO SAIR ' + $tot + ' ARQUIVOS') -ForegroundColor White
   $n = $o.nome
   Write-Host ('  1) ' + $n + '.mkv  =  o original, integro (atalho no disco: nao ocupa espaco a mais)')
   if ($e.copV) {
-    Write-Host ('  2) ' + $n + '.mp4  =  COPIA SEM PERDA (-c copy): a imagem e o audio do disco ficam exatamente como estao no MKV') -ForegroundColor Green
+    Write-Host ('  2) ' + $n + '.mp4  =  COPIA SEM PERDA (-c copy): a imagem e ' + $aud + ' ficam exatamente como estao no MKV') -ForegroundColor Green
     if (-not $e.copD) { Write-Host ('     (o audio ' + $e.disco.codec + ' vira AAC 320k, porque o navegador nao toca; o original segue no MKV)') -ForegroundColor Yellow }
   } else {
     Write-Host ('  2) ' + $n + '.mp4  =  recodificado H.264 + AAC (' + $e.motivoV + '; o original segue no MKV)') -ForegroundColor Yellow
   }
-  if ($o.fita -gt 0) {
+  if ($o.vivo) {
+  } elseif ($o.fita -gt 0) {
     if ($e.copF) { Write-Host ('  3) ' + $n + '-fita.m4a  =  COPIA SEM PERDA (-c copy) do som da fita') -ForegroundColor Green }
     else { Write-Host ('  3) ' + $n + '-fita.m4a  =  som da fita em AAC 256k (o ' + $e.fita.codec + ' original segue no MKV)') -ForegroundColor Yellow }
   } else { Dica '3) sem som da fita (nenhuma faixa escolhida)' }
@@ -424,8 +461,8 @@ function Mostrar-Plano($A, $o, $e, $pasta, $ent) {
     if ($o.corte) { $q += 'corta as bordas' }
     if ($o.ar -eq '4') { $q += 'forca 4:3' } elseif ($o.ar -eq '16') { $q += 'forca 16:9' } else { $q += 'pixels quadrados' }
     $est = $A.dur * (([double]($tx.maxrate -replace 'k', '') + 128) * 1000 / 8) * 0.7
-    Write-Host ('  4) ' + $n + '_celular.mp4  =  ate ' + $altF + 'p, H.264 + AAC 128k, ~' + (Tam $est) + ': ' + ($q -join ', '))
-  } else { Dica '4) sem arquivo para celular (desligado nos ajustes)' }
+    Write-Host ('  ' + $tot + ') ' + $n + '_celular.mp4  =  ate ' + $altF + 'p, H.264 + AAC 128k, ~' + (Tam $est) + ': ' + ($q -join ', '))
+  } else { Dica ($tot + ') sem arquivo para celular (desligado nos ajustes)') }
   Write-Host '     + conferencia automatica (pacotes identicos ao MKV, duracao, leitura sem erros)'
   Write-Host ''
 }
@@ -435,10 +472,13 @@ function Ajustar($A, $o, $ent) {
   Write-Host ' --- Ajustes (Enter mantem o que esta entre colchetes) ---' -ForegroundColor Cyan
   $r = Perguntar ('Nome dos arquivos [' + $o.nome + ']') ''
   if ($r) { $s = Slug $r; if ($s) { $o.nome = $s } }
+  if ($o.vivo) { $o.nome = Nome-Vivo $o.nome }
   $n = $A.audios.Count
-  $r = Perguntar ('Numero da faixa com o audio do DISCO [' + $o.disco + ']') ''
+  $rotAud = 'o audio do DISCO'
+  if ($o.vivo) { $rotAud = 'o AUDIO do video' }
+  $r = Perguntar ('Numero da faixa com ' + $rotAud + ' [' + $o.disco + ']') ''
   if ($r -match '^\d{1,4}$' -and [int]$r -ge 1 -and [int]$r -le $n) { $o.disco = [int]$r }
-  if ($n -ge 2) {
+  if ($n -ge 2 -and -not $o.vivo) {
     $pad = if ($o.fita -gt 0) { [string]$o.fita } else { 'nenhuma' }
     $r = Perguntar ('Numero da faixa com o SOM DA FITA [' + $pad + ', N = nenhuma]') ''
     if ($r.ToUpper() -eq 'N') { $o.fita = 0 }
@@ -537,7 +577,9 @@ function Exportar-Um([string]$arqEntrada) {
     $ent = Detectar-Entrelacado $A
     $corte = Detectar-Corte $A
     $fx = Sugerir-Faixas $A
-    $o = @{ nome = $nome; disco = $fx.disco; fita = $fx.fita; entr = $ent.entr; corte = $corte; corteDetectado = $corte; ar = ''; altMob = 480; mobile = $true; matriz = $true }
+    $vivoNome = ([IO.Path]::GetFileNameWithoutExtension($arq) -match '(?i)ao[\s._-]?vivo')
+    $o = @{ nome = $nome; disco = $fx.disco; fita = $fx.fita; entr = $ent.entr; corte = $corte; corteDetectado = $corte; ar = ''; altMob = 480; mobile = $true; matriz = $true; vivo = $vivoNome }
+    if ($o.vivo) { $o.fita = 0; $o.nome = Nome-Vivo $o.nome }
 
     $raiz = Join-Path (Split-Path -Parent $arq) 'para_o_site'
     $pasta = Join-Path $raiz $o.nome
@@ -545,15 +587,24 @@ function Exportar-Um([string]$arqEntrada) {
     Mostrar-Plano $A $o $e $pasta $ent
 
     if (-not $G.auto) {
-      $r = Perguntar ' [Enter] gerar assim    [C] ajustar    [X] cancelar' ''
-      if ($r.ToUpper() -eq 'X') { $res.estado = 'cancelado'; Write-Host '  Cancelado. Nada foi criado.'; [void]$G.resultados.Add($res); return }
-      if ($r.ToUpper() -eq 'C') {
-        Ajustar $A $o $ent
-        $pasta = Join-Path $raiz $o.nome
-        $e = Estrategia $A $o
-        Mostrar-Plano $A $o $e $pasta $ent
-        $r = Perguntar ' [Enter] gerar assim    [X] cancelar' ''
-        if ($r.ToUpper() -eq 'X') { $res.estado = 'cancelado'; Write-Host '  Cancelado. Nada foi criado.'; [void]$G.resultados.Add($res); return }
+      $pronto = $false
+      while (-not $pronto) {
+        $r = Perguntar ' [Enter] gerar assim    [V] ao vivo: ligar/desligar    [C] ajustar    [X] cancelar' ''
+        $r = $r.ToUpper()
+        if ($r -eq 'X') { $res.estado = 'cancelado'; Write-Host '  Cancelado. Nada foi criado.'; [void]$G.resultados.Add($res); return }
+        elseif ($r -eq 'V') {
+          Alternar-Vivo $A $o
+          $pasta = Join-Path $raiz $o.nome
+          $e = Estrategia $A $o
+          Mostrar-Plano $A $o $e $pasta $ent
+        }
+        elseif ($r -eq 'C') {
+          Ajustar $A $o $ent
+          $pasta = Join-Path $raiz $o.nome
+          $e = Estrategia $A $o
+          Mostrar-Plano $A $o $e $pasta $ent
+        }
+        else { $pronto = $true }
       }
     }
     $nome = $o.nome
@@ -571,7 +622,9 @@ function Exportar-Um([string]$arqEntrada) {
     # ja existe? (nao apaga nada sem perguntar)
     $refazer = $false
     $existem = @()
-    foreach ($f in @($fMp4, $fFita, $fCel)) { if (Test-Path -LiteralPath $f) { $existem += [IO.Path]::GetFileName($f) } }
+    $listaSaida = @($fMp4, $fFita, $fCel)
+    if ($o.vivo) { $listaSaida = @($fMp4, $fCel) }
+    foreach ($f in $listaSaida) { if (Test-Path -LiteralPath $f) { $existem += [IO.Path]::GetFileName($f) } }
     if ($existem.Count -gt 0) {
       Write-Host ('  Ja existem nesta pasta: ' + ($existem -join ', ')) -ForegroundColor Yellow
       $r = Perguntar '  [Enter] pular o que ja existe    [R] refazer tudo (o arquivo antigo so e trocado quando o novo ficar pronto)' ''
@@ -588,6 +641,10 @@ function Exportar-Um([string]$arqEntrada) {
       if (-not (SimNao '  Continuar mesmo assim?' $false)) { $res.estado = 'cancelado'; Write-Host '  Cancelado. Nada foi criado.'; [void]$G.resultados.Add($res); return }
     }
 
+    $tot = 4
+    if ($o.vivo) { $tot = 3 }
+    $nc = $tot
+    $sufP = '/' + $tot + '] '
     $falhas = 0
     $verif = New-Object System.Collections.ArrayList
 
@@ -599,7 +656,7 @@ function Exportar-Um([string]$arqEntrada) {
     # [1] o original (matriz) na pasta de envio: atalho de disco, sem ocupar espaco e sem mexer no arquivo
     $matrizEstado = 'nao'
     Write-Host ''
-    Write-Host ('  [1/4] ' + $nome + '.mkv  (o original, integro)') -ForegroundColor White
+    Write-Host ('  [1' + $sufP + $nome + '.mkv  (o original, integro)') -ForegroundColor White
     if (Test-Path -LiteralPath $fMkv) {
       $matrizEstado = 'existe'
       Dica 'ja existe na pasta: mantido'
@@ -620,15 +677,15 @@ function Exportar-Um([string]$arqEntrada) {
       $core1 = @('-i', $arq, '-map', ('0:v:' + $A.vOrd), '-map', ('0:a:' + $d0), '-c:v', 'copy')
       if ($e.copD) { $core1 += @('-c:a', 'copy') } else { $core1 += @('-c:a', 'aac', '-b:a', '320k') }
       $core1 += @('-movflags', '+faststart')
-      $rot1 = '[2/4] ' + $nome + '.mp4  (copia sem perda: so troca o envelope MKV por MP4)'
+      $rot1 = '[2' + $sufP + $nome + '.mp4  (copia sem perda: so troca o envelope MKV por MP4)'
     } else {
       $vf1 = Filtro $A $o 'send_field' 0
       $core1 = @('-i', $arq, '-map', ('0:v:' + $A.vOrd), '-map', ('0:a:' + $d0), '-vf', $vf1, '-c:v', 'libx264', '-preset', 'slow', '-crf', '19', '-maxrate', '3500k', '-bufsize', '7000k', '-g', '120', '-keyint_min', '24', '-profile:v', 'high', '-level', '4.1', '-pix_fmt', 'yuv420p', '-af', 'aresample=async=1:first_pts=0', '-c:a', 'aac', '-b:a', '256k', '-movflags', '+faststart', '-map_metadata', '-1', '-map_chapters', '-1')
-      $rot1 = '[2/4] ' + $nome + '.mp4  (recodificado; pode levar alguns minutos)'
+      $rot1 = '[2' + $sufP + $nome + '.mp4  (recodificado; pode levar alguns minutos)'
     }
     if ((Test-Path -LiteralPath $fMp4) -and -not $refazer) {
       Write-Host ''
-      Write-Host ('  [2/4] ' + $nome + '.mp4 ja existe: mantido') -ForegroundColor DarkGray
+      Write-Host ('  [2' + $sufP + $nome + '.mp4 ja existe: mantido') -ForegroundColor DarkGray
     } elseif (-not (Passo $rot1 $fMp4 $core1 'mp4' (Texto-Cmd $core1 $arq $nomeArq ($nome + '.mp4')))) {
       Falha ('O FFmpeg nao conseguiu gerar ' + $nome + '.mp4 (veja a mensagem acima). Nada foi apagado.')
       $falhas++
@@ -655,11 +712,11 @@ function Exportar-Um([string]$arqEntrada) {
       $core2 = @('-i', $arq, '-map', ('0:a:' + $f0), '-vn')
       if ($e.copF) { $core2 += @('-c:a', 'copy') } else { $core2 += @('-c:a', 'aac', '-b:a', '256k') }
       $core2 += @('-movflags', '+faststart')
-      $rot2 = '[3/4] ' + $nome + '-fita.m4a  (convertido para AAC)'
-      if ($e.copF) { $rot2 = '[3/4] ' + $nome + '-fita.m4a  (copia sem perda)' }
+      $rot2 = '[3' + $sufP + $nome + '-fita.m4a  (convertido para AAC)'
+      if ($e.copF) { $rot2 = '[3' + $sufP + $nome + '-fita.m4a  (copia sem perda)' }
       if ((Test-Path -LiteralPath $fFita) -and -not $refazer) {
         Write-Host ''
-        Write-Host ('  [3/4] ' + $nome + '-fita.m4a ja existe: mantido') -ForegroundColor DarkGray
+        Write-Host ('  [3' + $sufP + $nome + '-fita.m4a ja existe: mantido') -ForegroundColor DarkGray
       } elseif (-not (Passo $rot2 $fFita $core2 'mp4' (Texto-Cmd $core2 $arq $nomeArq ($nome + '-fita.m4a')))) {
         Falha ('O FFmpeg nao conseguiu gerar ' + $nome + '-fita.m4a. Nada foi apagado.')
         $falhas++
@@ -675,9 +732,9 @@ function Exportar-Um([string]$arqEntrada) {
         if ([math]::Abs($dm - $A.dur) -le 1.5) { [void]$verif.Add(('OK   M4A: duracao ' + (Dur $dm) + ' (MKV ' + (Dur $A.dur) + '): na mesma linha do tempo.')) }
         else { [void]$verif.Add(('ATENCAO M4A: duracao ' + (Dur $dm) + ' diferente do MKV (' + (Dur $A.dur) + '). Confira o sincronismo.')); Aviso ('M4A: duracao ' + (Dur $dm) + ' diferente do MKV (' + (Dur $A.dur) + ').') }
       }
-    } else {
+    } elseif (-not $o.vivo) {
       Write-Host ''
-      Write-Host '  [3/4] sem som da fita: pulado' -ForegroundColor DarkGray
+      Write-Host ('  [3' + $sufP + 'sem som da fita: pulado') -ForegroundColor DarkGray
     }
 
     # [4] arquivo menor para celular
@@ -687,8 +744,8 @@ function Exportar-Um([string]$arqEntrada) {
       $core3 = @('-i', $arq, '-map', ('0:v:' + $A.vOrd), '-map', ('0:a:' + $d0), '-vf', $vf3, '-c:v', 'libx264', '-preset', 'slow', '-crf', $tx.crf, '-maxrate', $tx.maxrate, '-bufsize', $tx.buf, '-profile:v', 'main', '-pix_fmt', 'yuv420p', '-g', '60', '-af', 'aresample=async=1:first_pts=0', '-c:a', 'aac', '-b:a', '128k', '-ac', '2', '-movflags', '+faststart', '-map_metadata', '-1', '-map_chapters', '-1')
       if ((Test-Path -LiteralPath $fCel) -and -not $refazer) {
         Write-Host ''
-        Write-Host ('  [4/4] ' + $nome + '_celular.mp4 ja existe: mantido') -ForegroundColor DarkGray
-      } elseif (-not (Passo ('[4/4] ' + $nome + '_celular.mp4  (versao leve, toca em qualquer celular; pode levar alguns minutos)') $fCel $core3 'mp4' (Texto-Cmd $core3 $arq $nomeArq ($nome + '_celular.mp4')))) {
+        Write-Host ('  [' + $nc + $sufP + $nome + '_celular.mp4 ja existe: mantido') -ForegroundColor DarkGray
+      } elseif (-not (Passo ('[' + $nc + $sufP + $nome + '_celular.mp4  (versao leve, toca em qualquer celular; pode levar alguns minutos)') $fCel $core3 'mp4' (Texto-Cmd $core3 $arq $nomeArq ($nome + '_celular.mp4')))) {
         Falha ('O FFmpeg nao conseguiu gerar ' + $nome + '_celular.mp4. Nada foi apagado.')
         $falhas++
       }
@@ -703,7 +760,7 @@ function Exportar-Um([string]$arqEntrada) {
       }
     } else {
       Write-Host ''
-      Write-Host '  [4/4] arquivo celular: pulado (desligado nos ajustes)' -ForegroundColor DarkGray
+      Write-Host ('  [' + $nc + $sufP + 'arquivo celular: pulado (desligado nos ajustes)') -ForegroundColor DarkGray
     }
 
     # resumo
@@ -711,6 +768,7 @@ function Exportar-Um([string]$arqEntrada) {
     Write-Host (' Pasta: ' + $pasta)
     Write-Host ''
     foreach ($arqSaida in @($fMkv, $fMp4, $fFita, $fCel)) {
+      if ($o.vivo -and $arqSaida -eq $fFita) { continue }
       if (Test-Path -LiteralPath $arqSaida) { Write-Host ('  ' + ([IO.Path]::GetFileName($arqSaida)).PadRight(48) + (Tam ([double](Get-Item -LiteralPath $arqSaida).Length)).PadLeft(10)) }
     }
     Write-Host ''

@@ -71,7 +71,7 @@ Cada alteração é aplicada por cima da versão mais nova que está no GitHub, 
 ## 4. Preparar um vídeo
 
 1. **EternalDub** (modo videoclipe): *Abrir filme* com a captura → *Adicionar música* com o FLAC do disco → **F5** (detectar atraso) → gerar o MKV. Ele sai no padrão de videoclipe: **faixa 1 = música do disco**, **faixa 2 = som original**.
-2. Arraste o MKV (pode ser mais de um) para cima de **`ferramentas/Exportar_para_o_site.bat`**. Prefere uma janela? Use **`ferramentas/Exportador_Ambario.bat`**, que faz o mesmo com botões. O script **analisa o arquivo sozinho** e mostra um plano na tela; **Enter** aceita, **C** ajusta, **X** cancela. O que ele confere:
+2. Arraste o MKV (pode ser mais de um) para cima de **`ferramentas/Exportar_para_o_site.bat`**. Prefere uma janela? Use **`ferramentas/Exportador_Ambario.bat`**, que faz o mesmo com botões. O script **analisa o arquivo sozinho** e mostra um plano na tela; **Enter** aceita, **C** ajusta, **X** cancela. Se for uma **gravação ao vivo** (vídeo normal, uma só faixa de áudio), aperte **V**: saem só 3 arquivos (`…-ao-vivo.mkv`, `.mp4` e `_celular.mp4`), sem o M4A. O que ele confere:
    - **faixas de áudio**: sugere qual é o disco e qual é a fita (pelo título da faixa; sem título, 1 = disco e 2 = fita, o padrão do EternalDub);
    - **entrelaçamento**: captura de fita é entrelaçada (filtro *bwdif*, o movimento fica igual ao da TV); cópia digital (DVD, internet) é progressiva e não mexe;
    - **bordas pretas**: procura num trecho de 40 s e corta (ex.: um arquivo 1920×1080 com a imagem 4:3 no meio vira 1490×1080);
@@ -129,7 +129,7 @@ A **versão** separa gravações diferentes da mesma música: vazia é a versão
 - **Artista** (`artists`): `id`, `name`, `alt`, `country` (`"BR"`, `"US"`…), `origin`, `years`, `members` (`[{ name, role, years }]`), `intro`, `src`, `releases`.
 - **Disco** (`releases`): `id`, `type` (`lp`, `compacto`, `single`, `ep`, `cd`, `coletanea`, `participacao`, `digital`), `title`, `year`, `date`, `label`, `format`, `credit`, `note`, `partial`, `src`, `tracks`.
 - **Faixa** (`tracks`): `n`, `t`, `song`, `ver`, `len`, `w` (compositores), `feat`, `note`.
-- **Vídeo** (`videos`): `id`, `artist`, `song`, `ver`, `title`, `kind` (`clipe`, `tv`, `ao-vivo`, `filme`, `entrevista`, `comercial`, `outro`), `date`, `program`, `channel`, `director`, `status` (`no-acervo`, `na-fila`, `procura-se`), `capa` (`media/capas/…jpg`), `fit` (`cover` corta bordas laterais, `fill` desestica), `aspect` (`16:9` para tela larga), `duration` (segundos), `file` (`video`, `mobile`, `ia`, `mirrors`), `audio`, `credits`, `source`, `description`, `note`, `src`, `refs`, `added`, `added_by`.
+- **Vídeo** (`videos`): `id`, `artist`, `song`, `ver`, `title`, `kind` (`clipe`, `tv`, `ao-vivo`, `filme`, `entrevista`, `comercial`, `outro`), `live` (`true` = gravação ao vivo: um só áudio, o da própria gravação; sem disco, sem 2º áudio e sem sincronização), `date`, `program`, `channel`, `director`, `status` (`no-acervo`, `na-fila`, `procura-se`), `capa` (`media/capas/…jpg`), `fit` (`cover` corta bordas laterais, `fill` desestica), `aspect` (`16:9` para tela larga), `duration` (segundos), `file` (`video`, `mobile`, `ia`, `mirrors`), `audio`, `credits`, `source`, `description`, `note`, `src`, `refs`, `added`, `added_by`.
 - **Áudio** (`audio`): o primeiro é o principal, dentro do MP4 (`embedded: true`); o segundo tem `url` (o M4A). Campos: `id`, `short` (o texto do botão), `label`, `kind`, `release`, `by`, `note`.
 - **Créditos** (`credits`): `tape`, `capture`, `sync`, `restore`, `extra`. Com o id de um acervo, o nome vira link.
 - **Origem** (`source`): `medium`, `standard`, `speed`, `from`, `aired`, `generation`, `deck`, `capture`, `notes`.
@@ -165,6 +165,6 @@ data/acervo.js              fontes, acervos, artistas, discos e vídeos
 media/capas/                capas dos vídeos (640×480)
 fonts/                      VT323 (licença SIL OFL)
 backend/Code.gs             servidor no Google Apps Script
-ferramentas/Exportar_para_o_site.bat   MKV do EternalDub → 4 arquivos: MKV, MP4 sem perda, M4A e MP4 para celular
+ferramentas/Exportar_para_o_site.bat   MKV do EternalDub → 4 arquivos: MKV, MP4 sem perda, M4A e MP4 para celular (ao vivo: 3, sem o M4A)
 ferramentas/Exportador_Ambario.bat     o mesmo, numa janela (Exportador_Ambario.ps1)
 ```

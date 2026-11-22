@@ -49,7 +49,7 @@
     Object.keys(o).forEach((k) => { if (!(k in n) && o[k] !== undefined) n[k] = o[k]; });
     return n;
   }
-  const ORDEM_VIDEO = ['id', 'artist', 'artist_name', 'song', 'song_title', 'ver', 'title', 'kind', 'date', 'program', 'channel', 'director', 'status',
+  const ORDEM_VIDEO = ['id', 'artist', 'artist_name', 'song', 'song_title', 'ver', 'title', 'kind', 'live', 'date', 'program', 'channel', 'director', 'status',
     'capa', 'fit', 'aspect', 'crt', 'duration', 'file', 'audio', 'music', 'credits', 'source', 'description', 'description_en', 'note', 'note_en', 'src', 'refs', 'tags', 'test', 'added', 'added_by'];
   const ORDEM_ARTISTA = ['id', 'name', 'photo', 'alt', 'country', 'origin', 'years', 'members', 'intro', 'intro_en', 'src', 'gallery', 'releases'];
   const ORDEM_DISCO = ['id', 'type', 'title', 'credit', 'year', 'date', 'label', 'format', 'partial', 'note', 'src', 'tracks'];
@@ -461,6 +461,7 @@
         campo('ver', 'Versão', v.ver || '', { ph: 'vazio = a do disco', ajuda: '(ex.: ao-vivo, 1984, alternativa)' }) +
         campo('title', 'Título do registro', v.title || '', { ph: 'ex.: Tudo Pode Mudar' }) +
         campo('kind', 'Tipo', '', { tipo: 'select', ops: opcoes(kinds, v.kind || 'clipe') }) +
+        '<label class="adm-check larga"><input type="checkbox" name="live"' + (v.live ? ' checked' : '') + '> Gravação ao vivo <small>(vídeo normal, com um só áudio: o som da própria gravação. Sem áudio do disco, sem segundo áudio e sem sincronização)</small></label>' +
         campo('date', 'Data', v.date || '', { ph: '1985, 05/1985 ou 12/05/1985' }) +
         campo('program', 'Programa / filme', v.program || '', { ph: 'ex.: Fantástico' }) +
         campo('channel', 'Emissora', v.channel || '', { ph: 'ex.: Rede Globo' }) +
@@ -495,14 +496,15 @@
         '</div></fieldset>' +
 
       '<fieldset><legend>Áudios</legend><div class="adm-grade">' +
-        '<p class="mini larga"><b>Principal</b> — o som que já está dentro do MP4 (o do disco, sincronizado no EternalDub).</p>' +
+        '<p class="mini larga adm-p-estudio"><b>Principal</b> — o som que já está dentro do MP4 (o do disco, sincronizado no EternalDub).</p>' +
+        '<p class="mini larga adm-p-vivo" hidden><b>Áudio da gravação ao vivo</b> — o som que já está dentro do MP4. É o único áudio deste vídeo: não há botão para trocar de áudio.</p>' +
         campo('a1_label', 'Nome', a1.label || '', { ph: 'ex.: LP Olhar (Epic, 1985)' }) +
         campo('a1_short', 'Sigla no botão', a1.short || '', { ph: 'DISCO' }) +
         campo('a1_kind', 'Origem', '', { tipo: 'select', ops: opcoes(audKinds, a1.kind || '') }) +
         campo('a1_release', 'Disco de onde veio', '', { tipo: 'select', ops: '<option value="">—</option>' }) +
         campo('a1_by', 'Digitalizado por', a1.by || '', { list: 'adm-acervos' }) +
         campo('a1_note', 'Observação', a1.note || '', { ph: 'ex.: faixa 3' }) +
-        '<p class="mini larga"><b>Segundo áudio</b> — o som original da gravação, num arquivo separado (.m4a). Deixe vazio se não tiver.</p>' +
+        '<p class="mini larga adm-p-estudio"><b>Segundo áudio</b> — o som original da gravação, num arquivo separado (.m4a). Deixe vazio se não tiver.</p>' +
         campo('a2_url', 'Arquivo do som original (M4A)', a2.url || '', { tipo: 'url', ph: 'https://archive.org/download/…/…-fita.m4a', larga: true }) +
         campo('a2_label', 'Nome', a2.label || '', { ph: 'Som original da fita VHS' }) +
         campo('a2_short', 'Sigla no botão', a2.short || '', { ph: 'VHS' }) +
@@ -597,6 +599,29 @@
       f.querySelector('[data-adm="capa-ajustar"]').hidden = !url || (!E.capaNova && /^https?:/i.test(caminho) && caminho.indexOf(location.origin + '/') !== 0);
     }
 
+    // gravação ao vivo: só um áudio (o da gravação), sem disco, sem segundo áudio, sem sincronização
+    function aplicarAoVivo() {
+      const vivo = !!el('live').checked;
+      ['a1_release', 'a1_by', 'a2_url', 'a2_label', 'a2_short', 'a2_kind', 'sync'].forEach((n) => { const l = el(n) && el(n).closest('label'); if (l) l.hidden = vivo; });
+      f.querySelectorAll('.adm-p-estudio').forEach((p) => { p.hidden = vivo; });
+      f.querySelectorAll('.adm-p-vivo').forEach((p) => { p.hidden = !vivo; });
+      const dg = f.querySelector('.adm-discogs');
+      if (dg) dg.hidden = vivo;
+      el('a1_short').placeholder = vivo ? 'AO VIVO' : 'DISCO';
+      el('a1_label').placeholder = vivo ? 'Som original da gravação' : 'ex.: LP Olhar (Epic, 1985)';
+    }
+    // ao ligar: tira os valores padrão de disco (sigla DISCO, origem LP) para valer a sigla AO VIVO
+    function ligouAoVivo() {
+      if (el('live').checked) {
+        if (el('a1_short').value.trim().toUpperCase() === 'DISCO') el('a1_short').value = '';
+        if (el('a1_kind').value === 'lp') el('a1_kind').value = '';
+      }
+      aplicarAoVivo();
+      E.sujo = true;
+    }
+    el('live').addEventListener('change', ligouAoVivo);
+    el('kind').addEventListener('change', () => { if (el('kind').value === 'ao-vivo' && !el('live').checked) { el('live').checked = true; ligouAoVivo(); } });
+    aplicarAoVivo();
     el('artist').addEventListener('change', () => { atualizarArtista(); idPrevisto(); });
     const muMostrar = () => { const st = el('mu_status').value; f.querySelectorAll('.adm-mu').forEach((x) => { x.hidden = !x.classList.contains('adm-mu-' + st); }); };
     el('mu_status').addEventListener('change', muMostrar);
@@ -766,6 +791,10 @@
       const mp4 = achar(/^(?!.*_celular\.mp4$).*\.mp4$/i, /^(?!.*_512kb)/i);
       const cel = achar(/_celular\.mp4$/i);
       const fita = achar(/\.(m4a|mp3|ogg|opus)$/i, /(fita|vhs|tape|original)/i);
+      // item com “ao vivo” no nome e sem M4A: marca como gravação ao vivo (dá para desmarcar)
+      const pareceVivo = /ao[-_ ]?vivo/i.test(id + ' ' + (mp4 ? mp4.name : ''));
+      let avisoVivo = '';
+      if (pareceVivo && !fita && !f.elements.live.checked) { f.elements.live.checked = true; f.elements.live.dispatchEvent(new Event('change')); avisoVivo = ' — marquei “Gravação ao vivo” (nome com “ao vivo” e sem som da fita); desmarque se não for.'; }
       const capa = achar(/\.(jpe?g|png)$/i);
       const el = (n) => f.elements[n];
       if (mp4) {
@@ -774,15 +803,15 @@
         if (el('status').value !== 'no-acervo') el('status').value = 'no-acervo';
       }
       if (cel) el('mobile').value = url(cel.name);
-      if (fita) { el('a2_url').value = url(fita.name); if (!el('a2_label').value.trim()) el('a2_label').value = 'Som original da gravação'; if (!el('a2_short').value.trim()) el('a2_short').value = 'ORIGINAL'; }
+      if (fita && !el('live').checked) { el('a2_url').value = url(fita.name); if (!el('a2_label').value.trim()) el('a2_label').value = 'Som original da gravação'; if (!el('a2_short').value.trim()) el('a2_short').value = 'ORIGINAL'; }
       if (capa && !el('capa').value.trim() && !E.capaNova) { el('capa').value = url(capa.name); el('capa').dispatchEvent(new Event('input')); }
       const meta = j.metadata || {};
       if (!el('title').value.trim() && meta.title) el('title').value = String(meta.title).replace(/^.*?\s[—-]\s/, '');
       if (!el('date').value.trim() && meta.date) el('date').value = String(meta.date).slice(0, 10);
       if (!el('description').value.trim() && meta.description) el('description').value = String(meta.description).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 600);
       E.sujo = true;
-      msg.textContent = 'Encontrado: ' + [mp4 && 'vídeo ' + mp4.name, cel && 'versão para celular ' + cel.name, fita && 'som original ' + fita.name, capa && 'imagem ' + capa.name].filter(Boolean).join(' · ') +
-        (mp4 ? '' : ' — ainda sem MP4 (o Archive pode estar processando o envio).');
+      msg.textContent = 'Encontrado: ' + [mp4 && 'vídeo ' + mp4.name, cel && 'versão para celular ' + cel.name, fita && !el('live').checked && 'som original ' + fita.name, capa && 'imagem ' + capa.name].filter(Boolean).join(' · ') +
+        (mp4 ? '' : ' — ainda sem MP4 (o Archive pode estar processando o envio).') + avisoVivo;
     } catch (er) {
       msg.textContent = (er && er.message) || 'Não deu para ler o item agora.';
     }
@@ -803,8 +832,9 @@
     v.artist = artista;
     delete v.artist_name;
     // disco puxado do Discogs: entra na discografia do artista (se ainda não estiver lá)
+    const vivo = !!(f.elements.live && f.elements.live.checked);
     let artistaDisco = null;
-    if (E.discogs && E.discogs.disco) {
+    if (!vivo && E.discogs && E.discogs.disco) {
       const d = E.discogs.disco;
       const base = artistaNovo || (rawArtista(artista) ? clone(rawArtista(artista)) : null);
       if (base) {
@@ -853,6 +883,7 @@
     const title = val('title') || (a && song && a.songs[song] ? a.songs[song].t : '');
     put(v, 'title', title);
     v.kind = val('kind') || 'outro';
+    if (vivo) v.live = true; else delete v.live;
     const data = normData(val('date'));
     put(v, 'date', data);
     ['program', 'channel', 'director'].forEach((k) => put(v, k, val(k)));
@@ -878,7 +909,7 @@
     if (String(val('orig_url') || '').split(/\s+/).filter(Boolean).some((u) => !AMB.isUrl(u))) return { erro: 'Os links dos vídeos originais precisam começar com https:// (um por linha).', campo: 'orig_url' };
     for (const k of ['mu_qobuz', 'mu_youtube', 'mu_download']) if (val(k) && !AMB.isUrl(val(k))) return { erro: 'Os links de “onde ouvir” precisam começar com https://', campo: k };
     const ROT_LINK = { video: 'Vídeo (MP4)', mobile: 'Vídeo leve para celular (MP4)', a2_url: 'Arquivo do som original' };
-    for (const k of ['video', 'mobile', 'a2_url']) if (val(k) && !AMB.isUrl(val(k)) && !/^media\//.test(val(k))) return { erro: 'O link em “' + ROT_LINK[k] + '” precisa começar com https://', campo: k };
+    for (const k of (vivo ? ['video', 'mobile'] : ['video', 'mobile', 'a2_url'])) if (val(k) && !AMB.isUrl(val(k)) && !/^media\//.test(val(k))) return { erro: 'O link em “' + ROT_LINK[k] + '” precisa começar com https://', campo: k };
     if (v.status === 'no-acervo' && !val('video')) return { erro: 'Para ficar “No acervo” precisa do link do vídeo (MP4). Ou mude a situação para “Na fila”.', campo: 'video' };
     const espelhos = linhas(val('mirrors'));
     if (espelhos.some((u) => !AMB.isUrl(u))) return { erro: 'Os espelhos precisam ser links (https://…), um por linha.', campo: 'mirrors' };
@@ -912,23 +943,23 @@
     put(v, 'file', ordenar(file, ['video', 'mobile', 'ia', 'mirrors']));
 
     // áudios (os dois primeiros vêm do formulário; outros, se houver, ficam como estão)
-    const extras = (v.audio || []).slice(2);
+    const extras = vivo ? [] : (v.audio || []).slice(2);
     const a1 = Object.assign({}, (v.audio || [])[0] || {});
     const a2 = Object.assign({}, (v.audio || [])[1] || {});
     const audio = [];
     if (val('video') || val('a1_label') || val('a1_release') || val('a1_by')) {
       a1.id = a1.id || 'principal';
-      put(a1, 'short', val('a1_short') || (val('a1_kind') && AMB.AUDIO_KINDS[val('a1_kind')]) || 'DISCO');
-      put(a1, 'label', val('a1_label') || 'Áudio do disco');
+      put(a1, 'short', val('a1_short') || (val('a1_kind') && AMB.AUDIO_KINDS[val('a1_kind')]) || (vivo ? 'AO VIVO' : 'DISCO'));
+      put(a1, 'label', val('a1_label') || (vivo ? 'Som original da gravação' : 'Áudio do disco'));
       put(a1, 'kind', val('a1_kind'));
-      put(a1, 'release', val('a1_release'));
-      put(a1, 'by', val('a1_by'));
+      put(a1, 'release', vivo ? '' : val('a1_release'));
+      put(a1, 'by', vivo ? '' : val('a1_by'));
       put(a1, 'note', val('a1_note'));
       a1.embedded = true;
       delete a1.url;
       audio.push(ordenar(a1, ['id', 'short', 'label', 'kind', 'release', 'by', 'note', 'embedded']));
     }
-    if (val('a2_url') || val('a2_label')) {
+    if (!vivo && (val('a2_url') || val('a2_label'))) {
       a2.id = a2.id && a2.id !== 'principal' ? a2.id : 'original';
       put(a2, 'short', val('a2_short') || 'ORIGINAL');
       put(a2, 'label', val('a2_label') || 'Som original da gravação');
@@ -941,7 +972,7 @@
     put(v, 'audio', audio.concat(extras));
 
     const cr = Object.assign({}, v.credits || {});
-    ['tape', 'capture', 'sync'].forEach((k) => put(cr, k, val(k)));
+    ['tape', 'capture', 'sync'].forEach((k) => put(cr, k, k === 'sync' && vivo ? '' : val(k)));
     put(v, 'credits', cr);
     const so = Object.assign({}, v.source || {});
     [['medium', 'medium'], ['standard', 'standard'], ['speed', 'speed'], ['from', 'from'], ['aired', 'aired'], ['generation', 'generation'],

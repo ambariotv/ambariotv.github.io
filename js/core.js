@@ -362,6 +362,7 @@
   function normVideo(v, idx, artists) {
     v = Object.assign({ audio: [], credits: {}, source: {}, src: [], refs: [], tags: [] }, v);
     v.file = v.file || {};
+    v.live = v.live === true;
     v.hasFile = !!v.file.video;
     if (!v.status) v.status = v.hasFile ? 'no-acervo' : 'na-fila';
     if (v.status === 'no-acervo' && !v.hasFile) v.status = 'na-fila';
@@ -383,6 +384,7 @@
     if (!v.audio || !v.audio.length) {
       v.audio = v.hasFile ? [{ id: 'principal', short: 'Original', label: T('Som do arquivo', 'File audio'), embedded: true }] : [];
     }
+    if (v.live) v.audio = v.audio.slice(0, 1);   // gravação ao vivo: um só áudio
     v.audio = v.audio.map((t, i) => {
       const f = Object.assign({ id: 'faixa' + i, short: t.short || AMB.AUDIO_KINDS[t.kind] || (T('Áudio ', 'Audio ') + (i + 1)) }, t, {
         embedded: t.embedded === true || (!t.url && i === 0)
