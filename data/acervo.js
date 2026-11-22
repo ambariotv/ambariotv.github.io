@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-22",
-  "rev": 102,
+  "rev": 103,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1853,6 +1853,37 @@ window.AMB_DATA = {
       },
       "description": "Chuá! Chuá!",
       "description_en": "Chuah! Chuah!",
+      "added": "2026-11-22",
+      "added_by": "moguell"
+    },
+    {
+      "id": "rita-lee-saude-clipe-1981",
+      "artist": "rita-lee",
+      "song": "saude",
+      "title": "Saúde (Ao vivo, 1981)",
+      "kind": "clipe",
+      "live": true,
+      "date": "1981",
+      "status": "no-acervo",
+      "capa": "media/capas/rita-lee-saude-clipe-1981.jpg?v=mwscth7l",
+      "duration": 301,
+      "file": {
+        "video": "https://archive.org/download/ambario-rita-lee-saude-1981-ao-vivo/rita-lee-saude-1981-ao-vivo.mp4",
+        "mobile": "https://archive.org/download/ambario-rita-lee-saude-1981-ao-vivo/rita-lee-saude-1981-ao-vivo_celular.mp4",
+        "ia": "ambario-rita-lee-saude-1981-ao-vivo"
+      },
+      "audio": [
+        {
+          "id": "principal",
+          "short": "AO VIVO",
+          "label": "Som original da gravação",
+          "embedded": true
+        }
+      ],
+      "credits": { "tape": "Videoteca do Jota" },
+      "source": { "medium": "VHS", "aired": "1981", "url": "https://www.youtube.com/watch?v=qJgWsn0ooNk" },
+      "description": "Saúde é tudo.",
+      "description_en": "Health is everything.",
       "added": "2026-11-22",
       "added_by": "moguell"
     }
