@@ -485,12 +485,15 @@
   };
 
   // Link do vídeo original (de onde veio a cópia): o campo do curador ou, se não tiver, o primeiro link do YouTube nas fontes
-  AMB.linkOriginal = (v) => {
+  // Pode haver mais de um (clipe montado com dois vídeos): source.urls = [link, link]
+  AMB.linksOriginais = (v) => {
     const so = (v && v.source) || {};
-    if (so.url && AMB.isUrl(so.url)) return so.url;
+    const l = [].concat(so.urls || [], so.url || []).filter((u) => AMB.isUrl(u));
+    if (l.length) return Array.from(new Set(l));
     const s = ((v && v.src) || []).map(AMB.src).find((x) => x && /(^https?:\/\/)?(www\.|m\.)?(youtube\.com|youtu\.be)\//i.test(x.u || ''));
-    return s ? s.u : '';
+    return s ? [s.u] : [];
   };
+  AMB.linkOriginal = (v) => AMB.linksOriginais(v)[0] || '';
 
   /* ---------------- discografia × videografia ---------------- */
   // Para cada disco: cada faixa com os registros em vídeo da mesma música.

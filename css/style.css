@@ -949,3 +949,5 @@ html[data-tema="escuro"] .tema-bt { color: #ffd76a; background: linear-gradient(
 html[data-tema="escuro"] .w-de-mini .de-orig { color: #ff5c5c; }
 .w-de-mini .de-orig.de-sem-link { color: #777; font-weight: 400; }
 html[data-tema="escuro"] .w-de-mini .de-orig.de-sem-link { color: #a3b3c6; }
+.w-de-mini .de-mais { color: #888; }
+.w-de-mini .de-orig-n { margin-left: 4px; font-size: 12px; }

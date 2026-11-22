@@ -246,9 +246,16 @@
           (v.test ? '' : V.box(T('Sobre a música', 'About the song'), sobre, 'w-musica')) +
           V.ouvir(v) +
           (cr && cr.w ? (() => {
-            const orig = AMB.linkOriginal(v);
-            const nome = orig ? '<a class="de-orig" href="' + esc(orig) + '" target="_blank" rel="noopener" title="' + T('Ver o vídeo original', 'See the original video') + '">' + esc(cr.w.name) + ' ↗</a>'
-              : '<span class="de-orig de-sem-link">' + esc(cr.w.name) + '</span>';
+            const links = AMB.linksOriginais(v);
+            const tit = T('Ver o vídeo original', 'See the original video');
+            const a = (u, txt) => '<a class="de-orig" href="' + esc(u) + '" target="_blank" rel="noopener" title="' + tit + '">' + esc(txt) + ' ↗</a>';
+            const partes = cr.w.name.split(/\s+\+\s+/);
+            let nome;
+            if (!links.length) nome = '<span class="de-orig de-sem-link">' + esc(cr.w.name) + '</span>';
+            else if (links.length === 1) nome = a(links[0], cr.w.name);
+            // "Música Paixão + Gilberto" com 2 links: cada nome leva ao seu vídeo
+            else if (partes.length === links.length) nome = partes.map((p, i) => a(links[i], p)).join(' <span class="de-mais">+</span> ');
+            else nome = a(links[0], cr.w.name) + links.slice(1).map((u, i) => ' <a class="de-orig de-orig-n" href="' + esc(u) + '" target="_blank" rel="noopener" title="' + tit + ' ' + (i + 2) + '">' + (i + 2) + ' ↗</a>').join('');
             return '<section class="box w-de w-de-mini"><div class="box-c"><span class="de-papel">' + esc(cr.papel) + ':</span> ' + nome + '</div></section>';
           })() : '') +
           (mais.length ? V.box(T('Mais de ', 'More from ') + esc(a.name), '<ul class="rel">' + mais.slice(0, 8).map(V.relItem).join('') + '</ul>' +
