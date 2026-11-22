@@ -77,24 +77,21 @@ Cada alteração é aplicada por cima da versão mais nova que está no GitHub, 
    - **bordas pretas**: procura num trecho de 40 s e corta (ex.: um arquivo 1920×1080 com a imagem 4:3 no meio vira 1490×1080);
    - **proporção**: Enter mantém (só acerta pixels não quadrados, 720×480 → 640×480); **4** força 4:3 (para imagem esticada); **16** força 16:9.
 
-   Com vários arquivos ele segue sozinho, sem perguntas (usa o plano sugerido para cada um). Saem numa pasta `para_o_site\nome\`, uma por título:
+   Com vários arquivos ele segue sozinho, sem perguntas (usa o plano sugerido para cada um). Saem **só 4 arquivos**, numa pasta `para_o_site\nome\` por título:
 
    | Arquivo | O que é |
    |---|---|
-   | `nome.mp4` | **cópia sem perda** (`-c copy`): imagem e som são exatamente os da matriz, só o envelope MKV vira MP4. Só recodifica se o navegador não tocar o original (vídeo que não seja H.264 yuv420p; áudio que não seja AAC, MP3, Opus ou FLAC) |
+   | `nome.mkv` | o original, íntegro. É um atalho de disco para o seu MKV (não gasta espaço; se o disco não permitir, ele oferece copiar) |
+   | `nome.mp4` | **cópia sem perda** (`-c copy`): imagem e som são exatamente os do MKV, só o envelope vira MP4. Só recodifica se o navegador não tocar o original (vídeo que não seja H.264 yuv420p; áudio que não seja AAC, MP3, Opus ou FLAC) |
    | `nome-fita.m4a` | o som original da fita, também copiado sem perda (guarda o Opus sem converter) |
    | `nome_celular.mp4` | versão leve para celular: H.264 até 480p (CRF 23, no máximo 1200 kb/s), AAC estéreo 128 kb/s. O site toca esta no celular e o `nome.mp4` no computador |
-   | `nome.jpg` | capa (um quadro do vídeo) |
-   | `nome.sha256` | SHA-256 de cada arquivo (formato do `sha256sum`) |
-   | `nome-info.txt` | ficha: o que foi feito, a conferência e os comandos FFmpeg exatos, para refazer à mão |
-   | `nome.mkv` | a matriz, como atalho de disco (não gasta espaço; se o disco não permitir, ele oferece copiar) |
 
-   **Preservação:** o MKV original nunca é alterado. Cada arquivo é escrito como `.part` e só ganha o nome final quando o FFmpeg termina sem erro; o que já existe é mantido, a menos que você peça para refazer. Nas cópias sem perda ele compara o SHA-256 dos pacotes de vídeo e áudio com os da matriz, e confere a duração, a leitura completa do arquivo de celular e o espaço livre. Tirar o entrelaçamento, cortar bordas e acertar a proporção valem só para o arquivo de celular e a capa; no MP4 do site use **Enquadramento** (seção 3). Ele usa o mesmo FFmpeg do EternalDub.
+   **Preservação:** o MKV original nunca é alterado. Cada arquivo é escrito como `.part` e só ganha o nome final quando o FFmpeg termina sem erro; o que já existe é mantido, a menos que você peça para refazer. A conferência aparece na tela (não cria arquivos): nas cópias sem perda ele compara o SHA-256 dos pacotes de vídeo e áudio com os do MKV, e confere a duração, a leitura completa do arquivo de celular e o espaço livre. Cada comando do FFmpeg também aparece na tela, para você poder refazer à mão. Tirar o entrelaçamento, cortar bordas e acertar a proporção valem para o arquivo de celular e, só quando o MP4 precisa ser recodificado, para o MP4; numa cópia sem perda o MP4 guarda a imagem como está, e para acertar a tela use **Enquadramento** (seção 3). A capa é escolhida na área do curador. Ele usa o mesmo FFmpeg do EternalDub.
 
 ## 5. Enviar ao Internet Archive
 
 1. Crie uma conta em archive.org (grátis).
-2. Vá em **archive.org/upload** e arraste **todos os arquivos da pasta** do vídeo (MP4, `_celular.mp4`, M4A, JPG, MKV, `.sha256` e `-info.txt`).
+2. Vá em **archive.org/upload** e arraste **os 4 arquivos da pasta** do vídeo (MKV, MP4, `_celular.mp4` e M4A).
 3. Preencha:
    - **Page URL / identificador**: `ambario-metro-olhar-1985` (sem espaços nem acentos);
    - **Title**: `Metrô — Olhar (ao vivo, 1985)`;
@@ -168,6 +165,6 @@ data/acervo.js              fontes, acervos, artistas, discos e vídeos
 media/capas/                capas dos vídeos (640×480)
 fonts/                      VT323 (licença SIL OFL)
 backend/Code.gs             servidor no Google Apps Script
-ferramentas/Exportar_para_o_site.bat   MKV do EternalDub → MP4 sem perda + celular + M4A + capa + checksums
+ferramentas/Exportar_para_o_site.bat   MKV do EternalDub → 4 arquivos: MKV, MP4 sem perda, M4A e MP4 para celular
 ferramentas/Exportador_Ambario.bat     o mesmo, numa janela (Exportador_Ambario.ps1)
 ```

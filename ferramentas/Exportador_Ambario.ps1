@@ -3,16 +3,14 @@
 #
 #  Faz o mesmo que o Exportar_para_o_site.bat, numa janela:
 #  arraste o MKV do EternalDub (faixa 1 = disco, faixa 2 = fita), confira
-#  as opções e clique em Exportar. Numa pasta "para_o_site\NOME" saem:
+#  as opções e clique em Exportar. Numa pasta "para_o_site\NOME" saem só 4 arquivos:
+#    NOME.mkv          o original, íntegro (atalho de disco: não gasta espaço)
 #    NOME.mp4          cópia sem perda (-c copy) do vídeo e do áudio do disco;
 #                      só recodifica se o navegador não tocar o original
 #    NOME-fita.m4a     som original da fita (cópia sem perda quando possível)
 #    NOME_celular.mp4  versão leve para celular (H.264 até 480p + AAC estéreo)
-#    NOME.jpg          capa
-#    NOME.sha256       SHA-256 de cada arquivo
-#    NOME-info.txt     ficha: conferência automática, comandos e próximos passos
-#    NOME.mkv          a matriz, como atalho de disco (não gasta espaço)
-#  O MKV original nunca é alterado. Cada arquivo é escrito como .part e só ganha
+#  A conferência (pacotes idênticos ao MKV, duração, leitura sem erros) aparece
+#  na janela, sem criar arquivos. O MKV original nunca é alterado. Cada arquivo é escrito como .part e só ganha
 #  o nome final quando o FFmpeg termina sem erro.
 #  Para abrir: dois cliques em "Exportador_Ambario.bat" (ao lado deste arquivo).
 #  Precisa do FFmpeg (o mesmo do EternalDub): no PATH, ao lado deste arquivo,
@@ -582,9 +580,8 @@ $bExp.Add_Click({
   $fMp4 = Join-Path $dest "$nome.mp4"
   $fFita = Join-Path $dest "$nome-fita.m4a"
   $fCel = Join-Path $dest "$($nome)_celular.mp4"
-  $fJpg = Join-Path $dest "$nome.jpg"
   $ja = @()
-  foreach ($x in @($fMp4, $fFita, $fCel, $fJpg)) { if (Test-Path -LiteralPath $x) { $ja += [System.IO.Path]::GetFileName($x) } }
+  foreach ($x in @($fMp4, $fFita, $fCel)) { if (Test-Path -LiteralPath $x) { $ja += [System.IO.Path]::GetFileName($x) } }
   if ($ja.Count -gt 0) {
     $msg = 'Já existem nesta pasta: ' + ($ja -join ', ') + "`n`nSubstituir? (os antigos só são trocados quando os novos ficarem prontos)"
     if ([System.Windows.Forms.MessageBox]::Show($msg, 'Ambário', 'YesNo', 'Question') -ne 'Yes') { return }
@@ -633,13 +630,6 @@ $bExp.Add_Click({
     $cmds += ('ffmpeg ' + $core.Replace($entrada, $leaf) + ' ' + (Q "$($nome)_celular.mp4"))
   }
 
-  # 4. capa
-  $pos = [math]::Max(0, [math]::Floor($S.dur / 3))
-  $vfj = Filtro 'send_frame' 0
-  $core = "-ss $pos -i $entrada -map 0:v:0 -frames:v 1 -update 1 -vf " + (Q $vfj) + ' -q:v 3'
-  $etapas += Novo-Passo "Capa ($nome.jpg)" 0 $core 'image2' $fJpg
-  $cmds += ('ffmpeg ' + $core.Replace($entrada, $leaf) + ' ' + (Q "$nome.jpg"))
-
   # espaço em disco
   try {
     $livre = [double](New-Object System.IO.DriveInfo([System.IO.Path]::GetPathRoot($dest))).AvailableFreeSpace
@@ -659,6 +649,7 @@ $bExp.Add_Click({
   Log ''
   Log "Exportando: $nome   (pasta: $dest)"
   Log ('MP4 do site: ' + $(if ($e.copV) { 'cópia sem perda' } else { 'recodificado' }) + '   |   celular: ' + $(if ($chCel.Checked) { "até ${altMob}p" } else { 'não' }))
+  foreach ($cm in $cmds) { Log ('  ' + $cm) }
   Travar $true
   IniciarEtapa
 })
@@ -674,7 +665,6 @@ function Concluir() {
   $fMp4 = Join-Path $dest "$nome.mp4"
   $fFita = Join-Path $dest "$nome-fita.m4a"
   $fCel = Join-Path $dest "$($nome)_celular.mp4"
-  $fJpg = Join-Path $dest "$nome.jpg"
   $fMkv = Join-Path $dest "$nome.mkv"
   $verif = New-Object System.Collections.ArrayList
   $avisos = New-Object System.Collections.ArrayList
@@ -715,107 +705,41 @@ function Concluir() {
       else { [void]$verif.Add('ATENCAO Celular: o FFmpeg reclamou ao ler o arquivo de ponta a ponta.'); [void]$avisos.Add('Celular: o FFmpeg reclamou ao ler o arquivo. Exporte de novo.') }
     }
 
-    # ----- matriz na pasta de envio (atalho de disco: não gasta espaço) -----
-    $shaMkv = ''
+    # ----- o original (MKV) na pasta de envio: atalho de disco, não gasta espaço -----
     $matriz = 'nao'
     if ($o.matriz) {
       if (Test-Path -LiteralPath $fMkv) { $matriz = 'existe' }
       else {
-        $lEtapa.Text = 'Pondo a matriz na pasta…'
+        $lEtapa.Text = 'Pondo o original na pasta…'
         $r = Rodar-Vivo 'cmd.exe' ('/c mklink /H ' + (Q $fMkv) + ' ' + (Q $arq))
         if ($r.code -eq 0 -and (Test-Path -LiteralPath $fMkv)) { $matriz = 'atalho' }
         else {
-          $msg = "Não deu para criar o atalho da matriz (disco exFAT/FAT ou outra unidade).`n`nCopiar o MKV para a pasta? (gasta espaço)"
+          $msg = "Não deu para criar o atalho do MKV (disco exFAT/FAT ou outra unidade).`n`nCopiar o MKV para a pasta? (gasta espaço)"
           if ([System.Windows.Forms.MessageBox]::Show($msg, 'Ambário', 'YesNo', 'Question') -eq 'Yes') {
-            $lEtapa.Text = 'Copiando a matriz…'
+            $lEtapa.Text = 'Copiando o MKV…'
             [System.Windows.Forms.Application]::DoEvents()
             [System.IO.File]::Copy($arq, $fMkv)
             $matriz = 'copia'
           }
         }
       }
-      if ($matriz -ne 'nao') {
-        $shaMkv = Sha-Janela $arq 'SHA-256 da matriz (pode levar alguns minutos)'
-        if ($matriz -eq 'copia') {
-          if ((Sha-Janela $fMkv 'Conferindo a cópia da matriz') -ne $shaMkv) {
-            [System.IO.File]::Delete($fMkv); $matriz = 'nao'
-            [void]$avisos.Add('A cópia da matriz não bateu com o original e foi descartada. Envie o MKV original direto.')
-          } else { [void]$verif.Add('OK   Matriz copiada para a pasta e conferida (SHA-256 igual).') }
-        }
+      if ($matriz -eq 'copia') {
+        $shaMkv = Sha-Janela $arq 'SHA-256 do original (pode levar alguns minutos)'
+        if ((Sha-Janela $fMkv 'Conferindo a cópia do MKV') -ne $shaMkv) {
+          [System.IO.File]::Delete($fMkv); $matriz = 'nao'
+          [void]$avisos.Add('A cópia do MKV não bateu com o original e foi descartada. Envie o MKV original direto.')
+        } else { [void]$verif.Add('OK   MKV: cópia na pasta conferida (SHA-256 igual ao original).') }
       }
     }
-
-    # ----- checksums e ficha -----
-    $linhas = New-Object System.Collections.ArrayList
-    $gerados = New-Object System.Collections.ArrayList
-    if ($matriz -ne 'nao') { [void]$linhas.Add($shaMkv + '  ' + $nome + '.mkv'); [void]$gerados.Add(@{ nome = "$nome.mkv"; tam = $S.tamanho; sha = $shaMkv; desc = 'matriz (MKV original, sem alteração)' }) }
-    $cands = @(
-      @{ f = $fMp4; d = $(if ($e.copV) { 'MP4 do site (cópia sem perda)' } else { 'MP4 do site (recodificado)' }) },
-      @{ f = $fFita; d = $(if ($e.copF) { 'som original da fita (cópia sem perda)' } else { 'som original da fita (AAC)' }) },
-      @{ f = $fCel; d = 'versão leve para celular (H.264 + AAC)' },
-      @{ f = $fJpg; d = 'capa' }
-    )
-    foreach ($c in $cands) {
-      if (Test-Path -LiteralPath $c.f) {
-        $nm = [System.IO.Path]::GetFileName($c.f)
-        $h = Sha-Janela $c.f ('SHA-256 de ' + $nm)
-        [void]$linhas.Add($h + '  ' + $nm)
-        [void]$gerados.Add(@{ nome = $nm; tam = [double](Get-Item -LiteralPath $c.f).Length; sha = $h; desc = $c.d })
-      }
-    }
-    [System.IO.File]::WriteAllText((Join-Path $dest "$nome.sha256"), (($linhas -join "`n") + "`n"), (New-Object System.Text.UTF8Encoding($false)))
-
-    $verFF = ''
-    try { $verFF = (($(Rodar $FFMPEG '-version').out) -split "`r?`n")[0] } catch { }
-    $ficha = New-Object System.Collections.ArrayList
-    [void]$ficha.Add('AMBARIO - FICHA DE EXPORTACAO')
-    [void]$ficha.Add('=============================')
-    [void]$ficha.Add("Nome: $nome")
-    [void]$ficha.Add("Identificador sugerido no Internet Archive: ambario-$nome")
-    [void]$ficha.Add('Gerado em: ' + (Get-Date -Format 'yyyy-MM-dd HH:mm') + '   por Exportador_Ambario (janela, versão ' + $VERSAO + ')')
-    if ($verFF) { [void]$ficha.Add('FFmpeg: ' + $verFF) }
-    [void]$ficha.Add('')
-    [void]$ficha.Add('MATRIZ (o original nunca é alterado)')
-    [void]$ficha.Add('  Arquivo : ' + $arq)
-    [void]$ficha.Add('  Tamanho : ' + ([string][int64]$S.tamanho) + ' bytes (' + (Tam $S.tamanho) + ')')
-    [void]$ficha.Add('  Duração : ' + (Dur $S.dur))
-    if ($shaMkv) { [void]$ficha.Add('  SHA-256 : ' + $shaMkv) }
-    [void]$ficha.Add('  Vídeo   : ' + $S.vcodec + ' ' + $S.larg + 'x' + $S.alt + ' ' + $S.pixfmt)
-    [void]$ficha.Add('')
-    [void]$ficha.Add('ARQUIVOS GERADOS')
-    foreach ($ge in $gerados) { [void]$ficha.Add('  ' + $ge.nome + '   ' + (Tam $ge.tam) + '   ' + $ge.desc); [void]$ficha.Add('      SHA-256 ' + $ge.sha) }
-    [void]$ficha.Add('')
-    [void]$ficha.Add('CONFERÊNCIA AUTOMÁTICA')
-    if ($verif.Count -eq 0) { [void]$ficha.Add('  (nenhuma conferência rodou)') }
-    foreach ($v in $verif) { [void]$ficha.Add('  ' + $v) }
-    if ($e.copV -and ($o.entr -or $o.corte -or $o.ar -gt 0)) {
-      [void]$ficha.Add('')
-      [void]$ficha.Add('OBSERVAÇÃO: tirar o entrelaçamento, cortar bordas e acertar a proporção só valem para o arquivo de celular e a capa.')
-      [void]$ficha.Add('O MP4 do site e o M4A guardam a imagem e o som exatamente como estão na matriz.')
-      if ($o.ar -gt 0) { [void]$ficha.Add('Como a proporção foi forçada no celular, no site use "Enquadramento" para acertar o MP4 principal.') }
-    }
-    [void]$ficha.Add('')
-    [void]$ficha.Add('COMANDOS USADOS (para refazer à mão: PowerShell, dentro da pasta do MKV)')
-    foreach ($cm in $S.cmds) { [void]$ficha.Add('  ' + $cm) }
-    [void]$ficha.Add('')
-    [void]$ficha.Add('PRÓXIMOS PASSOS')
-    [void]$ficha.Add('1. archive.org/upload - arraste TODOS os arquivos desta pasta.')
-    [void]$ficha.Add("   Identificador: ambario-$nome")
-    [void]$ficha.Add('   Subject tags: ambario; videoclipe; VHS.   Media type: Movies.   Collection: Community Video.')
-    [void]$ficha.Add('2. No site, abra a área do curador: endereço do site + #admin')
-    [void]$ficha.Add('   Abra o vídeo (ou + Novo vídeo), cole o identificador em "Item do Internet Archive" e clique em Importar arquivos.')
-    [void]$ficha.Add("   Confira que ""Vídeo (MP4)"" aponta para $nome.mp4 e que ""Vídeo leve para celular"" aponta para $($nome)_celular.mp4. Clique em Salvar e publicar.")
-    [void]$ficha.Add('3. Guarde a matriz (MKV) e esta pasta num HD: o site toca os arquivos, mas a cópia de segurança é sua.')
-    [System.IO.File]::WriteAllText((Join-Path $dest "$nome-info.txt"), (($ficha -join "`r`n") + "`r`n"), (New-Object System.Text.UTF8Encoding($true)))
 
     # ----- resumo -----
-    $mb = if (Test-Path -LiteralPath $fMp4) { Tam ((Get-Item -LiteralPath $fMp4).Length) } else { '-' }
     $seg2 = ((Get-Date) - $S.inicio).TotalSeconds
-    $lEtapa.Text = ('Pronto em {0}min {1}s!  MP4: {2}. Identificador: ambario-{3}' -f [int][math]::Floor($seg2 / 60), [int]($seg2 % 60), $mb, $nome)
+    $lEtapa.Text = ('Pronto em {0}min {1}s!  Identificador sugerido no Archive: ambario-{2}' -f [int][math]::Floor($seg2 / 60), [int]($seg2 % 60), $nome)
     Log ''
     Log 'Pronto! Arquivos na pasta:'
-    foreach ($ge in $gerados) { Log ('  ' + $ge.nome + '   ' + (Tam $ge.tam)) }
-    Log ("  $nome.sha256  /  $nome-info.txt")
+    foreach ($arqSaida in @($fMkv, $fMp4, $fFita, $fCel)) {
+      if (Test-Path -LiteralPath $arqSaida) { Log ('  ' + [System.IO.Path]::GetFileName($arqSaida) + '   ' + (Tam ([double](Get-Item -LiteralPath $arqSaida).Length))) }
+    }
     foreach ($v in $verif) { Log ('  ' + $v) }
     foreach ($w in $avisos) { Log ('  [!] ' + $w) }
     Log ('Pasta: ' + $dest)
