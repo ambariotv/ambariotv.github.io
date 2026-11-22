@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-22",
-  "rev": 100,
+  "rev": 101,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -845,6 +845,31 @@ window.AMB_DATA = {
           ],
           "tracks": [{ "n": "B1", "t": "Lindo Lago Do Amor", "song": "lindo-lago-do-amor" }],
           "discogs": 12698105
+        }
+      ]
+    },
+    {
+      "id": "rita-lee",
+      "name": "Rita Lee",
+      "country": "BR",
+      "origin": "São Paulo",
+      "releases": [
+        {
+          "id": "saude-1981",
+          "type": "lp",
+          "title": "Saúde",
+          "year": 1981,
+          "label": "Som Livre (403.6243)",
+          "format": "Vinyl, LP, Album, Stereo",
+          "partial": true,
+          "src": [
+            {
+              "t": "Discogs — Rita Lee & Roberto – Saúde",
+              "u": "https://www.discogs.com/release/1892641"
+            }
+          ],
+          "tracks": [{ "n": "B2", "t": "Atlântida", "song": "atlantida" }],
+          "discogs": 1892641
         }
       ]
     }
@@ -1782,6 +1807,52 @@ window.AMB_DATA = {
       "description": "Onde fica esse lago? Me pergunto",
       "description_en": "Where is this lake? I wonder",
       "added": "2026-11-21",
+      "added_by": "moguell"
+    },
+    {
+      "id": "rita-lee-atlantida-clipe-1981",
+      "artist": "rita-lee",
+      "song": "atlantida",
+      "title": "Atlântida",
+      "kind": "clipe",
+      "date": "1981",
+      "status": "no-acervo",
+      "capa": "media/capas/rita-lee-atlantida-clipe-1981.jpg?v=mwsaf235",
+      "duration": 198,
+      "file": {
+        "video": "https://archive.org/download/ambario-rita-lee-atlantida-1981/rita-lee-atlantida-1981.mp4",
+        "mobile": "https://archive.org/download/ambario-rita-lee-atlantida-1981/rita-lee-atlantida-1981_celular.mp4",
+        "ia": "ambario-rita-lee-atlantida-1981"
+      },
+      "audio": [
+        {
+          "id": "principal",
+          "short": "CD",
+          "label": "LP Saúde (Som Livre, 1981)",
+          "kind": "cd",
+          "release": "saude-1981",
+          "by": "Miguel Lins",
+          "note": "faixa B2",
+          "embedded": true
+        },
+        {
+          "id": "original",
+          "short": "GRAVAÇÃO",
+          "label": "Som original da gravação",
+          "kind": "vhs",
+          "url": "https://archive.org/download/ambario-rita-lee-atlantida-1981/rita-lee-atlantida-1981-fita.m4a"
+        }
+      ],
+      "music": { "status": "streaming", "qobuz": "https://open.qobuz.com/track/26924297" },
+      "credits": { "tape": "Rita Lee", "sync": "Miguel Lins" },
+      "source": {
+        "medium": "VHS",
+        "aired": "1981",
+        "url": "https://youtu.be/6PTd5Z6LpxY?si=Ew9dm4pLuBKrjAPZ"
+      },
+      "description": "Chuá! Chuá!",
+      "description_en": "Chuah! Chuah!",
+      "added": "2026-11-22",
       "added_by": "moguell"
     }
   ]
