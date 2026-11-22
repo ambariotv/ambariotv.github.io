@@ -15,8 +15,8 @@
  *   sources   : { id: { t: título, u: link } } (usadas por id nos campos src)
  */
 window.AMB_DATA = {
-  "updated": "2026-11-21",
-  "rev": 98,
+  "updated": "2026-11-22",
+  "rev": 99,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1744,6 +1744,7 @@ window.AMB_DATA = {
       "date": "1984",
       "status": "no-acervo",
       "capa": "media/capas/gonzaguinha-lindo-lago-do-amor-clipe-1984.jpg?v=mwr546cy",
+      "fit": "cover",
       "duration": 281,
       "file": {
         "video": "https://archive.org/download/ambario-gonzaguinha-lindo-lago-do-amor-1984/gonzaguinha-lindo-lago-do-amor-1984.mp4",
