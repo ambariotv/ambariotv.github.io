@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-22",
-  "rev": 101,
+  "rev": 102,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -851,6 +851,7 @@ window.AMB_DATA = {
     {
       "id": "rita-lee",
       "name": "Rita Lee",
+      "photo": "media/artistas/rita-lee.jpg?v=mwsahiv4",
       "country": "BR",
       "origin": "São Paulo",
       "releases": [
