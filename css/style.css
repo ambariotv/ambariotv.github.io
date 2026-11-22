@@ -692,6 +692,7 @@ html.vr-trava { overflow: hidden; }
   .vr-transporte { flex-wrap: wrap; }
   .vr-seek { order: 5; flex-basis: 100%; }
   .vr-audio { margin-left: auto; }
+  .vr-audio + .vr-qual { margin-left: 6px; }
   .vr-ss-meio b { font-size: 1.5rem; }
   .vr-ss-nome { font-size: 1.1rem; }
   .vr-ss-sub { display: none; }

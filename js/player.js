@@ -88,6 +88,9 @@
   // No computador e em tablet grande segue o MP4 de preservação. Se a versão leve falhar, o player cai para o principal.
   AMB.preferirLeve = () => {
     try {
+      const q = AMB.store.get('amb.qualidade', '');   // escolha feita no botão ALTA / LEVE do player
+      if (q === 'leve') return true;
+      if (q === 'alta') return false;
       const mq = (q) => typeof matchMedia !== 'undefined' && matchMedia(q).matches;
       const c = navigator.connection || {};
       return !!c.saveData || mq('(max-width: 600px)') || (mq('(pointer: coarse)') && mq('(max-width: 900px)'));
@@ -203,6 +206,9 @@
             '<button type="button" class="vr-t-btn vr-mudo" data-a="mudo" aria-label="' + T('Tirar o som', 'Mute') + '">' + ICONE.som + '</button>' +
             '<input type="range" class="vr-vol" min="0" max="100" step="1" value="' + Math.round(this.volume * 100) + '" aria-label="Volume">' +
             (trilhas ? '<div class="vr-audio" role="group" aria-label="' + T('Escolher o áudio', 'Choose audio') + '">' + trilhas + '</div>' : '') +
+            (v.hasFile && v.file.mobile ? '<div class="vr-audio vr-qual" role="group" aria-label="' + T('Qualidade do vídeo', 'Video quality') + '">' +
+              '<button type="button" data-a="qual" data-q="alta" aria-pressed="' + (this.fontesLeves.length === 0) + '" title="' + T('Qualidade original (arquivo grande)', 'Original quality (large file)') + '">' + T('ALTA', 'HIGH') + '</button>' +
+              '<button type="button" data-a="qual" data-q="leve" aria-pressed="' + (this.fontesLeves.length > 0) + '" title="' + T('Versão leve: usa menos dados e carrega mais rápido', 'Light version: uses less data and loads faster') + '">' + T('LEVE', 'LIGHT') + '</button></div>' : '') +
           '</div>' +
         '</div>' +
         '<div class="vr-controles">' +
@@ -528,9 +534,29 @@
     const p = iaPartes(m);
     return url === m || (!!p && url.slice(-p.caminho.length) === p.caminho);
   };
+  // botões ALTA / LEVE: mostram o que está tocando agora
+  Player.prototype.marcarQualidade = function () {
+    const leve = this.eLeve(this.fontes[this.fonteIdx]);
+    this.root.querySelectorAll('[data-a="qual"]').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.q === 'leve') === leve)));
+  };
+  // o espectador escolheu ALTA (MP4 principal) ou LEVE (versão para celular); a escolha fica guardada neste navegador
+  Player.prototype.escolherQualidade = function (q) {
+    if (!this.v.hasFile || !this.fontes.length) return;
+    const querLeve = q === 'leve';
+    const idx = this.fontes.findIndex((u) => this.eLeve(u) === querLeve);
+    AMB.store.set('amb.qualidade', querLeve ? 'leve' : 'alta');
+    if (idx < 0 || this.eLeve(this.fontes[this.fonteIdx]) === querLeve) { this.marcarQualidade(); return; }
+    const v = this.video;
+    const tempo = v.readyState > 0 ? v.currentTime : (this._tempoAlvo || 0);
+    const tocando = !v.paused;
+    this.falhas = 0;
+    this.osd(querLeve ? T('VERSÃO LEVE', 'LIGHT VERSION') : T('QUALIDADE ALTA', 'HIGH QUALITY'));
+    this.trocarFonte(idx, tempo, tocando);
+  };
   Player.prototype.trocarFonte = function (i, tempo, continuar) {
     if (this.eLeve(this.fontes[i]) && !this.eLeve(this.fontes[this.fonteIdx])) this.osd(T('VERSÃO LEVE', 'LIGHT VERSION'));
     this.fonteIdx = i;
+    this.marcarQualidade();
     this._tempoAlvo = tempo || 0;
     this._recuperando = continuar !== false;
     this.video.src = this.fontes[i];
@@ -578,7 +604,10 @@
     this._recuperando = continuar;
     this.osd(this.fontes.length > 1 ? T('TROCANDO DE SERVIDOR', 'SWITCHING SERVER') : T('RECONECTANDO', 'RECONNECTING'));
     this.glitch();
-    const prox = (this.fonteIdx + 1) % this.fontes.length;
+    let prox = (this.fonteIdx + 1) % this.fontes.length;
+    // o MP4 principal continua travando: depois de duas tentativas vai direto para a versão leve (se o registro tiver uma)
+    const iLeve = this.fontes.findIndex((u) => this.eLeve(u));
+    if (iLeve >= 0 && this.falhas >= 2 && !this.eLeve(this.fontes[this.fonteIdx])) prox = iLeve;
     // espera um pouco a cada volta completa, para não martelar um servidor fora do ar
     const pausa = prox === 0 ? 1500 : 0;
     this.timer('reconectar', () => this.trocarFonte(prox, tempo, continuar), pausa);
@@ -683,6 +712,7 @@
       switch (a) {
         case 'pp': this.alternar(); break;
         case 'audio': this.selecionar(b.dataset.id); break;
+        case 'qual': this.escolherQualidade(b.dataset.q); break;
         case 'mudo': this.alternarMudo(); break;
         case 'power': this.reiniciar(); break;
         case 'crt': this.alternarCRT(); break;
