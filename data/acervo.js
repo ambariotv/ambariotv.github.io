@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-21",
-  "rev": 95,
+  "rev": 96,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -819,6 +819,31 @@ window.AMB_DATA = {
           ],
           "tracks": [{ "n": "A2", "t": "Coming Up Close", "song": "coming-up-close" }],
           "discogs": 11167282
+        }
+      ]
+    },
+    {
+      "id": "gonzaguinha",
+      "name": "Gonzaguinha",
+      "country": "BR",
+      "origin": "Rio de Janeiro",
+      "releases": [
+        {
+          "id": "as-melhores-da-manchete-fm-1984",
+          "type": "coletanea",
+          "title": "As Melhores da Manchete FM",
+          "year": 1984,
+          "label": "EMI (31C 064 260348)",
+          "format": "Vinyl, LP, Compilation",
+          "partial": true,
+          "src": [
+            {
+              "t": "Discogs — Various – As Melhores da Manchete FM",
+              "u": "https://www.discogs.com/release/12698105"
+            }
+          ],
+          "tracks": [{ "n": "B1", "t": "Lindo Lago Do Amor", "song": "lindo-lago-do-amor" }],
+          "discogs": 12698105
         }
       ]
     }
@@ -1707,6 +1732,47 @@ window.AMB_DATA = {
       "description": "Tá aí uma banda que todo mundo deveria conhecer. São fantásticos",
       "description_en": "There's a band that everyone should know. They are fantastic",
       "added": "2026-11-20",
+      "added_by": "moguell"
+    },
+    {
+      "id": "gonzaguinha-lindo-lago-do-amor-clipe-1984",
+      "artist": "gonzaguinha",
+      "song": "lindo-lago-do-amor",
+      "title": "Lindo Lago Do Amor",
+      "kind": "clipe",
+      "date": "1984",
+      "status": "no-acervo",
+      "capa": "media/capas/gonzaguinha-lindo-lago-do-amor-clipe-1984.jpg?v=mwr546cy",
+      "duration": 281,
+      "file": {
+        "video": "https://archive.org/download/ambario-gonzaguinha-lindo-lago-do-amor-1984/gonzaguinha-lindo-lago-do-amor-1984.mp4",
+        "ia": "ambario-gonzaguinha-lindo-lago-do-amor-1984"
+      },
+      "audio": [
+        {
+          "id": "principal",
+          "short": "LP",
+          "label": "Coletânea As Melhores da Manchete FM (EMI, 1984)",
+          "kind": "lp",
+          "release": "as-melhores-da-manchete-fm-1984",
+          "by": "bugrim",
+          "note": "faixa B1",
+          "embedded": true
+        },
+        {
+          "id": "original",
+          "short": "GRAVAÇÃO",
+          "label": "Som original da gravação",
+          "kind": "vhs",
+          "url": "https://archive.org/download/ambario-gonzaguinha-lindo-lago-do-amor-1984/gonzaguinha-lindo-lago-do-amor-1984-fita.m4a"
+        }
+      ],
+      "music": { "status": "streaming", "qobuz": "https://open.qobuz.com/track/101994542" },
+      "credits": { "tape": "Música Paixão + Gilberto", "sync": "Miguel Lins" },
+      "source": { "medium": "VHS", "url": "https://youtu.be/NkfAnGkcDhM?si=XzqIWPhXMz3QiEZr" },
+      "description": "Onde fica esse lago? Me pergunto",
+      "description_en": "Where is this lake? I wonder",
+      "added": "2026-11-21",
       "added_by": "moguell"
     }
   ]
