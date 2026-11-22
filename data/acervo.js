@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-21",
-  "rev": 97,
+  "rev": 98,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1770,7 +1770,13 @@ window.AMB_DATA = {
       ],
       "music": { "status": "streaming", "qobuz": "https://open.qobuz.com/track/101994542" },
       "credits": { "tape": "Música Paixão + Gilberto", "sync": "Miguel Lins" },
-      "source": { "medium": "VHS", "url": "https://youtu.be/NkfAnGkcDhM?si=XzqIWPhXMz3QiEZr" },
+      "source": {
+        "medium": "VHS",
+        "urls": [
+          "https://youtu.be/NkfAnGkcDhM?si=XzqIWPhXMz3QiEZr",
+          "https://youtu.be/GDAKvNZag8M?si=MYokquzmsR3IPnY6"
+        ]
+      },
       "description": "Onde fica esse lago? Me pergunto",
       "description_en": "Where is this lake? I wonder",
       "added": "2026-11-21",
