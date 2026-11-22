@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-21",
-  "rev": 96,
+  "rev": 97,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -825,6 +825,7 @@ window.AMB_DATA = {
     {
       "id": "gonzaguinha",
       "name": "Gonzaguinha",
+      "photo": "media/artistas/gonzaguinha.jpg?v=mwr55une",
       "country": "BR",
       "origin": "Rio de Janeiro",
       "releases": [
