@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-22",
-  "rev": 99,
+  "rev": 100,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1748,6 +1748,7 @@ window.AMB_DATA = {
       "duration": 281,
       "file": {
         "video": "https://archive.org/download/ambario-gonzaguinha-lindo-lago-do-amor-1984/gonzaguinha-lindo-lago-do-amor-1984.mp4",
+        "mobile": "https://archive.org/download/ambario-gonzaguinha-lindo-lago-do-amor-1984/gonzaguinha-lindo-lago-do-amor-1984_celular.mp4",
         "ia": "ambario-gonzaguinha-lindo-lago-do-amor-1984"
       },
       "audio": [
