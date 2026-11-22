@@ -21,7 +21,7 @@ Nenhum vídeo fica no YouTube: os arquivos são seus, enviados para o Internet A
 | Peça | Onde fica | Custo |
 |---|---|---|
 | O site (HTML, CSS, JS), os dados (`data/acervo.js`) e as capas (`media/capas/`) | GitHub Pages | grátis |
-| Os vídeos (MP4 + som original M4A + a matriz MKV) | Internet Archive | grátis |
+| Os vídeos (MP4 + versão leve para celular + som original M4A + a matriz MKV) | Internet Archive | grátis |
 | Comentários, exibições, estrelas e mensagens | Google Apps Script + a planilha “Ambário - banco” | grátis |
 | Preparar cada vídeo | EternalDub + `ferramentas/Exportar_para_o_site.bat` | no seu computador |
 | Cadastrar e editar | Área do curador do próprio site (`#admin`) | grátis |
@@ -40,7 +40,7 @@ Abra **https://ambariotv.github.io/#admin** (o link também está no rodapé).
 
 - **Vídeos**: lista com busca e filtro. **+ Novo vídeo**, **Editar**, **Ver**, **Apagar** (pergunta antes e oferece apagar a capa junto).
 - **Capa**: *Escolher imagem…* (ou arraste uma imagem para a janela, ou cole com Ctrl+V), *Tirar de um vídeo do computador…* (escolhe o momento numa barra e usa o quadro), *Reenquadrar* e *Sem capa*. Você arrasta e dá zoom para enquadrar; sai um JPG 640×480 salvo em `media/capas/<id>.jpg`.
-- **Arquivo de vídeo**: cole o identificador do Internet Archive e clique em **Importar arquivos**: ele acha o MP4, o M4A e a duração, e muda a situação para “No acervo”.
+- **Arquivo de vídeo**: cole o identificador do Internet Archive e clique em **Importar arquivos**: ele acha o MP4, a versão leve para celular (`…_celular.mp4`, que vai para o campo próprio e nunca vira o vídeo principal), o M4A e a duração, e muda a situação para “No acervo”.
 - **Enquadramento**: *Cortar bordas pretas das laterais* (imagem 4:3 dentro de um arquivo 16:9) ou *Desesticar* (imagem 4:3 que alguém esticou para 16:9). Não precisa converter o arquivo de novo.
 - **Artistas**: dados, formação, fontes e a **discografia**, disco por disco, com as faixas numa tabela. **Colar lista de faixas…** aceita “1. Título 3:45”, “A1 Título” ou só os títulos.
 - **Acervos**: quem cede fitas, digitaliza e sincroniza, com foto ou logo.
@@ -71,17 +71,30 @@ Cada alteração é aplicada por cima da versão mais nova que está no GitHub, 
 ## 4. Preparar um vídeo
 
 1. **EternalDub** (modo videoclipe): *Abrir filme* com a captura → *Adicionar música* com o FLAC do disco → **F5** (detectar atraso) → gerar o MKV. Ele sai no padrão de videoclipe: **faixa 1 = música do disco**, **faixa 2 = som original**.
-2. Arraste o MKV para cima de **`ferramentas/Exportar_para_o_site.bat`**. Ele pergunta o nome dos arquivos e confirma as faixas. Depois **confere a imagem sozinho** e sugere (Enter aceita):
-   - **entrelaçamento**: captura de fita é entrelaçada (usa o filtro *bwdif*, 59,94 quadros/s, o movimento fica igual ao da TV); cópia digital (DVD, internet) é progressiva e não mexe;
+2. Arraste o MKV (pode ser mais de um) para cima de **`ferramentas/Exportar_para_o_site.bat`**. Prefere uma janela? Use **`ferramentas/Exportador_Ambario.bat`**, que faz o mesmo com botões. O script **analisa o arquivo sozinho** e mostra um plano na tela; **Enter** aceita, **C** ajusta, **X** cancela. O que ele confere:
+   - **faixas de áudio**: sugere qual é o disco e qual é a fita (pelo título da faixa; sem título, 1 = disco e 2 = fita, o padrão do EternalDub);
+   - **entrelaçamento**: captura de fita é entrelaçada (filtro *bwdif*, o movimento fica igual ao da TV); cópia digital (DVD, internet) é progressiva e não mexe;
    - **bordas pretas**: procura num trecho de 40 s e corta (ex.: um arquivo 1920×1080 com a imagem 4:3 no meio vira 1490×1080);
    - **proporção**: Enter mantém (só acerta pixels não quadrados, 720×480 → 640×480); **4** força 4:3 (para imagem esticada); **16** força 16:9.
 
-   Numa pasta `para_o_site` saem `nome.mp4` (imagem + áudio do disco, H.264 CRF 18 + AAC 256 kb/s), `nome-fita.m4a` (o som original, AAC 160 kb/s), `nome.jpg` e `nome-info.txt` (duração, tamanho final da imagem e os próximos passos). Ele usa o mesmo FFmpeg do EternalDub.
+   Com vários arquivos ele segue sozinho, sem perguntas (usa o plano sugerido para cada um). Saem numa pasta `para_o_site\nome\`, uma por título:
+
+   | Arquivo | O que é |
+   |---|---|
+   | `nome.mp4` | **cópia sem perda** (`-c copy`): imagem e som são exatamente os da matriz, só o envelope MKV vira MP4. Só recodifica se o navegador não tocar o original (vídeo que não seja H.264 yuv420p; áudio que não seja AAC, MP3, Opus ou FLAC) |
+   | `nome-fita.m4a` | o som original da fita, também copiado sem perda (guarda o Opus sem converter) |
+   | `nome_celular.mp4` | versão leve para celular: H.264 até 480p (CRF 23, no máximo 1200 kb/s), AAC estéreo 128 kb/s. O site toca esta no celular e o `nome.mp4` no computador |
+   | `nome.jpg` | capa (um quadro do vídeo) |
+   | `nome.sha256` | SHA-256 de cada arquivo (formato do `sha256sum`) |
+   | `nome-info.txt` | ficha: o que foi feito, a conferência e os comandos FFmpeg exatos, para refazer à mão |
+   | `nome.mkv` | a matriz, como atalho de disco (não gasta espaço; se o disco não permitir, ele oferece copiar) |
+
+   **Preservação:** o MKV original nunca é alterado. Cada arquivo é escrito como `.part` e só ganha o nome final quando o FFmpeg termina sem erro; o que já existe é mantido, a menos que você peça para refazer. Nas cópias sem perda ele compara o SHA-256 dos pacotes de vídeo e áudio com os da matriz, e confere a duração, a leitura completa do arquivo de celular e o espaço livre. Tirar o entrelaçamento, cortar bordas e acertar a proporção valem só para o arquivo de celular e a capa; no MP4 do site use **Enquadramento** (seção 3). Ele usa o mesmo FFmpeg do EternalDub.
 
 ## 5. Enviar ao Internet Archive
 
 1. Crie uma conta em archive.org (grátis).
-2. Vá em **archive.org/upload** e arraste o MP4, o M4A e, se quiser guardar a matriz, o MKV.
+2. Vá em **archive.org/upload** e arraste **todos os arquivos da pasta** do vídeo (MP4, `_celular.mp4`, M4A, JPG, MKV, `.sha256` e `-info.txt`).
 3. Preencha:
    - **Page URL / identificador**: `ambario-metro-olhar-1985` (sem espaços nem acentos);
    - **Title**: `Metrô — Olhar (ao vivo, 1985)`;
@@ -91,7 +104,7 @@ Cada alteração é aplicada por cima da versão mais nova que está no GitHub, 
 4. **Upload**. O item aparece em alguns minutos (às vezes horas).
 5. No site: `#admin` → abra o vídeo → cole o identificador → **Importar arquivos** → **Salvar e publicar**.
 
-O site toca os arquivos direto do Archive com o player próprio. Guarde sempre as matrizes no seu computador. Se um item sair do ar, dá para pôr outro endereço em **Espelhos** (o player troca sozinho quando um link falha).
+O site toca os arquivos direto do Archive com o player próprio (no celular, o `_celular.mp4`). Guarde sempre as matrizes no seu computador. Se um item sair do ar, dá para pôr outro endereço em **Espelhos** (o player troca sozinho quando um link falha).
 
 ## 6. Comentários, exibições e estrelas (Apps Script)
 
@@ -119,7 +132,7 @@ A **versão** separa gravações diferentes da mesma música: vazia é a versão
 - **Artista** (`artists`): `id`, `name`, `alt`, `country` (`"BR"`, `"US"`…), `origin`, `years`, `members` (`[{ name, role, years }]`), `intro`, `src`, `releases`.
 - **Disco** (`releases`): `id`, `type` (`lp`, `compacto`, `single`, `ep`, `cd`, `coletanea`, `participacao`, `digital`), `title`, `year`, `date`, `label`, `format`, `credit`, `note`, `partial`, `src`, `tracks`.
 - **Faixa** (`tracks`): `n`, `t`, `song`, `ver`, `len`, `w` (compositores), `feat`, `note`.
-- **Vídeo** (`videos`): `id`, `artist`, `song`, `ver`, `title`, `kind` (`clipe`, `tv`, `ao-vivo`, `filme`, `entrevista`, `comercial`, `outro`), `date`, `program`, `channel`, `director`, `status` (`no-acervo`, `na-fila`, `procura-se`), `capa` (`media/capas/…jpg`), `fit` (`cover` corta bordas laterais, `fill` desestica), `aspect` (`16:9` para tela larga), `duration` (segundos), `file` (`video`, `ia`, `mirrors`), `audio`, `credits`, `source`, `description`, `note`, `src`, `refs`, `added`, `added_by`.
+- **Vídeo** (`videos`): `id`, `artist`, `song`, `ver`, `title`, `kind` (`clipe`, `tv`, `ao-vivo`, `filme`, `entrevista`, `comercial`, `outro`), `date`, `program`, `channel`, `director`, `status` (`no-acervo`, `na-fila`, `procura-se`), `capa` (`media/capas/…jpg`), `fit` (`cover` corta bordas laterais, `fill` desestica), `aspect` (`16:9` para tela larga), `duration` (segundos), `file` (`video`, `mobile`, `ia`, `mirrors`), `audio`, `credits`, `source`, `description`, `note`, `src`, `refs`, `added`, `added_by`.
 - **Áudio** (`audio`): o primeiro é o principal, dentro do MP4 (`embedded: true`); o segundo tem `url` (o M4A). Campos: `id`, `short` (o texto do botão), `label`, `kind`, `release`, `by`, `note`.
 - **Créditos** (`credits`): `tape`, `capture`, `sync`, `restore`, `extra`. Com o id de um acervo, o nome vira link.
 - **Origem** (`source`): `medium`, `standard`, `speed`, `from`, `aired`, `generation`, `deck`, `capture`, `notes`.
@@ -127,6 +140,7 @@ A **versão** separa gravações diferentes da mesma música: vazia é a versão
 ## 9. O player
 
 - Atalhos: **espaço** tocar/pausar · **← →** 5 s · **A** trocar o áudio · **F** tela cheia · **M** som · **C** filtro CRT.
+- Versão para celular: se o vídeo tem `file.mobile`, o player começa por ele em tela pequena (até 600 px, ou até 900 px quando é toque) ou com “economizar dados” ligado; no computador toca o `file.video`. Se a versão leve falhar, cai sozinho para o MP4 principal.
 - Os dois áudios: o MP4 toca a imagem com o áudio do disco; o som original é um arquivo à parte, tocado junto e corrigido a cada 1/4 de segundo (nos testes, diferença abaixo de 30 milésimos).
 - Vídeo “na fila” mostra a tela azul do videocassete por cima da capa, com o botão “Tenho essa gravação”.
 - Para o visual vermelho do Eternal Medias original, troque `--vr-acento` e `--vr-moldura` no `css/style.css`.
@@ -154,5 +168,6 @@ data/acervo.js              fontes, acervos, artistas, discos e vídeos
 media/capas/                capas dos vídeos (640×480)
 fonts/                      VT323 (licença SIL OFL)
 backend/Code.gs             servidor no Google Apps Script
-ferramentas/Exportar_para_o_site.bat   MKV do EternalDub → MP4 + M4A + capa
+ferramentas/Exportar_para_o_site.bat   MKV do EternalDub → MP4 sem perda + celular + M4A + capa + checksums
+ferramentas/Exportador_Ambario.bat     o mesmo, numa janela (Exportador_Ambario.ps1)
 ```

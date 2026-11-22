@@ -368,7 +368,8 @@
     if (v.hasFile) {
       add(T('Duração', 'Duration'), v.duration ? AMB.fmtDur(v.duration) : '');
       add(T('Arquivo', 'File'), (v.file.ia && AMB.cfg('MOSTRAR_LINK_IA', true) ? T('preservado no ', 'preserved at ') + '<a href="https://archive.org/details/' + encodeURIComponent(v.file.ia) + '" target="_blank" rel="noopener">Internet Archive (' + esc(v.file.ia) + ')</a>' : T('hospedado pelo acervo', 'hosted by the archive')) +
-        ((v.file.mirrors || []).length ? ' · ' + pl(v.file.mirrors.length, T('espelho', 'mirror'), T('espelhos', 'mirrors')) : ''));
+        ((v.file.mirrors || []).length ? ' · ' + pl(v.file.mirrors.length, T('espelho', 'mirror'), T('espelhos', 'mirrors')) : '') +
+        (v.file.mobile ? ' · ' + T('com versão leve para celular', 'with a light version for phones') : ''));
     }
     add(T('Observações', 'Notes'), esc(s.notes || ''));
     add(T('Situação', 'Status'), V.selo(v.status) + ' <span class="mini">' + esc((AMB.STATUS[v.status] || {}).d || '') + '</span>');
