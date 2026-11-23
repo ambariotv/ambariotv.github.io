@@ -952,3 +952,9 @@ html[data-tema="escuro"] .w-de-mini .de-orig { color: #ff5c5c; }
 html[data-tema="escuro"] .w-de-mini .de-orig.de-sem-link { color: #a3b3c6; }
 .w-de-mini .de-mais { color: #888; }
 .w-de-mini .de-orig-n { margin-left: 4px; font-size: 12px; }
+/* botões de qualidade (computador = HQ, celular = SD): pequenos e discretos */
+.vr-qual { opacity: .75; transition: opacity .15s; }
+.vr-qual:hover { opacity: 1; }
+.vr-qual button { display: inline-flex; align-items: center; justify-content: center; padding: 3px 6px; line-height: 0; }
+.vr-qual button[aria-pressed="true"] { color: #fff; text-shadow: none; background: linear-gradient(#3d4a5c, #262e3a); box-shadow: inset 0 1px rgba(255,255,255,.18); }
+.vr-qual button svg { display: block; }

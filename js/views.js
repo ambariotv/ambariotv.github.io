@@ -113,7 +113,9 @@
   };
 
   const ORDEM_ST = { 'no-acervo': 0, 'na-fila': 1, 'procura-se': 2 };
-  V.ordemHome = (lista) => lista.map((v, i) => ({ v, i })).sort((a, b) => (ORDEM_ST[a.v.status] - ORDEM_ST[b.v.status]) || (a.i - b.i)).map((x) => x.v);
+  void ORDEM_ST;
+  // página inicial: adicionados mais recentemente primeiro (mesma data: o cadastrado depois vem antes)
+  V.ordemHome = (lista) => lista.map((v, i) => ({ v, i })).sort((a, b) => String(b.v.added || '').localeCompare(String(a.v.added || '')) || (b.i - a.i)).map((x) => x.v);
 
   V.home = (st) => {
     const todos = V.ordemHome(AMB.publicVideos());

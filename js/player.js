@@ -122,6 +122,9 @@
     } catch (e) { /* sem áudio: segue sem o clique */ }
   };
  
+  // ícones dos botões de qualidade: computador (HQ, arquivo original) e celular (SD, versão leve)
+  const ICONE_PC = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="8.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M6 14h4M8 11v3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
+  const ICONE_CEL = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="4.5" y="1.5" width="7" height="13" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M7 12.4h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
   const ICONE = {
     play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
     pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>',
@@ -207,8 +210,8 @@
             '<input type="range" class="vr-vol" min="0" max="100" step="1" value="' + Math.round(this.volume * 100) + '" aria-label="Volume">' +
             (trilhas ? '<div class="vr-audio" role="group" aria-label="' + T('Escolher o áudio', 'Choose audio') + '">' + trilhas + '</div>' : '') +
             (v.hasFile && v.file.mobile ? '<div class="vr-audio vr-qual" role="group" aria-label="' + T('Qualidade do vídeo', 'Video quality') + '">' +
-              '<button type="button" data-a="qual" data-q="alta" aria-pressed="' + (this.fontesLeves.length === 0) + '" title="' + T('HQ: qualidade original (arquivo grande)', 'HQ: original quality (large file)') + '">HQ</button>' +
-              '<button type="button" data-a="qual" data-q="leve" aria-pressed="' + (this.fontesLeves.length > 0) + '" title="' + T('SD: versão leve, 480p (usa menos dados e carrega mais rápido)', 'SD: light version, 480p (uses less data, loads faster)') + '">SD</button></div>' : '') +
+              '<button type="button" data-a="qual" data-q="alta" aria-pressed="' + (this.fontesLeves.length === 0) + '" title="' + T('HQ: qualidade original (arquivo grande)', 'HQ: original quality (large file)') + '">' + ICONE_PC + '</button>' +
+              '<button type="button" data-a="qual" data-q="leve" aria-pressed="' + (this.fontesLeves.length > 0) + '" title="' + T('SD: versão leve, 480p (usa menos dados e carrega mais rápido)', 'SD: light version, 480p (uses less data, loads faster)') + '">' + ICONE_CEL + '</button></div>' : '') +
           '</div>' +
         '</div>' +
         '<div class="vr-controles">' +
