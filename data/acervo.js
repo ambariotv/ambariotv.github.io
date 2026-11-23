@@ -15,8 +15,8 @@
  *   sources   : { id: { t: título, u: link } } (usadas por id nos campos src)
  */
 window.AMB_DATA = {
-  "updated": "2026-11-22",
-  "rev": 103,
+  "updated": "2026-11-23",
+  "rev": 104,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -871,6 +871,32 @@ window.AMB_DATA = {
           ],
           "tracks": [{ "n": "B2", "t": "Atlântida", "song": "atlantida" }],
           "discogs": 1892641
+        }
+      ]
+    },
+    {
+      "id": "naoko-isamu",
+      "name": "Naoko Isamu",
+      "country": "JP",
+      "origin": "Urawa",
+      "releases": [
+        {
+          "id": "-2004",
+          "type": "coletanea",
+          "title": "コンプリート・ベスト",
+          "year": 2004,
+          "date": "2004-07-22",
+          "label": "Vivid Sound (VSCD3738-9)",
+          "format": "2×CD, Album, Compilation",
+          "partial": true,
+          "src": [
+            {
+              "t": "Discogs — Naoko Isamu – コンプリート・ベスト",
+              "u": "https://www.discogs.com/release/26653433"
+            }
+          ],
+          "tracks": [{ "n": "2-3", "t": "さよならは落ち込まないで", "song": "" }],
+          "discogs": 26653433
         }
       ]
     }
@@ -1885,6 +1911,50 @@ window.AMB_DATA = {
       "description": "Saúde é tudo.",
       "description_en": "Health is everything.",
       "added": "2026-11-22",
+      "added_by": "moguell"
+    },
+    {
+      "id": "naoko-isamu-tv-1987",
+      "artist": "naoko-isamu",
+      "title": "さよならは落ち込まないで",
+      "kind": "tv",
+      "date": "1987",
+      "status": "no-acervo",
+      "capa": "media/capas/naoko-isamu-tv-1987.jpg?v=mwtb6b3m",
+      "duration": 114,
+      "file": {
+        "video": "https://archive.org/download/ambario-naoko-isamu-1987/naoko-isamu-1987.mp4",
+        "mobile": "https://archive.org/download/ambario-naoko-isamu-1987/naoko-isamu-1987_celular.mp4",
+        "ia": "ambario-naoko-isamu-1987"
+      },
+      "audio": [
+        {
+          "id": "principal",
+          "short": "CD",
+          "label": "Coletânea コンプリート・ベスト (Vivid Sound, 2004)",
+          "kind": "cd",
+          "release": "-2004",
+          "by": "Soulseek_User",
+          "note": "faixa 2-3",
+          "embedded": true
+        },
+        {
+          "id": "original",
+          "short": "GRAVAÇÃO",
+          "label": "Som original da gravação",
+          "kind": "vhs",
+          "url": "https://archive.org/download/ambario-naoko-isamu-1987/naoko-isamu-1987-fita.m4a"
+        }
+      ],
+      "credits": { "tape": "Mystical Seameadow Eskimo Fox", "sync": "Miguel Lins" },
+      "source": {
+        "medium": "VHS",
+        "aired": "1987",
+        "url": "https://youtu.be/ee7kC0KlM-U?si=yhMNBXkDCNb5AvnZ"
+      },
+      "description": "Videoclipe de \"さよならは落ち込まないで\", de Naoko Isamu (1987). Gravado da TV em fita VHS. ARQUIVOS • .mkv — arquivo de preservação: vídeo + 2 faixas de áudio 1. Áudio do disco (MP3, fonte: CD) 2. Som original da gravação da TV (Opus) • .mp4 — vídeo + áudio do disco (para assistir) • _celular.mp4 — versão menor, para assistir em celulares • -fita.m4a — som original da gravação da TV CRÉDITOS Fonte da fita: Mystical Seameadow Eskimo Fox Fonte de áudio melhor: Soulseek_User Sincronização do áudio (EternalDub): Miguel Lins Parte do Ambário — acervo de videoclipes brasileiros. Assista em: https://ambariotv.g",
+      "description_en": "Music video for \"さよならは落ち込まないで\", by Naoko Isamu (1987). Recorded from TV on VHS tape. FILE best audio: Soulseek_User Audio synchronization (EternalDub): Miguel Lins Parte do Ambário — collection of Brazilian music videos. Watch at: https://ambariotv.g",
+      "added": "2026-11-23",
       "added_by": "moguell"
     }
   ]
