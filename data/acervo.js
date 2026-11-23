@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-23",
-  "rev": 110,
+  "rev": 111,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -939,15 +939,14 @@ window.AMB_DATA = {
         }
       ],
       "music": { "status": "streaming", "qobuz": "https://open.qobuz.com/track/33951340" },
-      "credits": { "sync": "moguell", "tape": "Virginie Boutaud" },
+      "credits": { "sync": "Miguel Lins", "tape": "Virginie Boutaud" },
       "source": {
-        "medium": "Cópia digital",
+        "medium": "VHS",
         "from": "Reprise no canal Multishow (a logo do canal aparece no canto da tela)",
         "aired": "1984",
         "url": "https://youtu.be/XhRQsqWMVLc?si=t5RvkpZCrwY0CXSF"
       },
-      "description": "Videoclipe de \"Beat Acelerado\", de Metrô (1984). Gravado da TV em fita VHS. ARQUIVOS • .mkv — arquivo de preservação: vídeo + 2 faixas de áudio 1. Áudio do disco (FLAC, fonte: CD) 2. Som original da gravação da TV (Opus) • .mp4 — vídeo + áudio do CD (para assistir) • _celular.mp4 — versão menor, para assistir em celulares • -fita.m4a — som original da gravação da TV CRÉDITOS Fonte da fita: Virginie Boutaud Fonte de áudio melhor: Miguel Lins Sincronização do áudio (EternalDub): Miguel Lins Parte do Ambário — acervo de videoclipes brasileiros. Assista em: https://ambariotv.github.io",
-      "description_en": "Music video for \"Beat Acelerado\", by Metrô (1984). Recorded from TV on VHS tape. FILES • .mkv — preservation file: video + 2 audio tracks 1. Audio from the disc (FLAC, source: CD) 2. Original sound from the TV recording (Opus) • .mp4 — video + audio from the CD (to watch) • _celular.mp4 — smaller version, to watch on cell phones • -tape.m4a — original sound from the TV recording CREDITS Tape source: Virginie Boutaud Better audio source: Miguel Lins Audio synchronization (EternalDub): Miguel Lins Parte do Ambário — collection of Brazilian music videos. Watch at: https://ambariotv.github.io",
+      "description": "E esse Beat só Acelerado",
       "added": "2026-11-07",
       "added_by": "moguell"
     },
