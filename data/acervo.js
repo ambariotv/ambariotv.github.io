@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-23",
-  "rev": 107,
+  "rev": 108,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1759,6 +1759,7 @@ window.AMB_DATA = {
       "duration": 277,
       "file": {
         "video": "https://archive.org/download/ambario-til-tuesday-coming-up-close-1986/til-tuesday-coming-up-close-1986.mp4",
+        "mobile": "https://archive.org/download/ambario-til-tuesday-coming-up-close-1986/til-tuesday-coming-up-close-1986_celular.mp4",
         "ia": "ambario-til-tuesday-coming-up-close-1986"
       },
       "audio": [
