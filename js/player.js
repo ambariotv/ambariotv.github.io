@@ -197,8 +197,6 @@
             '<div class="vr-sensor"></div>' +
             '<button type="button" class="vr-grande" data-a="pp" aria-label="' + T('Tocar', 'Play') + '">' + ICONE.play + '</button>' +
             '<div class="vr-fim" hidden></div>' +
-            '<button type="button" class="vr-fs-btn vr-fs-prev' + (this.opts.prev ? '' : ' vr-sem') + '" data-a="prev" aria-label="' + T('Vídeo anterior', 'Previous video') + '">' + ICONE.prev + '</button>' +
-            '<button type="button" class="vr-fs-btn vr-fs-next' + (this.opts.next ? '' : ' vr-sem') + '" data-a="next" aria-label="' + T('Próximo vídeo', 'Next video') + '">' + ICONE.next + '</button>' +
             '<button type="button" class="vr-sair-tela" data-a="tela">✕ ' + T('SAIR', 'EXIT') + '</button>' +
           '</div>' +
           '<div class="vr-transporte"' + (v.hasFile ? '' : ' hidden') + '>' +

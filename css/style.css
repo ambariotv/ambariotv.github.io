@@ -639,16 +639,6 @@ table.adm-faixas { width: 100%; min-width: 860px; border-collapse: collapse; fon
 .vr-screen.vr-tela-cheia .vr-osd-modo { right: 24px; bottom: 84px; font-size: 1.8rem; }
 .vr-screen.vr-fake { position: fixed; inset: 0; z-index: 10001; width: 100vw; height: 100vh; height: 100dvh; }
 html.vr-trava { overflow: hidden; }
-.vr-fs-btn { display: none; position: absolute; z-index: 27; top: 50%; width: 64px; height: 65px; margin-top: -32px; padding: 0; background: none; border: 0; opacity: 0; pointer-events: none; transition: opacity .25s; cursor: pointer; }
-.vr-fs-prev { left: 24px; }
-.vr-fs-next { right: 24px; }
-.vr-fs-btn svg { display: block; width: 100%; height: 100%; }
-.vr-fs-btn rect { fill: rgba(0,0,0,.55); stroke: var(--vr-acento); stroke-width: 8; }
-.vr-fs-btn polyline { fill: none; stroke: var(--vr-acento); stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; }
-.vr-fs-btn:hover rect, .vr-fs-btn:hover polyline { stroke: #fff; }
-.vr-screen.vr-tela-cheia .vr-fs-btn { display: block; }
-.vr-screen.vr-tela-cheia.vr-mexendo .vr-fs-btn { opacity: 1; pointer-events: auto; }
-.vr-fs-btn.vr-sem { display: none !important; }
  
 /* ---------------- telas pequenas ---------------- */
 @media (max-width: 820px) {
