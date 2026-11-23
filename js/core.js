@@ -94,7 +94,12 @@
   const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
   AMB.esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ESC[c]);
   AMB.norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-  AMB.slug = (s) => AMB.norm(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+  // nomes em japonês, coreano etc. ficariam vazios no slug latino: aí mantém as letras originais
+  AMB.slug = (s) => {
+    const lat = AMB.norm(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+    if (lat) return lat;
+    return String(s || '').normalize('NFC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+  };
   AMB.uid = (p) => (p || 'x') + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   AMB.clone = (o) => JSON.parse(JSON.stringify(o));
   AMB.isUrl = (s) => /^https?:\/\//i.test(String(s || ''));

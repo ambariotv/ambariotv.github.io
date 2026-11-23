@@ -896,7 +896,7 @@ window.AMB_DATA = {
               "u": "https://www.discogs.com/release/26653433"
             }
           ],
-          "tracks": [{ "n": "2-3", "t": "さよならは落ち込まないで" }],
+          "tracks": [{ "n": "2-3", "t": "さよならは落ち込まないで", "song": "さよならは落ち込まないで" }],
           "discogs": 26653433
         }
       ]
@@ -1918,6 +1918,7 @@ window.AMB_DATA = {
       "id": "naoko-isamu-tv-1987",
       "artist": "naoko-isamu",
       "title": "さよならは落ち込まないで",
+      "song": "さよならは落ち込まないで",
       "kind": "tv",
       "date": "1987",
       "status": "no-acervo",
