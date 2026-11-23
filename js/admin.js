@@ -566,7 +566,7 @@
     '</div></form>';
   }
 
-  function ligarVideo(root, idOriginal) {
+  function ligarVideo(root, idOriginal, prefill) {
     const f = root.querySelector('#adm-video');
     if (!f) return;
     const original = idOriginal === 'novo' ? null : rawVideo(idOriginal);
@@ -767,9 +767,50 @@
       }
     });
 
+    // ---- pré-preenchimento vindo da ficha do Publicar_no_Ambario (só preenche o que está vazio; nada é salvo sozinho) ----
+    function aplicarPrefill(d) {
+      const norm = (x) => AMB.norm(String(x || '')).trim();
+      const achar = (lista, nome) => { const n = norm(nome); return n ? lista.find((x) => norm(x.name) === n || norm(x.id) === n || (x.alt || []).some((a) => norm(a) === n)) : null; };
+      const quem = (nome) => { const c = achar(Object.values(AMB.acervos), nome); return c ? c.id : String(nome || '').trim(); };
+      const ponha = (n, valor) => { const c = el(n); if (c && valor && !String(c.value || '').trim()) c.value = String(valor).trim(); };
+      const texto = (k) => String(d[k] == null ? '' : d[k]).trim();
+
+      if (texto('artist')) {
+        const a = achar(AMB.artistList, d.artist);
+        if (a) el('artist').value = a.id;
+        else { el('artist').value = '__novo'; ponha('artist_name', texto('artist')); }
+        atualizarArtista();
+      }
+      ponha('song', texto('song'));
+      ponha('title', texto('song'));
+      ponha('date', texto('date'));
+      if (d.live && !el('live').checked) { el('live').checked = true; ligouAoVivo(); }
+      if (texto('tape')) ponha('tape', quem(d.tape));
+      ponha('medium', 'VHS');
+      if (d.live) {
+        ponha('program', texto('event'));
+      } else {
+        if (texto('sync')) el('sync').value = quem(d.sync);
+        ponha('a1_by', texto('audioBy') ? quem(d.audioBy) : '');
+        const k = /^cd/i.test(texto('disc')) ? 'cd' : /compacto|single|7/i.test(texto('disc')) ? 'compacto' : /^lp/i.test(texto('disc')) ? 'lp' : /cassete|fita/i.test(texto('disc')) ? 'fita' : '';
+        if (k && !el('a1_kind').value) el('a1_kind').value = k;
+      }
+      idPrevisto();
+      E.sujo = true;
+      const topo = f.querySelector('.box-c');
+      if (topo) {
+        const p = document.createElement('p');
+        p.className = 'mini adm-prefill';
+        p.textContent = 'Formulário preenchido pela ficha do Publicar_no_Ambario: confira tudo antes de salvar.' + (texto('ia') ? ' Importando os arquivos do Internet Archive…' : '');
+        topo.insertBefore(p, topo.firstChild);
+      }
+      if (/^[\w.-]{3,100}$/.test(texto('ia'))) { el('ia').value = texto('ia'); importarIA(f); }
+    }
+
     atualizarArtista();
     idPrevisto();
     mostrarCapa();
+    if (prefill && idOriginal === 'novo') aplicarPrefill(prefill);
   }
 
   async function importarIA(f) {
@@ -1819,10 +1860,24 @@
     carregar();
   }
 
+  // Link da ficha do Publicar_no_Ambario: #admin/video/novo?d=<JSON em base64url> (artista, música, ano, créditos, item do Archive)
+  function lerPrefill(consulta) {
+    const m = /(?:^|&)d=([\w-]+)/.exec(consulta || '');
+    if (!m) return null;
+    try {
+      const b64 = m[1].replace(/-/g, '+').replace(/_/g, '/');
+      const bin = atob(b64 + '='.repeat((4 - b64.length % 4) % 4));
+      const d = JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0))));
+      return d && typeof d === 'object' ? d : null;
+    } catch (e) { return null; }
+  }
+
   function render(root, rota) {
-    const partes = String(rota || 'admin').split('/');
+    const corte = String(rota || 'admin').split('?');
+    const partes = corte[0].split('/');
     const sec = partes[1] || 'videos';
     const id = partes.slice(2).join('/');
+    const prefill = sec === 'video' && (id || 'novo') === 'novo' ? lerPrefill(corte.slice(1).join('?')) : null;
     E.sujo = false; E.capaNova = null; E.capaRemovida = false; E.fotoNova = null; E.discogs = null;
     let corpo = '', aba = sec;
     if (sec === 'videos') corpo = telaVideos();
@@ -1854,7 +1909,7 @@
       else if (b.dataset.adm === 'apagar-acervo') apagarAcervo(b.dataset.id, root);
     });
     if (sec === 'videos' || sec === 'artistas') ligarLista(root);
-    else if (sec === 'video') ligarVideo(root, id || 'novo');
+    else if (sec === 'video') ligarVideo(root, id || 'novo', prefill);
     else if (sec === 'artista') ligarArtista(root, id || 'novo');
     else if (sec === 'acervo') ligarAcervo(root, id || 'novo');
     else if (sec === 'publicar') ligarPublicar(root);
