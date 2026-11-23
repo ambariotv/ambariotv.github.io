@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-23",
-  "rev": 104,
+  "rev": 105,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -877,11 +877,12 @@ window.AMB_DATA = {
     {
       "id": "naoko-isamu",
       "name": "Naoko Isamu",
+      "photo": "media/artistas/naoko-isamu.jpg?v=mwtb8s25",
       "country": "JP",
       "origin": "Urawa",
       "releases": [
         {
-          "id": "-2004",
+          "id": "2004",
           "type": "coletanea",
           "title": "コンプリート・ベスト",
           "year": 2004,
@@ -895,7 +896,7 @@ window.AMB_DATA = {
               "u": "https://www.discogs.com/release/26653433"
             }
           ],
-          "tracks": [{ "n": "2-3", "t": "さよならは落ち込まないで", "song": "" }],
+          "tracks": [{ "n": "2-3", "t": "さよならは落ち込まないで" }],
           "discogs": 26653433
         }
       ]
