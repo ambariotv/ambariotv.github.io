@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-23",
-  "rev": 105,
+  "rev": 106,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1922,6 +1922,7 @@ window.AMB_DATA = {
       "date": "1987",
       "status": "no-acervo",
       "capa": "media/capas/naoko-isamu-tv-1987.jpg?v=mwtb6b3m",
+      "fit": "cover",
       "duration": 114,
       "file": {
         "video": "https://archive.org/download/ambario-naoko-isamu-1987/naoko-isamu-1987.mp4",
@@ -1934,7 +1935,6 @@ window.AMB_DATA = {
           "short": "CD",
           "label": "Coletânea コンプリート・ベスト (Vivid Sound, 2004)",
           "kind": "cd",
-          "release": "-2004",
           "by": "Soulseek_User",
           "note": "faixa 2-3",
           "embedded": true
