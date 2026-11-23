@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-23",
-  "rev": 106,
+  "rev": 107,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1955,6 +1955,41 @@ window.AMB_DATA = {
       },
       "description": "Videoclipe de \"さよならは落ち込まないで\", de Naoko Isamu (1987). Gravado da TV em fita VHS. ARQUIVOS • .mkv — arquivo de preservação: vídeo + 2 faixas de áudio 1. Áudio do disco (MP3, fonte: CD) 2. Som original da gravação da TV (Opus) • .mp4 — vídeo + áudio do disco (para assistir) • _celular.mp4 — versão menor, para assistir em celulares • -fita.m4a — som original da gravação da TV CRÉDITOS Fonte da fita: Mystical Seameadow Eskimo Fox Fonte de áudio melhor: Soulseek_User Sincronização do áudio (EternalDub): Miguel Lins Parte do Ambário — acervo de videoclipes brasileiros. Assista em: https://ambariotv.g",
       "description_en": "Music video for \"さよならは落ち込まないで\", by Naoko Isamu (1987). Recorded from TV on VHS tape. FILE best audio: Soulseek_User Audio synchronization (EternalDub): Miguel Lins Parte do Ambário — collection of Brazilian music videos. Watch at: https://ambariotv.g",
+      "added": "2026-11-23",
+      "added_by": "moguell"
+    },
+    {
+      "id": "rpm-louras-geladas-ao-vivo-1986",
+      "artist": "rpm",
+      "song": "louras-geladas",
+      "title": "Louras Geladas",
+      "kind": "ao-vivo",
+      "live": true,
+      "date": "1986",
+      "status": "no-acervo",
+      "capa": "media/capas/rpm-louras-geladas-ao-vivo-1986.jpg?v=mwtpf4a9",
+      "duration": 175,
+      "file": {
+        "video": "https://archive.org/download/ambario-rpm-louras-geladas-1986-ao-vivo/rpm-louras-geladas-1986-ao-vivo.mp4",
+        "mobile": "https://archive.org/download/ambario-rpm-louras-geladas-1986-ao-vivo/rpm-louras-geladas-1986-ao-vivo_celular.mp4",
+        "ia": "ambario-rpm-louras-geladas-1986-ao-vivo"
+      },
+      "audio": [
+        {
+          "id": "principal",
+          "short": "AO VIVO",
+          "label": "Som original da gravação",
+          "embedded": true
+        }
+      ],
+      "credits": { "tape": "RPMVEVO" },
+      "source": {
+        "medium": "VHS",
+        "aired": "1986",
+        "url": "https://youtu.be/Jh7WdQ0Erzg?si=kUpPMvcrvpaFCK6b"
+      },
+      "description": "Nem todas são iguais",
+      "description_en": "Not all are the same",
       "added": "2026-11-23",
       "added_by": "moguell"
     }
