@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-23",
-  "rev": 109,
+  "rev": 110,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
