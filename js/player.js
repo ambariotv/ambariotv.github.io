@@ -618,15 +618,32 @@
  
   /* ---------- tela cheia (nativa; "falsa" no iPhone, como no original) ---------- */
   Player.prototype.telaCheia = function () { return this.screen.classList.contains('vr-tela-cheia'); };
+  // celular: tenta deitar a tela (Android; só funciona já em tela cheia) quando o vídeo é mais largo que alto
+  Player.prototype.deitar = function () {
+    try {
+      const o = screen.orientation;
+      const v = this.video;
+      const largo = !v.videoWidth || v.videoWidth >= v.videoHeight;
+      if (o && o.lock && largo && window.matchMedia && window.matchMedia('(pointer: coarse)').matches) o.lock('landscape').catch(() => {});
+    } catch (e) { /* ok */ }
+  };
+  Player.prototype.desdeitar = function () { try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (e) { /* ok */ } };
   Player.prototype.entrarTelaCheia = function () {
     const t = this.screen;
+    const v = this.video;
     const pedir = t.requestFullscreen || t.webkitRequestFullscreen;
+    // iPhone: o Safari não deixa pôr a página em tela cheia, só o vídeo. Usa a tela cheia do próprio iPhone,
+    // como o YouTube faz (some a barra do navegador e o vídeo gira com o celular). O filtro CRT não aparece nela.
+    if (!pedir && v && v.webkitEnterFullscreen && v.readyState >= 1) {
+      try { v.webkitEnterFullscreen(); return; } catch (e) { /* cai na tela cheia "falsa" */ }
+    }
     t.classList.add('vr-tela-cheia');
     this.mexendo();
     if (!pedir) { t.classList.add('vr-fake'); document.documentElement.classList.add('vr-trava'); return; }
     try {
       const r = pedir.call(t);
-      if (r && r.catch) r.catch(() => { t.classList.add('vr-fake'); document.documentElement.classList.add('vr-trava'); });
+      if (r && r.then) r.then(() => this.deitar(), () => { t.classList.add('vr-fake'); document.documentElement.classList.add('vr-trava'); });
+      else this.deitar();
     } catch (e) { t.classList.add('vr-fake'); document.documentElement.classList.add('vr-trava'); }
     setTimeout(() => this.ajustarRuido(), 300);
   };
@@ -637,6 +654,7 @@
     const nativa = document.fullscreenElement || document.webkitFullscreenElement;
     const sair = document.exitFullscreen || document.webkitExitFullscreen;
     if (nativa === t && sair) { try { const r = sair.call(document); if (r && r.catch) r.catch(() => {}); } catch (e) { /* ok */ } }
+    this.desdeitar();
     setTimeout(() => this.ajustarRuido(), 300);
   };
   Player.prototype.alternarTela = function () { if (this.telaCheia()) this.sairTelaCheia(); else this.entrarTelaCheia(); };
@@ -839,9 +857,16 @@
       const t = this.screen;
       if (!t.classList.contains('vr-tela-cheia')) return;
       const nativa = document.fullscreenElement || document.webkitFullscreenElement;
-      if (nativa !== t && !t.classList.contains('vr-fake')) t.classList.remove('vr-tela-cheia');
+      if (nativa !== t && !t.classList.contains('vr-fake')) { t.classList.remove('vr-tela-cheia'); this.desdeitar(); }
       this.ajustarRuido();
     };
+    // iPhone: ao sair da tela cheia do próprio aparelho, o vídeo volta para a TV da página sem parar
+    this.on(this.video, 'webkitendfullscreen', () => {
+      const v = this.video;
+      if (this._tocandoAntesFs && v.paused) { const r = v.play(); if (r && r.catch) r.catch(() => {}); }
+      this.ajustarRuido();
+    });
+    this.on(this.video, 'webkitbeginfullscreen', () => { this._tocandoAntesFs = !this.video.paused; });
     this.on(document, 'fullscreenchange', aoMudar);
     this.on(document, 'webkitfullscreenchange', aoMudar);
     this.on(window, 'resize', () => this.ajustarRuido());
