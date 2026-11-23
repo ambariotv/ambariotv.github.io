@@ -530,13 +530,13 @@
       'Have tapes or records stored away? <a href="#colaborar">See how to contribute</a>.') + '</p>' +
       '<div class="acervos">' + lista.map((c) => {
         const t = c.trabalhos || {};
-        const nums = [['fitas', T('fitas cedidas', 'tapes lent')], ['captura', T('capturas', 'captures')], ['audio', T('áudios de disco', 'record audio tracks')], ['sincronizacao', T('sincronias', 'syncs')]]
+        const nums = [['fitas', T('fitas cedidas', 'tapes lent')], ['captura', T('capturas', 'captures')], ['audio', T('áudios de disco', 'record audio tracks')]]
           .filter(([k]) => (t[k] || []).length).map(([k, r]) => '<b>' + t[k].length + '</b> ' + r);
         return '<a class="acervo-card" href="#c-' + esc(c.id) + '">' + V.avatar(c, 'g') +
           '<span class="acervo-nome">' + esc(c.name) + '</span>' +
           '<span class="mini">' + esc((c.roles || []).map((r) => AMB.ROLES[r] || r).join(' · ')) + '</span>' +
           (c.city ? '<span class="mini">' + esc(c.city) + '</span>' : '') +
-          '<span class="mini">' + (nums.length ? nums.join(' · ') : (t.cadastro || []).length + T(' registros cadastrados', ' recordings added')) + '</span></a>';
+          (nums.length ? '<span class="mini">' + nums.join(' · ') + '</span>' : (t.cadastro || []).length ? '<span class="mini">' + (t.cadastro || []).length + T(' registros cadastrados', ' recordings added') + '</span>' : '') + '</a>';
       }).join('') + '</div></div></section>';
   };
 
@@ -544,7 +544,7 @@
     const t = c.trabalhos || {};
     const secao = (k, tit) => (t[k] && t[k].length ? '<h3 class="sub">' + tit + ' (' + t[k].length + ')</h3><div class="grade">' + t[k].map(V.card).join('') + '</div>' : '');
     const corpo = secao('fitas', T('Fitas cedidas', 'Tapes lent')) + secao('captura', T('Vídeos digitalizados', 'Videos digitized')) + secao('audio', T('Áudios de disco digitalizados', 'Record audio digitized')) +
-      secao('sincronizacao', T('Sincronias', 'Syncs')) + secao('restauracao', T('Restaurações', 'Restorations'));
+      secao('restauracao', T('Restaurações', 'Restorations'));
     const cad = t.cadastro || [];
     return '<div class="pg-acervo"><div class="art-topo">' + V.avatar(c, 'g') +
       '<div class="art-topo-txt"><h1>' + esc(c.name) + '</h1>' +
@@ -553,7 +553,7 @@
         (c.bio ? '<p>' + V.tx(c, 'bio') + '</p>' : '') +
         ((c.links || []).length ? '<p class="links">' + c.links.map((l) => '<a href="' + esc(l.u) + '" target="_blank" rel="noopener">' + esc(l.t) + ' ↗</a>').join(' · ') + '</p>' : '') +
       '</div></div>' +
-      (corpo || V.vazio(T('Os trabalhos de ' + esc(c.name) + ' aparecem aqui assim que os vídeos com o crédito dele entrarem no acervo.', esc(c.name) + '’s work shows up here as soon as videos credited to them enter the archive.'))) +
+      (corpo || cad.length || (t.sincronizacao || []).length ? corpo : V.vazio(T('Os trabalhos de ' + esc(c.name) + ' aparecem aqui assim que os vídeos com o crédito dele entrarem no acervo.', esc(c.name) + '’s work shows up here as soon as videos credited to them enter the archive.'))) +
       (cad.length ? '<h3 class="sub">' + T('Registros cadastrados', 'Recordings added') + ' (' + cad.length + ')</h3><div class="linhas">' + cad.slice(0, 40).map(V.linha).join('') + '</div>' : '') +
     '</div>';
   };
