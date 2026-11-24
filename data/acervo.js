@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-23",
-  "rev": 112,
+  "rev": 113,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1012,6 +1012,7 @@ window.AMB_DATA = {
       "duration": 213,
       "file": {
         "video": "https://archive.org/download/ambario-joe-euthanazia-me-leva-pra-casa-1985/joe-euthanazia-me-leva-pra-casa-1985.mp4",
+        "mobile": "https://archive.org/download/ambario-joe-euthanazia-me-leva-pra-casa-1985/joe-euthanazia-me-leva-pra-casa-1985_celular.mp4",
         "ia": "ambario-joe-euthanazia-me-leva-pra-casa-1985"
       },
       "audio": [
@@ -1035,13 +1036,13 @@ window.AMB_DATA = {
       ],
       "credits": { "sync": "Miguel Lins", "tape": "MofoTV" },
       "source": {
-        "medium": "Cópia digital",
+        "medium": "VHS",
         "from": "Cópia com a marca d’água “MofoTV”",
         "aired": "1985",
         "url": "https://youtu.be/4xLov6E79Rg?si=YeyEIr6SVPCzRsOn"
       },
-      "description": "Joe Euthanazia canta “Me Leva pra Casa”, do compacto de 1984, no Programa Vamos Nessa.",
-      "description_en": "Joe Euthanazia sings “Me Leva pra Casa”, from his 1984 single, on the TV show Programa Vamos Nessa.",
+      "description": "Me leva",
+      "description_en": "Take me",
       "src": ["scribd-rock-gaucho"],
       "refs": [
         {
