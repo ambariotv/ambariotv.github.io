@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-23",
-  "rev": 111,
+  "rev": 112,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -962,6 +962,7 @@ window.AMB_DATA = {
       "duration": 157,
       "file": {
         "video": "https://archive.org/download/ambario-legiao-urbana-sera-1985/legiao-urbana-sera-1985.mp4",
+        "mobile": "https://archive.org/download/ambario-legiao-urbana-sera-1985/legiao-urbana-sera-1985_celular.mp4",
         "ia": "ambario-legiao-urbana-sera-1985"
       },
       "audio": [
@@ -984,9 +985,9 @@ window.AMB_DATA = {
         }
       ],
       "music": { "status": "streaming", "qobuz": "https://open.qobuz.com/track/4916917" },
-      "credits": { "sync": "moguell", "tape": "Legião Urbana" },
+      "credits": { "sync": "Miguel Lins", "tape": "Legião Urbana" },
       "source": {
-        "medium": "Cópia digital",
+        "medium": "VHS",
         "aired": "1985",
         "url": "https://youtu.be/hZg1r7BOXVA?si=5lVDCD1Gdlg8RO-R"
       },
