@@ -16,7 +16,7 @@
  */
 window.AMB_DATA = {
   "updated": "2026-11-23",
-  "rev": 113,
+  "rev": 114,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1922,11 +1922,11 @@ window.AMB_DATA = {
     {
       "id": "naoko-isamu-tv-1987",
       "artist": "naoko-isamu",
-      "title": "さよならは落ち込まないで",
       "song": "さよならは落ち込まないで",
+      "title": "さよならは落ち込まないで",
       "kind": "tv",
       "date": "1987",
-      "status": "no-acervo",
+      "status": "na-fila",
       "capa": "media/capas/naoko-isamu-tv-1987.jpg?v=mwtb6b3m",
       "fit": "cover",
       "duration": 114,
