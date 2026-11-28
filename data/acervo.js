@@ -7,7 +7,7 @@
  * Se for editar à mão, mantenha o formato JSON: aspas duplas, sem vírgula sobrando
  * no fim das listas e sem comentários dentro do bloco. Campos principais:
  *   videos[]  : id, artist, song, ver, title, kind, date, program, channel, director, status,
- *               capa, fit, duration, file {video, ia, mirrors}, audio[], credits, source,
+ *               capa, fit, duration, file {video, mobile, ia, mirrors}, live, audio[], credits, source,
  *               description, note, src[], refs[], added, added_by
  *   artists[] : id, name, alt[], country, origin, years, members[], intro, src[], releases[]
  *               (releases[]: id, type, title, year, date, label, format, note, partial, src[], tracks[])
@@ -15,8 +15,8 @@
  *   sources   : { id: { t: título, u: link } } (usadas por id nos campos src)
  */
 window.AMB_DATA = {
-  "updated": "2026-11-23",
-  "rev": 114,
+  "updated": "2026-11-28",
+  "rev": 115,
   "sources": {
     "wp-metro": {
       "t": "Metrô (band) — Wikipédia em inglês",
@@ -1997,6 +1997,46 @@ window.AMB_DATA = {
       "description": "Nem todas são iguais",
       "description_en": "Not all are the same",
       "added": "2026-11-23",
+      "added_by": "moguell"
+    },
+    {
+      "id": "kid-abelha-alice-nao-me-escreva-aquela-carta-de-amor-tv-1984",
+      "artist": "kid-abelha",
+      "song": "alice-nao-me-escreva-aquela-carta-de-amor",
+      "title": "Alice (Não Me Escreva Aquela Carta De Amor)",
+      "kind": "tv",
+      "live": true,
+      "date": "1984",
+      "status": "no-acervo",
+      "capa": "media/capas/kid-abelha-alice-nao-me-escreva-aquela-carta-de-amor-tv-1984.jpg?v=mx0dag8a",
+      "duration": 186,
+      "file": {
+        "video": "https://archive.org/download/ambario-kid-abelha-alice-nao-escreva-aquela-carta-de-amor-1984/kid-abelha-alice-nao-escreva-aquela-carta-de-amor-1984.mp4",
+        "mobile": "https://archive.org/download/ambario-kid-abelha-alice-nao-escreva-aquela-carta-de-amor-1984/kid-abelha-alice-nao-escreva-aquela-carta-de-amor-1984_celular.mp4",
+        "ia": "ambario-kid-abelha-alice-nao-escreva-aquela-carta-de-amor-1984"
+      },
+      "audio": [
+        {
+          "id": "principal",
+          "short": "LP",
+          "label": "Coletânea Cassino Do Chacrinha Especial (Som Livre, 1985)",
+          "kind": "lp",
+          "note": "faixa B2",
+          "embedded": true
+        }
+      ],
+      "credits": { "tape": "Nacionais Anos 80, RorschachFR" },
+      "source": {
+        "medium": "VHS",
+        "aired": "1984",
+        "urls": [
+          "https://youtu.be/QXCjB76bi6E?si=f9MHQspZlV8xEW6v",
+          "https://youtu.be/x1UoeYzniaE?si=IfeKJULCTlhzFJ8S"
+        ]
+      },
+      "description": "Imagina se Alice escrevesse aquela carta...",
+      "description_en": "Imagine if Alice wrote that letter...",
+      "added": "2026-11-28",
       "added_by": "moguell"
     }
   ]
